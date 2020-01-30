@@ -1,0 +1,22 @@
+{
+  "files": {
+    "main.css": "/employees-scoreboar/static/css/main.bc97b8c8.chunk.css",
+    "main.js": "/employees-scoreboar/static/js/main.460f709e.chunk.js",
+    "main.js.map": "/employees-scoreboar/static/js/main.460f709e.chunk.js.map",
+    "runtime-main.js": "/employees-scoreboar/static/js/runtime-main.1e43337a.js",
+    "runtime-main.js.map": "/employees-scoreboar/static/js/runtime-main.1e43337a.js.map",
+    "static/js/2.07686449.chunk.js": "/employees-scoreboar/static/js/2.07686449.chunk.js",
+    "static/js/2.07686449.chunk.js.map": "/employees-scoreboar/static/js/2.07686449.chunk.js.map",
+    "index.html": "/employees-scoreboar/index.html",
+    "precache-manifest.d1c184ca68c543d7bdd6998d2793d57b.js": "/employees-scoreboar/precache-manifest.d1c184ca68c543d7bdd6998d2793d57b.js",
+    "service-worker.js": "/employees-scoreboar/service-worker.js",
+    "static/css/main.bc97b8c8.chunk.css.map": "/employees-scoreboar/static/css/main.bc97b8c8.chunk.css.map",
+    "static/js/2.07686449.chunk.js.LICENSE": "/employees-scoreboar/static/js/2.07686449.chunk.js.LICENSE"
+  },
+  "entrypoints": [
+    "static/js/runtime-main.1e43337a.js",
+    "static/js/2.07686449.chunk.js",
+    "static/css/main.bc97b8c8.chunk.css",
+    "static/js/main.460f709e.chunk.js"
+  ]
+}
