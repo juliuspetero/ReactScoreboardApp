@@ -1,0 +1,15 @@
+#employee-component .inf-content {
+  border: 1px solid #dddddd;
+  -webkit-border-radius: 10px;
+  -moz-border-radius: 10px;
+  border-radius: 10px;
+  box-shadow: 7px 7px 7px rgba(0, 0, 0, 0.3);
+}
+
+/* strong {
+  color: #141414;
+} */
+
+#employee-component span {
+  color: #141414;
+}
