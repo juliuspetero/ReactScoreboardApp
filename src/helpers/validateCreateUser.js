@@ -22,7 +22,8 @@ export default function validateInput(data) {
     errors.passwordConfirmation = 'Passwords must match';
 
   // Check for department selection
-  if (data.department === '') errors.department = 'Please select department';
+  if (data.departmentId === '')
+    errors.departmentId = 'Please select department';
 
   // Check for the roles validation
   if (data.roles.length === 0) errors.roles = 'Please select employee type';

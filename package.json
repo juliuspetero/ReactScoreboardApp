@@ -1,6 +1,6 @@
 {
-  "name": "employees-scoreboard",
-  "homepage": "http://jpetero.github.io/employees-scoreboar",
+  "name": "employees-portal",
+  "homepage": ".",
   "version": "0.1.0",
   "private": true,
   "dependencies": {

@@ -5,6 +5,7 @@ import { addCreateUserFlashMessage } from '../../redux/flashMessages/actions/cre
 import CreateUserErrorMessage from '../messages/CreateUserErrorMessage';
 import { deleteCreateUserErrorMessage } from '../../redux/errorMessages/actions/errorMessagesActions';
 import { fetchRoles } from '../../redux/roles/actions/fetchRolesActions';
+import { fetchDepartments } from '../../redux/departments/actions/fetchDepartmentsActions';
 
 export class CreateEmployeeComponent extends Component {
   constructor(props) {
@@ -15,7 +16,7 @@ export class CreateEmployeeComponent extends Component {
       password: '',
       passwordConfirmation: '',
       phoneNumber: '',
-      department: '',
+      departmentId: '',
       sex: '',
       roles: []
     };
@@ -36,6 +37,7 @@ export class CreateEmployeeComponent extends Component {
 
   componentDidMount() {
     this.props.fetchRoles();
+    this.props.fetchDepartments();
   }
 
   // Call flash messages on successful user creation
@@ -60,7 +62,7 @@ export class CreateEmployeeComponent extends Component {
       email,
       passwordConfirmation,
       phoneNumber,
-      department
+      departmentId
     } = this.state;
 
     const { isLoading, errors } = this.props.createdUserData;
@@ -82,20 +84,28 @@ export class CreateEmployeeComponent extends Component {
       }
     }
     // Find all the roles in the system and insert in the DOM
-
     let rolesOptions = null;
     if (this.props.rolesData.roles) {
       rolesOptions = this.props.rolesData.roles.map(role => (
-        <option key={role.id} value={role.name}>
+        <option key={role.id} value={role.id}>
           {role.name}
         </option>
       ));
     }
 
+    // Find all the departments in the system and insert in the DOM
+    const departmentsOptions = this.props.departmentsData.departments
+      ? this.props.departmentsData.departments.map(department => (
+          <option key={department.id} value={department.id}>
+            {department.title}
+          </option>
+        ))
+      : null;
+
     return (
       <React.Fragment>
-        <div className="card bg-light">
-          <article className="card-body mx-auto" style={{ maxWidth: '400px' }}>
+        <div className="cardbg-light mx-auto">
+          <article className="card-body mx-auto" style={{ width: '35rem' }}>
             <h4 className="card-title mt-3 text-center">
               Create an Employee's Account
             </h4>
@@ -159,19 +169,12 @@ export class CreateEmployeeComponent extends Component {
                 </div>
                 <select
                   onChange={this.onChange}
-                  name="department"
-                  value={department}
+                  name="departmentId"
+                  value={departmentId}
                   className="form-control"
                 >
                   <option value="">Select Department</option>
-                  <option value="financeAdmin">
-                    Finance and Administration
-                  </option>
-                  <option value="salesMarketing">Sales and Marketing</option>
-                  <option value="helpDesk">Help Desk</option>
-                  <option value="clientRelations">Client Relations MGT</option>
-                  <option value="topMgt">Top Management</option>
-                  <option value="csoTech">CSO Technicians</option>
+                  {departmentsOptions}
                 </select>
               </div>
 
@@ -275,7 +278,8 @@ const mapStateToProps = state => {
   return {
     createdUserData: state.createUserReducer,
     createUserflashMessages: state.createUserflashMessagesReducer,
-    rolesData: state.fetchRolesReducer
+    rolesData: state.fetchRolesReducer,
+    departmentsData: state.fetchDepartmentsReducer
   };
 };
 
@@ -283,5 +287,6 @@ export default connect(mapStateToProps, {
   createUser,
   addCreateUserFlashMessage,
   deleteCreateUserErrorMessage,
-  fetchRoles
+  fetchRoles,
+  fetchDepartments
 })(CreateEmployeeComponent);

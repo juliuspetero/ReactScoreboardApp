@@ -1,21 +1,11 @@
 {
-  "short_name": "React App",
-  "name": "Create React App Sample",
+  "short_name": "KPI Scoreboard",
+  "name": "KPI Scoreboard Applicatiom",
   "icons": [
     {
-      "src": "images/3dservices.ico",
+      "src": "favicon.ico",
       "sizes": "64x64 32x32 24x24 16x16",
       "type": "image/x-icon"
-    },
-    {
-      "src": "images/3dservices.png",
-      "type": "image/png",
-      "sizes": "192x192"
-    },
-    {
-      "src": "images/3dservices.png",
-      "type": "image/png",
-      "sizes": "512x512"
     }
   ],
   "start_url": ".",

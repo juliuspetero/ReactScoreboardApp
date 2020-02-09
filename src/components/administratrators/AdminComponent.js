@@ -308,18 +308,6 @@ export class AdminComponent extends Component {
                   <span className="menu-collapsed">Help</span>
                 </div>
               </a>
-              <a
-                href="#!"
-                data-toggle="sidebar-colapse"
-                className="bg-dark list-group-item list-group-item-action d-flex align-items-center"
-              >
-                <div className="d-flex w-100 justify-content-start align-items-center">
-                  <span id="collapse-icon" className="fa fa-2x mr-3"></span>
-                  <span id="collapse-text" className="menu-collapsed">
-                    Collapse
-                  </span>
-                </div>
-              </a>
             </ul>
             {/* List Group END */}
           </div>

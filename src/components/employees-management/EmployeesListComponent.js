@@ -25,7 +25,7 @@ export class EmployeesListComponent extends Component {
             </th>
             <td>{employee.email}</td>
             <td>{employee.phoneNumber}</td>
-            <td>{employee.department}</td>
+            <td>{employee.department.title}</td>
             <td>{employee.roles[0] ? employee.roles[0].name : ''}</td>
           </tr>
         </React.Fragment>
