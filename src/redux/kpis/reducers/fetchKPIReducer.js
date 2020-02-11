@@ -5,28 +5,28 @@ import {
 } from '../actionsTypes/fetchUserActionTypes';
 
 const initialState = {
-  loading: false,
-  user: null,
+  isLoading: false,
+  kpi: null,
   error: null
 };
 
-const fetchUserReducer = (state = initialState, action) => {
+const fetchKPIReducer = (state = initialState, action) => {
   switch (action.type) {
     case FETCH_USER_REQUEST:
       return {
         ...state,
-        loading: true
+        isLoading: true
       };
     case FETCH_USER_SUCCESS:
       return {
-        loading: false,
-        user: action.payload,
+        isLoading: false,
+        kpi: action.payload,
         error: null
       };
     case FETCH_USER_FAILURE:
       return {
-        loading: false,
-        user: null,
+        isLoading: false,
+        kpi: null,
         error: action.payload
       };
     default:
@@ -34,4 +34,4 @@ const fetchUserReducer = (state = initialState, action) => {
   }
 };
 
-export default fetchUserReducer;
+export default fetchKPIReducer;

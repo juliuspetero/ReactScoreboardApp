@@ -6,9 +6,10 @@ import store from './redux/store';
 import NavigationBar from './components/layouts/NavigationBar';
 import AuthenticateUserComponent from './components/authentications/AuthenticateUserComponent';
 import FooterComponent from './components/layouts/FooterComponent';
-import EmployeesManagementComponent from './components/employees/EmployeesManagementComponent';
 import UnauthorizedUserFlashMessage from './components/messages/UnauthorizedUserFlashMessage';
-import authenticateComponent from './components/authentications/AuthenticateComponent';
+import authorizeAdminComponent from './components/authentications/AuthorizeAdminComponent';
+import authorizeEmployeeComponent from './components/authentications/AuthorizeEmployeeComponent';
+import authorizeManagerComponent from './components/authentications/AuthorizeManagerComponent';
 import AdminComponent from './components/administratrators/AdminComponent';
 import ManagerComponent from './components/managers/ManagerComponent';
 import EmployeeComponent from './components/employees/EmployeeComponent';
@@ -22,21 +23,16 @@ function App() {
           <Route path="/login" component={UnauthorizedUserFlashMessage} />
           <Route path="/login" component={AuthenticateUserComponent} />
           <Route
-            path="/manage-employees"
-            component={authenticateComponent(EmployeesManagementComponent)}
-          />
-
-          <Route
             path="/admin"
-            component={authenticateComponent(AdminComponent)}
+            component={authorizeAdminComponent(AdminComponent)}
           />
           <Route
             path="/manager"
-            component={authenticateComponent(ManagerComponent)}
+            component={authorizeManagerComponent(ManagerComponent)}
           />
           <Route
             path="/employee"
-            component={authenticateComponent(EmployeeComponent)}
+            component={authorizeEmployeeComponent(EmployeeComponent)}
           />
           <Route exact path="/" render={() => <Redirect to="/login" />} />
 

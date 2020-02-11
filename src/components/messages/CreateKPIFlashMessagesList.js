@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import CreateKPIFlashMessage from './';
 import { deleteCreateKPIFlashMessage } from '../../redux/flashMessages/actions/createKPIFlashMessagesActions';
+import CreateKPIFlashMessage from './CreateKPIFlashMessage';
 
 export class CreateKPIFlashMessagesList extends Component {
   render() {
@@ -16,9 +16,12 @@ export class CreateKPIFlashMessagesList extends Component {
   }
 }
 
+// export default CreateKPIFlashMessagesList;
 export default connect(
   state => {
-    return { createKPIFlashMessages: state.createKPIFlashMessagesReducer };
+    return {
+      createKPIFlashMessages: state.createKPIFlashMessagesReducer
+    };
   },
   { deleteCreateKPIFlashMessage }
 )(CreateKPIFlashMessagesList);

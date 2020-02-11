@@ -12,6 +12,7 @@ import fetchRolesReducer from './roles/reducers/fetchRolesReducer';
 import createKPIReducer from './kpis/reducers/createKPIReducer';
 import createKPIFlashMessagesReducer from './flashMessages/reducers/createKPIFlashMessagesReducer';
 import fetchDepartmentsReducer from './departments/reducers/fetchDepartmentsReducer';
+import fetchKPIsReducer from './kpis/reducers/fetchKPIsReducer';
 
 // Give appropriate names for the state
 const rootReducer = combineReducers({
@@ -27,7 +28,8 @@ const rootReducer = combineReducers({
   fetchRolesReducer,
   createKPIReducer,
   createKPIFlashMessagesReducer,
-  fetchDepartmentsReducer
+  fetchDepartmentsReducer,
+  fetchKPIsReducer
 });
 
 export default rootReducer;

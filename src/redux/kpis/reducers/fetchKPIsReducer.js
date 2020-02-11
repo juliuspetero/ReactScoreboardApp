@@ -1,32 +1,32 @@
 import {
-  FETCH_USERS_REQUEST,
-  FETCH_USERS_SUCCESS,
-  FETCH_USERS_FAILURE
-} from '../actionsTypes/fetchUsersActionTypes';
+  FETCH_KPIS_REQUEST,
+  FETCH_KPIS_SUCCESS,
+  FETCH_KPIS_FAILURE
+} from '../actionsTypes/fetchKPIsActionTypes';
 
 const initialState = {
   isLoading: false,
-  users: [],
+  kpis: [],
   error: null
 };
 
-const fetchUsersReducer = (state = initialState, action) => {
+const fetchKPIsReducer = (state = initialState, action) => {
   switch (action.type) {
-    case FETCH_USERS_REQUEST:
+    case FETCH_KPIS_REQUEST:
       return {
         ...state,
         isLoading: true
       };
-    case FETCH_USERS_SUCCESS:
+    case FETCH_KPIS_SUCCESS:
       return {
         isLoading: false,
-        users: action.payload,
+        kpis: action.payload,
         error: ''
       };
-    case FETCH_USERS_FAILURE:
+    case FETCH_KPIS_FAILURE:
       return {
         isLoading: false,
-        users: [],
+        kpis: [],
         error: action.payload
       };
     default:
@@ -34,4 +34,4 @@ const fetchUsersReducer = (state = initialState, action) => {
   }
 };
 
-export default fetchUsersReducer;
+export default fetchKPIsReducer;

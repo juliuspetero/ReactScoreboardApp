@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import cloneDeep from 'lodash/cloneDeep';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { fetchUsers } from '../../redux/users/actions/fetchUsersActions.js';
@@ -13,8 +14,21 @@ export class EmployeesListComponent extends Component {
   };
 
   render() {
+    // Retrieve the current logged in user department
+    const { authenticateUser } = this.props.authenticateUserData;
+
     const { users, isLoading } = this.props.usersData;
-    const employees = users.map(employee => {
+    let departmentEmployees = cloneDeep(users);
+    const departmentId = authenticateUser.userInformation.departmentId;
+
+    // This is the admin, he should see all the users
+    if (departmentId !== 'fvinu5fek6dwdzfe') {
+      departmentEmployees = departmentEmployees.filter(employee => {
+        return employee.departmentId === departmentId;
+      });
+    }
+
+    const employees = departmentEmployees.map(employee => {
       return (
         <React.Fragment key={employee.id}>
           <tr onClick={() => this.onRowClicked(employee)}>
@@ -63,7 +77,8 @@ export class EmployeesListComponent extends Component {
 export default connect(
   state => {
     return {
-      usersData: state.fetchUsersReducer
+      usersData: state.fetchUsersReducer,
+      authenticateUserData: state.authenticateUserReducer
     };
   },
   {

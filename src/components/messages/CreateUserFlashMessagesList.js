@@ -18,7 +18,10 @@ export class CreateUserFlashMessagesList extends Component {
 
 export default connect(
   state => {
-    return { createUserFlashMessages: state.createUserflashMessagesReducer };
+    return {
+      createUserFlashMessages: state.createUserflashMessagesReducer,
+      createKPIFlashMessages: state.createKPIFlashMessagesReducer
+    };
   },
   { deleteCreateUserFlashMessage }
 )(CreateUserFlashMessagesList);

@@ -58,7 +58,7 @@ export class CreateKPIComponent extends Component {
       <React.Fragment>
         <div
           className="mt-5 card bg-light text-center mx-auto"
-          style={{ width: '30rem' }}
+          style={{ width: '35rem' }}
         >
           <div className="card-body">
             <div>{errorMessages}</div>

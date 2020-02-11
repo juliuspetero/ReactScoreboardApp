@@ -15,7 +15,7 @@ export class AuthenticateFlashMessage extends Component {
           <button onClick={this.onClick} className="close">
             <span>&times;</span>
           </button>
-          Welcome {user.username}!<p>ID = {user.id}</p>
+          <p className="h3">Welcome {user.username}!</p>
         </div>
       </div>
     );

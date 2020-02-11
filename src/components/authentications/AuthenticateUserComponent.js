@@ -4,7 +4,7 @@ import { authenticateUser } from '../../redux/authentications/actions/authentica
 import { addAuthenticateUserFlashMessage } from '../../redux/flashMessages/actions/authenticateUserFlashMessagesActions';
 import AuthenticateUserErrorMessage from '../messages/AuthenticateUserErrorMessage';
 import { deleteAuthenticateUserErrorMessage } from '../../redux/errorMessages/actions/errorMessagesActions';
-import './authentication.css';
+import '../../assets/css/authentication.css';
 import setAuthorizationToken from '../../helpers/setAuthorizationToken';
 
 export class AuthenticateUserComponent extends Component {
@@ -35,11 +35,20 @@ export class AuthenticateUserComponent extends Component {
         authenticateUser.userInformation
       );
 
-      // Set the token to local storage
+      // Set the token to local storage and to the header of every request after
       localStorage.setItem('jwtToken', authenticateUser.token);
       setAuthorizationToken(authenticateUser.token);
       // Check he user role and push him to appropriate route
-      this.props.history.push('/admin');
+      if (authenticateUser.userInformation.roles[0].id === 'fvinu5fek6dwdzf7')
+        this.props.history.push('/admin');
+      else if (
+        authenticateUser.userInformation.roles[0].id === 'fvinu5fek6dwdzf8'
+      )
+        this.props.history.push('/manager');
+      else if (
+        authenticateUser.userInformation.roles[0].id === 'fvinu5fek6dwdzf9'
+      )
+        this.props.history.push('/employee');
     }
   }
 

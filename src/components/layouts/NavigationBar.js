@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { NavLink } from 'react-router-dom';
+import { NavLink, withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { logout } from '../../redux/authentications/actions/logoutActions';
 
@@ -7,6 +7,7 @@ export class NavigationBar extends Component {
   logout = e => {
     e.preventDefault();
     this.props.logout();
+    this.props.history.push('/login');
   };
 
   render() {
@@ -42,9 +43,11 @@ export class NavigationBar extends Component {
   }
 }
 
-export default connect(
-  state => {
-    return { authenticateUserData: state.authenticateUserReducer };
-  },
-  { logout }
-)(NavigationBar);
+export default withRouter(
+  connect(
+    state => {
+      return { authenticateUserData: state.authenticateUserReducer };
+    },
+    { logout }
+  )(NavigationBar)
+);

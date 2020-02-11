@@ -11,11 +11,14 @@ import EmployeeDetailsComponent from '../employees-management/EmployeeDetailsCom
 import CreateEmployeeComponent from '../employees-management/CreateEmployeeComponent';
 import CreateUserFlashMessagesList from '../messages/CreateUserFlashMessagesList';
 import CreateKPIComponent from '../kpis-management/CreateKPIComponent';
+import CreateKPIFlashMessagesList from '../messages/CreateKPIFlashMessagesList';
+import KPIsListComponent from '../kpis-management/KPIsListComponent';
 
 export class AdminComponent extends Component {
   logout = e => {
     e.preventDefault();
     this.props.logout();
+    this.props.history.push('/login');
   };
   render() {
     const {
@@ -63,6 +66,8 @@ export class AdminComponent extends Component {
 
               {/* <!-- This menu is hidden in bigger devices with d-sm-none.  */}
               {/* The sidebar isn't proper for smaller screens imo, so this dropdown menu can keep all the useful sidebar itens exclusively for smaller screens  --> */}
+
+              {/* Dashboard */}
               <li className="nav-item dropdown d-sm-block d-md-none">
                 <a
                   className="nav-link dropdown-toggle"
@@ -72,23 +77,113 @@ export class AdminComponent extends Component {
                   aria-haspopup="true"
                   aria-expanded="false"
                 >
-                  MAIN MENU
+                  Dashboards
                 </a>
+                {/* Drop down menu */}
                 <div
-                  className="dropdown-menu"
+                  className="dropdown-menu text-center bg-dark"
                   aria-labelledby="smallerscreenmenu"
                 >
-                  <a className="dropdown-item" href="#!">
-                    Dashboard
+                  <a className="dropdown-item bg-dark text-white" href="#!">
+                    Dashboard 1
                   </a>
-                  <a className="dropdown-item" href="#!">
-                    Profile
+                  <a className="dropdown-item bg-dark text-white" href="#!">
+                    Dashboard 2
                   </a>
-                  <a className="dropdown-item" href="#!">
-                    Tasks
+                </div>
+              </li>
+
+              {/* Employees */}
+              <li className="nav-item dropdown d-sm-block d-md-none">
+                <a
+                  className="nav-link dropdown-toggle"
+                  href="#!"
+                  id="smallerscreenmenu"
+                  data-toggle="dropdown"
+                  aria-haspopup="true"
+                  aria-expanded="false"
+                >
+                  Employees
+                </a>
+                {/* Drop down menu */}
+                <div
+                  className="dropdown-menu text-center bg-dark"
+                  aria-labelledby="smallerscreenmenu"
+                >
+                  <a
+                    className="dropdown-item bg-dark text-white"
+                    href="/admin/all-employees"
+                  >
+                    All Employees
                   </a>
-                  <a className="dropdown-item" href="#!">
-                    Etc ...
+                  <a
+                    className="dropdown-item bg-dark text-white"
+                    href="/admin/create-employee"
+                  >
+                    Add Employee
+                  </a>
+                </div>
+              </li>
+
+              {/* KPIs */}
+              {/* Scoreboard */}
+              <li className="nav-item dropdown d-sm-block d-md-none">
+                <a
+                  className="nav-link dropdown-toggle"
+                  href="#!"
+                  id="smallerscreenmenu"
+                  data-toggle="dropdown"
+                  aria-haspopup="true"
+                  aria-expanded="false"
+                >
+                  KPIs
+                </a>
+                <div
+                  className="dropdown-menu text-center bg-dark"
+                  aria-labelledby="smallerscreenmenu"
+                >
+                  <a
+                    className="dropdown-item bg-dark text-white"
+                    href="/admin/all-scoreboards"
+                  >
+                    All KPIs
+                  </a>
+                  <a
+                    className="dropdown-item bg-dark text-white"
+                    href="/create-employee"
+                  >
+                    Create KPI
+                  </a>
+                </div>
+              </li>
+
+              {/* Scoreboard */}
+              <li className="nav-item dropdown d-sm-block d-md-none">
+                <a
+                  className="nav-link dropdown-toggle"
+                  href="#!"
+                  id="smallerscreenmenu"
+                  data-toggle="dropdown"
+                  aria-haspopup="true"
+                  aria-expanded="false"
+                >
+                  Scoreboard
+                </a>
+                <div
+                  className="dropdown-menu text-center bg-dark"
+                  aria-labelledby="smallerscreenmenu"
+                >
+                  <a
+                    className="dropdown-item bg-dark text-white"
+                    href="/admin/all-scoreboards"
+                  >
+                    All Scoreboards
+                  </a>
+                  <a
+                    className="dropdown-item bg-dark text-white"
+                    href="/create-employee"
+                  >
+                    Add Scoreboard
                   </a>
                 </div>
               </li>
@@ -174,16 +269,6 @@ export class AdminComponent extends Component {
                   <span className="menu-collapsed">Password</span>
                 </a>
               </div>
-              <a
-                href="#!"
-                className="bg-dark list-group-item list-group-item-action"
-              >
-                <div className="d-flex w-100 justify-content-start align-items-center">
-                  <span className="fa fa-envelope-o fa-fw mr-3"></span>
-                  <span className="menu-collapsed">Messages</span>
-                  <span className="badge badge-pill badge-primary ml-2">5</span>
-                </div>
-              </a>
               {/* <!-- Separator with title --> */}
               <li className="list-group-item sidebar-separator-title text-muted d-flex align-items-center menu-collapsed">
                 <small>OPTIONS</small>
@@ -217,12 +302,6 @@ export class AdminComponent extends Component {
                 >
                   <span className="menu-collapsed">Create Employee</span>
                 </NavLink>
-                <a
-                  href="#!"
-                  className="list-group-item list-group-item-action bg-dark text-white"
-                >
-                  <span className="menu-collapsed">Remove Employee</span>
-                </a>
               </div>
               {/* KPIs Menu */}
               <a
@@ -240,7 +319,7 @@ export class AdminComponent extends Component {
               {/* <!-- KPIs Submenu --> */}
               <div id="kpis-submenu" className="collapse sidebar-submenu">
                 <a
-                  href="#!"
+                  href="/admin/all-kpis"
                   className="list-group-item list-group-item-action bg-dark text-white"
                 >
                   <span className="menu-collapsed">All KPIs</span>
@@ -250,12 +329,6 @@ export class AdminComponent extends Component {
                   className="list-group-item list-group-item-action bg-dark text-white"
                 >
                   <span className="menu-collapsed">Create KPI</span>
-                </a>
-                <a
-                  href="#!"
-                  className="list-group-item list-group-item-action bg-dark text-white"
-                >
-                  <span className="menu-collapsed">Remove KPI</span>
                 </a>
               </div>
               {/* Scoreboards Menu */}
@@ -288,12 +361,6 @@ export class AdminComponent extends Component {
                 >
                   <span className="menu-collapsed">Create Scoreboard</span>
                 </a>
-                <a
-                  href="#!"
-                  className="list-group-item list-group-item-action bg-dark text-white"
-                >
-                  <span className="menu-collapsed">Remove Scoreboard</span>
-                </a>
               </div>
 
               {/* <!-- Separator without title --> */}
@@ -318,6 +385,7 @@ export class AdminComponent extends Component {
             <AuthenticateUserFlashMessage />
             <UnauthorizedUserFlashMessage />
             <CreateUserFlashMessagesList />
+            <CreateKPIFlashMessagesList />
 
             <Route exact path="/admin" component={AdminDashboard} />
             <Switch>
@@ -330,6 +398,7 @@ export class AdminComponent extends Component {
                 path={'/admin/create-employee'}
                 component={CreateEmployeeComponent}
               />
+              <Route path={'/admin/all-kpis'} component={KPIsListComponent} />
               <Route
                 path={'admin/all-employees/:id'}
                 component={EmployeeDetailsComponent}
