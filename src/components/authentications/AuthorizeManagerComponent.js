@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { addUnauthorizedUserFlashMessage } from '../../redux/flashMessages/actions/unauthorizedUserFlashMessagesActions';
 
-const managerId = 'fvinu5fek6dwdzf8';
+const managerId = '3by786gk6s03iu3';
 
 export default function(ComposedCompponent) {
   class AuthenticateComponent extends Component {

@@ -43,7 +43,7 @@ export const createKPI = user => {
                   }
                 })
               );
-          } else
+          } else {
             dispatch(
               createKPIFailure({
                 data: {
@@ -51,6 +51,7 @@ export const createKPI = user => {
                 }
               })
             );
+          }
         });
     }
   };

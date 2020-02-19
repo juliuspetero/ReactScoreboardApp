@@ -6,6 +6,7 @@ import AuthenticateUserErrorMessage from '../messages/AuthenticateUserErrorMessa
 import { deleteAuthenticateUserErrorMessage } from '../../redux/errorMessages/actions/errorMessagesActions';
 import '../../assets/css/authentication.css';
 import setAuthorizationToken from '../../helpers/setAuthorizationToken';
+import { withRouter } from 'react-router-dom';
 
 export class AuthenticateUserComponent extends Component {
   constructor(props) {
@@ -39,16 +40,18 @@ export class AuthenticateUserComponent extends Component {
       localStorage.setItem('jwtToken', authenticateUser.token);
       setAuthorizationToken(authenticateUser.token);
       // Check he user role and push him to appropriate route
-      if (authenticateUser.userInformation.roles[0].id === 'fvinu5fek6dwdzf7')
+      if (authenticateUser.userInformation.roles[0].id === '3by786gk6s03iu2') {
+        console.log(this.props);
         this.props.history.push('/admin');
-      else if (
-        authenticateUser.userInformation.roles[0].id === 'fvinu5fek6dwdzf8'
-      )
+      } else if (
+        authenticateUser.userInformation.roles[0].id === '3by786gk6s03iu3'
+      ) {
         this.props.history.push('/manager');
-      else if (
-        authenticateUser.userInformation.roles[0].id === 'fvinu5fek6dwdzf9'
-      )
+      } else if (
+        authenticateUser.userInformation.roles[0].id === '3by786gk6s03iu4'
+      ) {
         this.props.history.push('/employee');
+      }
     }
   }
 
@@ -136,16 +139,19 @@ export class AuthenticateUserComponent extends Component {
   }
 }
 
-export default connect(
-  state => {
-    return {
-      authenticateUserData: state.authenticateUserReducer,
-      authenticateUserFlashMessages: state.authenticateUserFlashMessagesReducer
-    };
-  },
-  {
-    authenticateUser,
-    addAuthenticateUserFlashMessage,
-    deleteAuthenticateUserErrorMessage
-  }
-)(AuthenticateUserComponent);
+export default withRouter(
+  connect(
+    state => {
+      return {
+        authenticateUserData: state.authenticateUserReducer,
+        authenticateUserFlashMessages:
+          state.authenticateUserFlashMessagesReducer
+      };
+    },
+    {
+      authenticateUser,
+      addAuthenticateUserFlashMessage,
+      deleteAuthenticateUserErrorMessage
+    }
+  )(AuthenticateUserComponent)
+);

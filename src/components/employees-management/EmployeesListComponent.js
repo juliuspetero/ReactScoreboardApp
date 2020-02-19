@@ -22,7 +22,7 @@ export class EmployeesListComponent extends Component {
     const departmentId = authenticateUser.userInformation.departmentId;
 
     // This is the admin, he should see all the users
-    if (departmentId !== 'fvinu5fek6dwdzfe') {
+    if (departmentId !== '3by786gk6s03j1h') {
       departmentEmployees = departmentEmployees.filter(employee => {
         return employee.departmentId === departmentId;
       });

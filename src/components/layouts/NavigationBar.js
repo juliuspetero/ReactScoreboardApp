@@ -28,11 +28,7 @@ export class NavigationBar extends Component {
         <div className="collapse navbar-collapse" id="navbarSupportedContent">
           <ul className="navbar-nav ml-auto mr-5">
             <li className="nav-item">
-              <NavLink
-                activeClassName="active"
-                className="nav-link"
-                to="/login"
-              >
+              <NavLink activeClassName="active" className="nav-link" to="/">
                 Login
               </NavLink>
             </li>

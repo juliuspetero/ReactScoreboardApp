@@ -1,6 +1,11 @@
 import React from 'react';
 import { Provider } from 'react-redux';
-import { BrowserRouter as Router, Route, Redirect } from 'react-router-dom';
+import {
+  BrowserRouter as Router,
+  Route,
+  Redirect,
+  Switch
+} from 'react-router-dom';
 import './App.css';
 import store from './redux/store';
 import NavigationBar from './components/layouts/NavigationBar';
@@ -13,36 +18,45 @@ import authorizeManagerComponent from './components/authentications/AuthorizeMan
 import AdminComponent from './components/administratrators/AdminComponent';
 import ManagerComponent from './components/managers/ManagerComponent';
 import EmployeeComponent from './components/employees/EmployeeComponent';
+import NoMatch404 from './components/layouts/NoMatch404';
 
 function App() {
   return (
-    <Provider store={store}>
-      <Router>
-        <div className="app">
-          <Route path="/login" component={NavigationBar} />
-          <Route path="/login" component={UnauthorizedUserFlashMessage} />
-          <Route path="/login" component={AuthenticateUserComponent} />
-          <Route
-            path="/admin"
-            component={authorizeAdminComponent(AdminComponent)}
-          />
-          <Route
-            path="/manager"
-            component={authorizeManagerComponent(ManagerComponent)}
-          />
-          <Route
-            path="/employee"
-            component={authorizeEmployeeComponent(EmployeeComponent)}
-          />
-          <Route exact path="/" render={() => <Redirect to="/login" />} />
+    <div className="app">
+      <Provider store={store}>
+        <Router>
+          <Switch>
+            <Route
+              exact
+              path="/"
+              render={props => (
+                <React.Fragment>
+                  <NavigationBar />
+                  <UnauthorizedUserFlashMessage />
+                  <AuthenticateUserComponent />
+                  <FooterComponent />
+                </React.Fragment>
+              )}
+            />
 
-          <Route path="/login" component={FooterComponent} />
-
-          {/* Redirect the user to the login page for any other route path */}
-          {/* <Route path="*" render={() => <Redirect to="/login" />} /> */}
-        </div>
-      </Router>
-    </Provider>
+            <Route
+              path="/admin"
+              component={authorizeAdminComponent(AdminComponent)}
+            />
+            <Route
+              path="/manager"
+              component={authorizeManagerComponent(ManagerComponent)}
+            />
+            <Route
+              path="/employee"
+              component={authorizeEmployeeComponent(EmployeeComponent)}
+            />
+            <Route exact path="/login" render={() => <Redirect to="/" />} />
+            <Route component={NoMatch404} />
+          </Switch>
+        </Router>
+      </Provider>
+    </div>
   );
 }
 

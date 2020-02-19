@@ -13,6 +13,14 @@ import createKPIReducer from './kpis/reducers/createKPIReducer';
 import createKPIFlashMessagesReducer from './flashMessages/reducers/createKPIFlashMessagesReducer';
 import fetchDepartmentsReducer from './departments/reducers/fetchDepartmentsReducer';
 import fetchKPIsReducer from './kpis/reducers/fetchKPIsReducer';
+import fetchScoreboardsReducer from './scoreboards/reducers/fetchScoreboardsReducer';
+import createScoreboardReducer from './scoreboards/reducers/createScoreboardReducer';
+import addSelectKPIReducer from './kpis/reducers/addSelectKPIReducer';
+import { fetchSearchEmployeesReducer } from './users/reducers/fetchUsersReducer';
+import createScoreboardFlashMessagesReducer from './flashMessages/reducers/createScoreboardFlashMessagesReducer';
+import editScoreboardFlashMessagesReducer from './flashMessages/reducers/editScoreboardFlashMessageReducer';
+import editScoreboardReducer from './scoreboards/reducers/editScoreboardReducer';
+import editScoresReducer from './scoreboards/reducers/editScoresReducer';
 
 // Give appropriate names for the state
 const rootReducer = combineReducers({
@@ -29,7 +37,15 @@ const rootReducer = combineReducers({
   createKPIReducer,
   createKPIFlashMessagesReducer,
   fetchDepartmentsReducer,
-  fetchKPIsReducer
+  fetchKPIsReducer,
+  fetchScoreboardsReducer,
+  createScoreboardReducer,
+  addSelectKPIReducer,
+  fetchSearchEmployeesReducer,
+  createScoreboardFlashMessagesReducer,
+  editScoreboardFlashMessagesReducer,
+  editScoreboardReducer,
+  editScoresReducer
 });
 
 export default rootReducer;

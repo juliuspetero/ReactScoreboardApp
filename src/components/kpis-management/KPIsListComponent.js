@@ -17,9 +17,11 @@ export class KPIsListComponent extends Component {
   render() {
     // Retrieve all the KPIs in from the API
     const { kpis, isLoading } = this.props.kpisData;
-    console.log(kpis[0]);
+    // console.log(kpis[0]);
 
-    const kpi = kpis ? (kpis.length > 0 ? kpis[0] : {}) : {};
+    const clonedKPIs = cloneDeep(kpis);
+
+    const kpi = clonedKPIs ? (clonedKPIs.length > 0 ? clonedKPIs[0] : {}) : {};
     delete kpi.id;
     delete kpi.updatedAt;
 
@@ -36,20 +38,18 @@ export class KPIsListComponent extends Component {
     ));
 
     // List all the KPIs created
-    const kpisList = cloneDeep(kpis).map(kpi => {
+    const kpisList = cloneDeep(kpis).map((kpi, index) => {
       const timeAgo = moment(kpi.createdAt).fromNow();
       return (
-        <React.Fragment key={kpi.id}>
-          <tr onClick={() => this.onRowClicked(kpi)}>
-            <th scope="row">
-              <Link to={`${this.props.match.url}/${kpi.id}`}>{kpi.title}</Link>
-            </th>
-            <td>{kpi.description}</td>
-            <td className="date timeago" title={timeAgo}>
-              {timeAgo}
-            </td>
-          </tr>
-        </React.Fragment>
+        <tr key={index} onClick={() => this.onRowClicked(kpi)}>
+          <th scope="row">
+            <Link to={`${this.props.match.url}/${kpi.id}`}>{kpi.title}</Link>
+          </th>
+          <td>{kpi.description}</td>
+          <td className="date timeago" title={timeAgo}>
+            {timeAgo}
+          </td>
+        </tr>
       );
     });
     return (
@@ -65,12 +65,7 @@ export class KPIsListComponent extends Component {
           // ref={el => (this.el = el)}
         >
           <thead>
-            <tr>
-              {columnHeaders}
-              {/* <th scope="col">Title</th>
-              <th scope="col">Description</th>
-              <th scope="col">Date Created</th> */}
-            </tr>
+            <tr>{columnHeaders}</tr>
           </thead>
           <tbody>{kpisList}</tbody>
         </table>

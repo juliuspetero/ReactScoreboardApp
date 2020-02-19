@@ -13,6 +13,14 @@ import CreateUserFlashMessagesList from '../messages/CreateUserFlashMessagesList
 import CreateKPIComponent from '../kpis-management/CreateKPIComponent';
 import CreateKPIFlashMessagesList from '../messages/CreateKPIFlashMessagesList';
 import KPIsListComponent from '../kpis-management/KPIsListComponent';
+import ScoreboardsListComponent from '../scoreboards-management/ScoreboardsListComponent';
+import CreateScoreboardComponent from '../scoreboards-management/CreateScoreboardComponent';
+import CreateScoreboardFlashMessage from '../messages/CreateScoreboardFlashMessage';
+import AllScoreboardsComponent from '../scoreboards-management/AllScoreboardsComponent';
+import EditScoreboardComponent from '../scoreboards-management/EditScoreboardComponent';
+import EditScoreboardFlashMessage from '../messages/EditScoreboardFlashMessage';
+import EditScoresComponent from '../scoreboards-management/EditScoresComponent';
+import NoMatch404 from '../layouts/NoMatch404';
 
 export class AdminComponent extends Component {
   logout = e => {
@@ -84,12 +92,44 @@ export class AdminComponent extends Component {
                   className="dropdown-menu text-center bg-dark"
                   aria-labelledby="smallerscreenmenu"
                 >
-                  <a className="dropdown-item bg-dark text-white" href="#!">
+                  <NavLink className="dropdown-item bg-dark text-white" to="#!">
                     Dashboard 1
-                  </a>
-                  <a className="dropdown-item bg-dark text-white" href="#!">
+                  </NavLink>
+                  <NavLink className="dropdown-item bg-dark text-white" to="#!">
                     Dashboard 2
-                  </a>
+                  </NavLink>
+                </div>
+              </li>
+
+              {/* KPIs */}
+              <li className="nav-item dropdown d-sm-block d-md-none">
+                <a
+                  className="nav-link dropdown-toggle"
+                  href="#!"
+                  id="smallerscreenmenu"
+                  data-toggle="dropdown"
+                  aria-haspopup="true"
+                  aria-expanded="false"
+                >
+                  KPIs
+                </a>
+                {/* Drop down menu */}
+                <div
+                  className="dropdown-menu text-center bg-dark"
+                  aria-labelledby="smallerscreenmenu"
+                >
+                  <NavLink
+                    className="dropdown-item bg-dark text-white"
+                    to="/admin/all-kpis"
+                  >
+                    All KPIs
+                  </NavLink>
+                  <NavLink
+                    className="dropdown-item bg-dark text-white"
+                    to="/admin/create-employee"
+                  >
+                    Create KPI
+                  </NavLink>
                 </div>
               </li>
 
@@ -110,50 +150,18 @@ export class AdminComponent extends Component {
                   className="dropdown-menu text-center bg-dark"
                   aria-labelledby="smallerscreenmenu"
                 >
-                  <a
+                  <NavLink
                     className="dropdown-item bg-dark text-white"
-                    href="/admin/all-employees"
+                    to="/admin/all-employees"
                   >
                     All Employees
-                  </a>
-                  <a
+                  </NavLink>
+                  <NavLink
                     className="dropdown-item bg-dark text-white"
-                    href="/admin/create-employee"
+                    to="/admin/create-employee"
                   >
-                    Add Employee
-                  </a>
-                </div>
-              </li>
-
-              {/* KPIs */}
-              {/* Scoreboard */}
-              <li className="nav-item dropdown d-sm-block d-md-none">
-                <a
-                  className="nav-link dropdown-toggle"
-                  href="#!"
-                  id="smallerscreenmenu"
-                  data-toggle="dropdown"
-                  aria-haspopup="true"
-                  aria-expanded="false"
-                >
-                  KPIs
-                </a>
-                <div
-                  className="dropdown-menu text-center bg-dark"
-                  aria-labelledby="smallerscreenmenu"
-                >
-                  <a
-                    className="dropdown-item bg-dark text-white"
-                    href="/admin/all-scoreboards"
-                  >
-                    All KPIs
-                  </a>
-                  <a
-                    className="dropdown-item bg-dark text-white"
-                    href="/create-employee"
-                  >
-                    Create KPI
-                  </a>
+                    Create Employee
+                  </NavLink>
                 </div>
               </li>
 
@@ -167,24 +175,24 @@ export class AdminComponent extends Component {
                   aria-haspopup="true"
                   aria-expanded="false"
                 >
-                  Scoreboard
+                  Scoreboards
                 </a>
                 <div
                   className="dropdown-menu text-center bg-dark"
                   aria-labelledby="smallerscreenmenu"
                 >
-                  <a
+                  <NavLink
                     className="dropdown-item bg-dark text-white"
-                    href="/admin/all-scoreboards"
+                    to="/admin/all-scoreboards"
                   >
                     All Scoreboards
-                  </a>
-                  <a
+                  </NavLink>
+                  <NavLink
                     className="dropdown-item bg-dark text-white"
-                    href="/create-employee"
+                    to="/admin/create-employee"
                   >
-                    Add Scoreboard
-                  </a>
+                    Create Scoreboard
+                  </NavLink>
                 </div>
               </li>
               {/* <!-- Smaller devices menu END --> */}
@@ -318,18 +326,18 @@ export class AdminComponent extends Component {
               </a>
               {/* <!-- KPIs Submenu --> */}
               <div id="kpis-submenu" className="collapse sidebar-submenu">
-                <a
-                  href="/admin/all-kpis"
+                <NavLink
+                  to="/admin/all-kpis"
                   className="list-group-item list-group-item-action bg-dark text-white"
                 >
                   <span className="menu-collapsed">All KPIs</span>
-                </a>
-                <a
-                  href="/admin/create-kpi"
+                </NavLink>
+                <NavLink
+                  to="/admin/create-kpi"
                   className="list-group-item list-group-item-action bg-dark text-white"
                 >
                   <span className="menu-collapsed">Create KPI</span>
-                </a>
+                </NavLink>
               </div>
               {/* Scoreboards Menu */}
               <a
@@ -349,18 +357,18 @@ export class AdminComponent extends Component {
                 id="scoreboards-submenu"
                 className="collapse sidebar-submenu"
               >
-                <a
-                  href="#!"
+                <NavLink
+                  to="/admin/all-scoreboards"
                   className="list-group-item list-group-item-action bg-dark text-white"
                 >
                   <span className="menu-collapsed">All Scoreboards</span>
-                </a>
-                <a
-                  href="#!"
+                </NavLink>
+                <NavLink
+                  to="/admin/create-scoreboard"
                   className="list-group-item list-group-item-action bg-dark text-white"
                 >
                   <span className="menu-collapsed">Create Scoreboard</span>
-                </a>
+                </NavLink>
               </div>
 
               {/* <!-- Separator without title --> */}
@@ -386,21 +394,23 @@ export class AdminComponent extends Component {
             <UnauthorizedUserFlashMessage />
             <CreateUserFlashMessagesList />
             <CreateKPIFlashMessagesList />
-
-            <Route exact path="/admin" component={AdminDashboard} />
+            <CreateScoreboardFlashMessage />
+            <EditScoreboardFlashMessage />
             <Switch>
+              <Route exact path="/admin" component={AdminDashboard} />
               <Route
                 exact
                 path={'/admin/all-employees'}
                 component={EmployeesListComponent}
               />
+
               <Route
                 path={'/admin/create-employee'}
                 component={CreateEmployeeComponent}
               />
               <Route path={'/admin/all-kpis'} component={KPIsListComponent} />
               <Route
-                path={'admin/all-employees/:id'}
+                path={'/admin/all-employees/:id'}
                 component={EmployeeDetailsComponent}
               />
 
@@ -410,6 +420,30 @@ export class AdminComponent extends Component {
               />
 
               <Route path="/admin/create-kpi" component={CreateKPIComponent} />
+
+              <Route
+                path={'/admin/all-scoreboards/:id'}
+                component={ScoreboardsListComponent}
+              />
+              <Route
+                path={'/admin/all-scoreboards'}
+                component={AllScoreboardsComponent}
+              />
+
+              <Route
+                path={'/admin/create-scoreboard'}
+                component={CreateScoreboardComponent}
+              />
+
+              <Route
+                path={'/admin/edit-scoreboard/:id'}
+                component={EditScoreboardComponent}
+              />
+              <Route
+                path={'/admin/edit-scores/:id'}
+                component={EditScoresComponent}
+              />
+              <Route component={NoMatch404} />
             </Switch>
           </div>
           {/* Main Col END  */}
