@@ -17,7 +17,7 @@ export default function validateInput(data) {
   // Validate KPIWeights, not empty
   let KPIWeightEmpties = 0;
   data.KPIWeights.forEach(KPIWeight => {
-    if (KPIWeight < 0 || KPIWeight > 10)
+    if (KPIWeight < 0 || KPIWeight > 100)
       errors.range = 'KPI Weights must be between 0 and 10';
     if (KPIWeight === '') KPIWeightEmpties++;
   });

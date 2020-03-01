@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
 import axios from 'axios';
 import SearchEmployeesComponent from '../employees-management/SearchEmployeesComponent';
 import config from '../../config/config';
@@ -30,7 +31,13 @@ export class AllScoreboardsComponent extends Component {
 
   // Handle the selected employee
   handleSelectedEmployee = employee => {
-    this.props.history.push(`/admin/all-scoreboards/${employee.id}`);
+    const { authenticateUser } = this.props.authenticateUserData;
+    const roleId = authenticateUser.userInformation.roles[0].id;
+    this.props.history.push(
+      `/${roleId === '3by786gk6s03iu3' ? 'manager' : 'admin'}/all-scoreboards/${
+        employee.id
+      }`
+    );
   };
 
   // Handle state change i.e. the query parameter
@@ -94,4 +101,8 @@ export class AllScoreboardsComponent extends Component {
   }
 }
 
-export default AllScoreboardsComponent;
+export default connect(state => {
+  return {
+    authenticateUserData: state.authenticateUserReducer
+  };
+})(AllScoreboardsComponent);

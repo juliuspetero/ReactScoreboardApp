@@ -8,9 +8,17 @@ import ManagerDashboard from './ManagerDashboard';
 import { UnauthorizedUserFlashMessage } from '../messages/UnauthorizedUserFlashMessage';
 import EmployeesListComponent from '../employees-management/EmployeesListComponent';
 import EmployeeDetailsComponent from '../employees-management/EmployeeDetailsComponent';
-import CreateEmployeeComponent from '../employees-management/CreateEmployeeComponent';
-import CreateUserFlashMessagesList from '../messages/CreateUserFlashMessagesList';
-import CreateKPIComponent from '../kpis-management/CreateKPIComponent';
+import CreateKPIComponent from './CreateKPIComponent';
+import CreateKPIFlashMessagesList from '../messages/CreateKPIFlashMessagesList';
+import KPIsListComponent from '../kpis-management/KPIsListComponent';
+import ScoreboardsListComponent from './ScoreboardsListComponent';
+import CreateScoreboardComponent from '../scoreboards-management/CreateScoreboardComponent';
+import CreateScoreboardFlashMessage from '../messages/CreateScoreboardFlashMessage';
+import AllScoreboardsComponent from '../scoreboards-management/AllScoreboardsComponent';
+import EditScoreboardComponent from './EditScoreboardComponent';
+import EditScoreboardFlashMessage from '../messages/EditScoreboardFlashMessage';
+import EditScoresComponent from './EditScoresComponent';
+import NoMatch404 from '../layouts/NoMatch404';
 
 export class ManagerComponent extends Component {
   logout = e => {
@@ -42,7 +50,11 @@ export class ManagerComponent extends Component {
           </button>
 
           {/* 3D Branding */}
-          <NavLink activeClassName="active" className="navbar-brand" to="/">
+          <NavLink
+            activeClassName="active"
+            className="navbar-brand"
+            to="/manager"
+          >
             3D Services
           </NavLink>
 
@@ -64,6 +76,7 @@ export class ManagerComponent extends Component {
 
               {/* <!-- This menu is hidden in bigger devices with d-sm-none.  */}
               {/* The sidebar isn't proper for smaller screens imo, so this dropdown menu can keep all the useful sidebar itens exclusively for smaller screens  --> */}
+
               {/* Dashboard */}
               <li className="nav-item dropdown d-sm-block d-md-none">
                 <a
@@ -81,12 +94,44 @@ export class ManagerComponent extends Component {
                   className="dropdown-menu text-center bg-dark"
                   aria-labelledby="smallerscreenmenu"
                 >
-                  <a className="dropdown-item bg-dark text-white" href="#!">
+                  <NavLink className="dropdown-item bg-dark text-white" to="#!">
                     Dashboard 1
-                  </a>
-                  <a className="dropdown-item bg-dark text-white" href="#!">
+                  </NavLink>
+                  <NavLink className="dropdown-item bg-dark text-white" to="#!">
                     Dashboard 2
-                  </a>
+                  </NavLink>
+                </div>
+              </li>
+
+              {/* KPIs */}
+              <li className="nav-item dropdown d-sm-block d-md-none">
+                <a
+                  className="nav-link dropdown-toggle"
+                  href="#!"
+                  id="smallerscreenmenu"
+                  data-toggle="dropdown"
+                  aria-haspopup="true"
+                  aria-expanded="false"
+                >
+                  KPIs
+                </a>
+                {/* Drop down menu */}
+                <div
+                  className="dropdown-menu text-center bg-dark"
+                  aria-labelledby="smallerscreenmenu"
+                >
+                  <NavLink
+                    className="dropdown-item bg-dark text-white"
+                    to="/manager/all-kpis"
+                  >
+                    All KPIs
+                  </NavLink>
+                  <NavLink
+                    className="dropdown-item bg-dark text-white"
+                    to="/manager/create-employee"
+                  >
+                    Create KPI
+                  </NavLink>
                 </div>
               </li>
 
@@ -107,50 +152,18 @@ export class ManagerComponent extends Component {
                   className="dropdown-menu text-center bg-dark"
                   aria-labelledby="smallerscreenmenu"
                 >
-                  <a
+                  <NavLink
                     className="dropdown-item bg-dark text-white"
-                    href="/manager/all-employees"
+                    to="/manager/all-employees"
                   >
-                    Department's Employees
-                  </a>
-                  <a
+                    All Employees
+                  </NavLink>
+                  <NavLink
                     className="dropdown-item bg-dark text-white"
-                    href="/admin/create-employee"
+                    to="/manager/create-employee"
                   >
                     Create Employee
-                  </a>
-                </div>
-              </li>
-
-              {/* KPIs */}
-              {/* Scoreboard */}
-              <li className="nav-item dropdown d-sm-block d-md-none">
-                <a
-                  className="nav-link dropdown-toggle"
-                  href="#!"
-                  id="smallerscreenmenu"
-                  data-toggle="dropdown"
-                  aria-haspopup="true"
-                  aria-expanded="false"
-                >
-                  KPIs
-                </a>
-                <div
-                  className="dropdown-menu text-center bg-dark"
-                  aria-labelledby="smallerscreenmenu"
-                >
-                  <a
-                    className="dropdown-item bg-dark text-white"
-                    href="/manager/all-scoreboards"
-                  >
-                    All KPIs
-                  </a>
-                  <a
-                    className="dropdown-item bg-dark text-white"
-                    href="/manager/create-kpi"
-                  >
-                    Create KPI
-                  </a>
+                  </NavLink>
                 </div>
               </li>
 
@@ -164,24 +177,24 @@ export class ManagerComponent extends Component {
                   aria-haspopup="true"
                   aria-expanded="false"
                 >
-                  Scoreboard
+                  Scoreboards
                 </a>
                 <div
                   className="dropdown-menu text-center bg-dark"
                   aria-labelledby="smallerscreenmenu"
                 >
-                  <a
+                  <NavLink
                     className="dropdown-item bg-dark text-white"
-                    href="/manager/all-scoreboards"
+                    to="/manager/all-scoreboards"
                   >
                     All Scoreboards
-                  </a>
-                  <a
+                  </NavLink>
+                  <NavLink
                     className="dropdown-item bg-dark text-white"
-                    href="/manager/create-employee"
+                    to="/manager/create-employee"
                   >
-                    Add Scoreboard
-                  </a>
+                    Create Scoreboard
+                  </NavLink>
                 </div>
               </li>
               {/* <!-- Smaller devices menu END --> */}
@@ -266,7 +279,6 @@ export class ManagerComponent extends Component {
                   <span className="menu-collapsed">Password</span>
                 </a>
               </div>
-
               {/* <!-- Separator with title --> */}
               <li className="list-group-item sidebar-separator-title text-muted d-flex align-items-center menu-collapsed">
                 <small>OPTIONS</small>
@@ -287,22 +299,12 @@ export class ManagerComponent extends Component {
                 </div>
               </a>
               {/* <!-- Employees Submenu --> */}
-              <div
-                id="employees-submenu"
-                className="collapse sidebar-submenu"
-                style={{ height: '100px' }}
-              >
+              <div id="employees-submenu" className="collapse sidebar-submenu">
                 <NavLink
                   to="/manager/all-employees"
                   className="list-group-item list-group-item-action bg-dark text-white"
                 >
-                  <span className="menu-collapsed">Employees</span>
-                </NavLink>
-                <NavLink
-                  to="/manager/create-employee"
-                  className="list-group-item list-group-item-action bg-dark text-white"
-                >
-                  <span className="menu-collapsed">Create Employee</span>
+                  <span className="menu-collapsed">All Employees</span>
                 </NavLink>
               </div>
               {/* KPIs Menu */}
@@ -320,24 +322,18 @@ export class ManagerComponent extends Component {
               </a>
               {/* <!-- KPIs Submenu --> */}
               <div id="kpis-submenu" className="collapse sidebar-submenu">
-                <a
-                  href="/manager/all-kpis"
+                <NavLink
+                  to="/manager/all-kpis"
                   className="list-group-item list-group-item-action bg-dark text-white"
                 >
                   <span className="menu-collapsed">All KPIs</span>
-                </a>
-                <a
-                  href="/manager/create-kpi"
+                </NavLink>
+                <NavLink
+                  to="/manager/create-kpi"
                   className="list-group-item list-group-item-action bg-dark text-white"
                 >
                   <span className="menu-collapsed">Create KPI</span>
-                </a>
-                <a
-                  href="#!"
-                  className="list-group-item list-group-item-action bg-dark text-white"
-                >
-                  <span className="menu-collapsed">Remove KPI</span>
-                </a>
+                </NavLink>
               </div>
               {/* Scoreboards Menu */}
               <a
@@ -357,18 +353,18 @@ export class ManagerComponent extends Component {
                 id="scoreboards-submenu"
                 className="collapse sidebar-submenu"
               >
-                <a
-                  href="/manager/all-scoreboards"
+                <NavLink
+                  to="/manager/all-scoreboards"
                   className="list-group-item list-group-item-action bg-dark text-white"
                 >
                   <span className="menu-collapsed">All Scoreboards</span>
-                </a>
-                <a
-                  href="/manager/create-scoreboard"
+                </NavLink>
+                <NavLink
+                  to="/manager/create-scoreboard"
                   className="list-group-item list-group-item-action bg-dark text-white"
                 >
                   <span className="menu-collapsed">Create Scoreboard</span>
-                </a>
+                </NavLink>
               </div>
 
               {/* <!-- Separator without title --> */}
@@ -392,19 +388,18 @@ export class ManagerComponent extends Component {
           <div className="col">
             <AuthenticateUserFlashMessage />
             <UnauthorizedUserFlashMessage />
-            <CreateUserFlashMessagesList />
-
-            <Route exact path="/manager" component={ManagerDashboard} />
+            <CreateKPIFlashMessagesList />
+            <CreateScoreboardFlashMessage />
+            <EditScoreboardFlashMessage />
             <Switch>
+              <Route exact path="/manager" component={ManagerDashboard} />
               <Route
                 exact
                 path={'/manager/all-employees'}
                 component={EmployeesListComponent}
               />
-              <Route
-                path={'/manager/create-employee'}
-                component={CreateEmployeeComponent}
-              />
+
+              <Route path={'/manager/all-kpis'} component={KPIsListComponent} />
               <Route
                 path={'/manager/all-employees/:id'}
                 component={EmployeeDetailsComponent}
@@ -419,6 +414,30 @@ export class ManagerComponent extends Component {
                 path="/manager/create-kpi"
                 component={CreateKPIComponent}
               />
+
+              <Route
+                path={'/manager/all-scoreboards/:id'}
+                component={ScoreboardsListComponent}
+              />
+              <Route
+                path={'/manager/all-scoreboards'}
+                component={AllScoreboardsComponent}
+              />
+
+              <Route
+                path={'/manager/create-scoreboard'}
+                component={CreateScoreboardComponent}
+              />
+
+              <Route
+                path={'/manager/edit-scoreboard/:id'}
+                component={EditScoreboardComponent}
+              />
+              <Route
+                path={'/manager/edit-scores/:id'}
+                component={EditScoresComponent}
+              />
+              <Route component={NoMatch404} />
             </Switch>
           </div>
           {/* Main Col END  */}

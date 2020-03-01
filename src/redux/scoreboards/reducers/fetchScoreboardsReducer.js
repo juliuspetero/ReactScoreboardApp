@@ -21,7 +21,7 @@ const fetchScoreboardsReducer = (state = initialState, action) => {
       return {
         isLoading: false,
         scoreboards: action.payload,
-        error: ''
+        error: null
       };
     case FETCH_SCOREBOARDS_FAILURE:
       return {

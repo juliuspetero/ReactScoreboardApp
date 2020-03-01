@@ -10,17 +10,20 @@ import {
 } from '../actionsTypes/createKPIActionTypes';
 
 // Action creators returns the action object
-export const createKPI = user => {
+export const createKPI = kpi => {
+  // console.log(kpi);
   return dispatch => {
     dispatch(createKPIRequest());
     // Write client side validation here
-    const { errors, isValid } = validateCreateKPIInput(user);
+    const { errors, isValid } = validateCreateKPIInput(kpi);
+    // console.log(kpi);
+    // return;
     if (!isValid) dispatch(createKPIFailure({ data: errors }));
     else {
       axios
-        .post(`${config.baseUrl}/kpis`, user)
+        .post(`${config.baseUrl}/kpis`, kpi)
         .then(response => {
-          console.log(response);
+          // console.log(response);
           if (response.data) dispatch(createKPISuccess(response.data));
           else
             dispatch(

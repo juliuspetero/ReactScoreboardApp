@@ -10,7 +10,7 @@ function DeleteButtonComponent(props) {
 
   return (
     <>
-      <Button variant="light" onClick={handleShow}>
+      <Button variant="danger" onClick={handleShow}>
         Delete
       </Button>
 

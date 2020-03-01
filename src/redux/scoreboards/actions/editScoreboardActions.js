@@ -11,7 +11,8 @@ import {
 
 // Action creators returns the action object
 export const editScoreboard = scoreboard => {
-  console.log(scoreboard);
+  // console.log(scoreboard);
+  // return;
 
   return dispatch => {
     dispatch(editScoreboardRequest());
@@ -20,7 +21,7 @@ export const editScoreboard = scoreboard => {
     if (!isValid) dispatch(editScoreboardFailure({ data: errors }));
     else {
       // Prepare the request body for API call
-      const scoreBoardId = scoreboard.scoreBoardId;
+      const scoreboardLayoutId = scoreboard.scoreBoardId;
       let kpis = [];
 
       scoreboard.KPIIds.forEach((KPIId, index) => {
@@ -31,8 +32,8 @@ export const editScoreboard = scoreboard => {
       });
 
       axios
-        .put(`${config.baseUrl}/scoreboards/edit-kpi-weights`, {
-          scoreBoardId,
+        .put(`${config.baseUrl}/scoreboardlayouts/edit-kpi-weights`, {
+          scoreboardLayoutId,
           kpis
         })
         .then(response => {

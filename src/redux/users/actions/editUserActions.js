@@ -1,39 +1,81 @@
 import axios from 'axios';
+import isObject from 'lodash/isObject';
 import config from '../../../config/config';
+import validateCreateKPIInput from '../../../helpers/validateCreateKPIInput';
 
 import {
-  EDIT_USER_REQUEST,
-  EDIT_USER_SUCCESS,
-  EDIT_USER_FAILURE
-} from '../actionsTypes/editUserActionTypes';
+  CREATE_KPI_REQUEST,
+  CREATE_KPI_SUCCESS,
+  CREATE_KPI_FAILURE
+} from '../../kpis/actionsTypes/createKPIActionTypes';
 
 // Action creators returns the action object
-export const editUser = user => {
+export const editEmployeee = (id, employee) => {
+  console.log(employee);
   return dispatch => {
-    dispatch(editUserRequest());
-    axios
-      .put(`${config.baseUrl}/users/`)
-      .then(response => dispatch(editUserSuccess(response.data)))
-      .catch(error => dispatch(editUserFailure(error.message)));
+    dispatch(createKPIRequest());
+    // Write client side validation here
+    const { errors, isValid } = validateCreateKPIInput(employee);
+    // console.log(kpi);
+    // return;
+    if (!isValid) dispatch(createKPIFailure({ data: errors }));
+    else {
+      axios
+        .put(`${config.baseUrl}/users/${id}`, employee)
+        .then(response => {
+          // console.log(response);
+          if (response.data) dispatch(createKPISuccess(response.data));
+          else
+            dispatch(
+              createKPIFailure({
+                data: {
+                  message: 'Something occur try again later...'
+                }
+              })
+            );
+        })
+        .catch(error => {
+          if (error.response) {
+            if (isObject(error.response.data))
+              dispatch(createKPIFailure(error.response));
+            else
+              dispatch(
+                createKPIFailure({
+                  data: {
+                    message: 'Something occur try again later...'
+                  }
+                })
+              );
+          } else {
+            dispatch(
+              createKPIFailure({
+                data: {
+                  message: 'Something occur try again later...'
+                }
+              })
+            );
+          }
+        });
+    }
   };
 };
 
-export const editUserRequest = () => {
+export const createKPIRequest = () => {
   return {
-    type: EDIT_USER_REQUEST
+    type: CREATE_KPI_REQUEST
   };
 };
 
-export const editUserSuccess = editedUser => {
+export const createKPISuccess = kpi => {
   return {
-    type: EDIT_USER_SUCCESS,
-    payload: editedUser
+    type: CREATE_KPI_SUCCESS,
+    payload: kpi
   };
 };
 
-export const editUserFailure = error => {
+export const createKPIFailure = errors => {
   return {
-    type: EDIT_USER_FAILURE,
-    payload: error
+    type: CREATE_KPI_FAILURE,
+    payload: errors
   };
 };

@@ -15,10 +15,7 @@ export class CreateScoreboardFlashMessage extends Component {
           >
             <span>&times;</span>
           </button>
-          <div>
-            The scoreboard for {message.user.username} has been successfully
-            created
-          </div>
+          <div>The scoreboards have been successfully created</div>
         </div>
       </div>
     );

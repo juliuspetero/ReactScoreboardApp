@@ -28,7 +28,7 @@ export default function validateInput(data) {
 
   //   Validate that the weight can only be from 0 to 10
   data.KPIWeights.forEach(KPIWeight => {
-    if (KPIWeight < 0 || KPIWeight > 10)
+    if (KPIWeight < 0 || KPIWeight > 100)
       errors.range = 'KPI Weight must be between 0 and 10';
   });
 

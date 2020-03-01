@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { addUnauthorizedUserFlashMessage } from '../../redux/flashMessages/actions/unauthorizedUserFlashMessagesActions';
 
-const managerId = '3by786gk6s03iu3';
+const lineManagerId = '3by786gk6s03iu3';
 
 export default function(ComposedCompponent) {
   class AuthenticateComponent extends Component {
@@ -16,11 +16,11 @@ export default function(ComposedCompponent) {
       } else {
         if (
           this.props.authenticateUserData.authenticateUser.userInformation
-            .roles[0].id !== managerId
+            .roles[0].id !== lineManagerId
         ) {
           // Non-admin members are not allow to access the resource
           this.props.addUnauthorizedUserFlashMessage(
-            'You need to login as a Line Manager to access this resource'
+            'You need to login as Administrator to access this resource'
           );
           this.props.history.push('/login');
         }
@@ -37,11 +37,11 @@ export default function(ComposedCompponent) {
       } else {
         if (
           this.props.authenticateUserData.authenticateUser.userInformation
-            .roles[0].id !== managerId
+            .roles[0].id !== lineManagerId
         ) {
           // Non-admin members are not allow to access the resource
           this.props.addUnauthorizedUserFlashMessage(
-            'You need to login as a Line Manager to access this resource'
+            'You need to login as Administrator to access this resource'
           );
           this.props.history.push('/login');
         }

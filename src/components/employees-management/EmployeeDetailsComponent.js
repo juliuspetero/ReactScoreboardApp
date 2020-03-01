@@ -1,16 +1,26 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import axios from 'axios';
+import isEmpty from 'lodash/isEmpty';
+import { Link } from 'react-router-dom';
 import '../../assets/css/employeeComponent.css';
 import profile from '../../assets/images/profile.jpg';
 import { fetchUser } from '../../redux/users/actions/fetchUserActions';
+import DeleteButtonComponent from './DeleteButtonComponent';
+import config from '../../config/config';
 
 export class EmployeeComponent extends Component {
+  deleteEmployee = async id => {
+    await axios.delete(`${config.baseUrl}/users/${id}`);
+    this.props.history.push('/admin/all-employees');
+  };
+
   componentWillMount() {
     this.props.fetchUser(this.props.match.params.id);
   }
   render() {
     const user = this.props.userData.user;
-    if (!user) {
+    if (isEmpty(user)) {
       return <div />;
     }
     // return null;
@@ -79,7 +89,9 @@ export class EmployeeComponent extends Component {
                             Role
                           </strong>
                         </td>
-                        <td className="text-primary">{user.sex}</td>
+                        <td className="text-primary">
+                          {user.roles ? user.roles[0].name : null}
+                        </td>
                       </tr>
                       <tr>
                         <td>
@@ -110,6 +122,32 @@ export class EmployeeComponent extends Component {
                       </tr>
                     </tbody>
                   </table>
+                </div>
+
+                {/* Buttons */}
+                <div className="text-center my-2">
+                  <DeleteButtonComponent
+                    employee={user}
+                    deleteEmployee={this.deleteEmployee}
+                  />
+                  <Link
+                    to={`/admin/edit-employee/${user.id}`}
+                    className="btn btn-primary mx-2"
+                  >
+                    Edit
+                  </Link>
+                  <Link
+                    to={`/admin/scoreboardlayout/${user.id}`}
+                    className="btn btn-primary mx-2"
+                  >
+                    View KPIs
+                  </Link>
+                  <Link
+                    to={`/admin/all-scoreboards/${user.id}`}
+                    className="btn btn-primary mx-2"
+                  >
+                    View Scoreboards
+                  </Link>
                 </div>
               </div>
             </div>

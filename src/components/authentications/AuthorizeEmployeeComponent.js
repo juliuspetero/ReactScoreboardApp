@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { addUnauthorizedUserFlashMessage } from '../../redux/flashMessages/actions/unauthorizedUserFlashMessagesActions';
 
-const lineStuffId = '3by786gk6s03iu4';
+const lineStaffId = '3by786gk6s03iu4';
 
 export default function(ComposedCompponent) {
   class AuthenticateComponent extends Component {
@@ -16,11 +16,11 @@ export default function(ComposedCompponent) {
       } else {
         if (
           this.props.authenticateUserData.authenticateUser.userInformation
-            .roles[0].id !== lineStuffId
+            .roles[0].id !== lineStaffId
         ) {
           // Non-admin members are not allow to access the resource
           this.props.addUnauthorizedUserFlashMessage(
-            'You need to login as a Line Stuff to access this resource'
+            'You need to login as administrator to access this resource'
           );
           this.props.history.push('/login');
         }
@@ -28,15 +28,21 @@ export default function(ComposedCompponent) {
     }
 
     componentWillUpdate(nextProps) {
-      if (!nextProps.authenticateUserData.isAuthenticated)
+      if (!this.props.authenticateUserData.isAuthenticated) {
+        // Non-authenticated user are allowed to access
+        this.props.addUnauthorizedUserFlashMessage(
+          'You need to login to access this resource'
+        );
         this.props.history.push('/login');
-      if (!nextProps.authenticateUserData.isAuthenticated)
-        this.props.history.push('/login');
-      else {
+      } else {
         if (
-          !nextProps.authenticateUserData.authenticateUser.userInformation
-            .roles[0].id !== lineStuffId
+          this.props.authenticateUserData.authenticateUser.userInformation
+            .roles[0].id !== lineStaffId
         ) {
+          // Non-admin members are not allow to access the resource
+          this.props.addUnauthorizedUserFlashMessage(
+            'You need to login as Administrator to access this resource'
+          );
           this.props.history.push('/login');
         }
       }

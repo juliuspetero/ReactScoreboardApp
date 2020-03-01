@@ -1,0 +1,2 @@
+export const ADD_SELECT_KPI = 'ADD_SELECT_KPI';
+export const DELETE_SELECT_KPI = 'DELETE_SELECT_KPI';

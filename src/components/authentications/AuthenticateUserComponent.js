@@ -41,7 +41,7 @@ export class AuthenticateUserComponent extends Component {
       setAuthorizationToken(authenticateUser.token);
       // Check he user role and push him to appropriate route
       if (authenticateUser.userInformation.roles[0].id === '3by786gk6s03iu2') {
-        console.log(this.props);
+        // console.log(authenticateUser.userInformation);
         this.props.history.push('/admin');
       } else if (
         authenticateUser.userInformation.roles[0].id === '3by786gk6s03iu3'

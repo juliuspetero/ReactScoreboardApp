@@ -8,6 +8,9 @@ export default function validateInput(data) {
   // Password validation
   if (data.description === '') errors.description = 'Description is required';
 
+  // Department
+  if (data.departmentId === '') errors.department = 'Department is required';
+
   return {
     errors,
     isValid: isEmpty(errors)

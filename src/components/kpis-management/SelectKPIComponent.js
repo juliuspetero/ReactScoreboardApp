@@ -22,7 +22,7 @@ export class SelectKPIComponent extends Component {
       id: this.props.id,
       KPIId: this.props.selectedKPI ? this.props.selectedKPI.id : '',
       KPIWeight: this.props.selectedKPI
-        ? this.props.selectedKPI.kPIScoreBoards.KPIWeight
+        ? this.props.selectedKPI.kPIScoreboardLayouts.KPIWeight
         : ''
     });
     this.props.fetchKPIs();

@@ -7,6 +7,10 @@ import AuthenticateUserFlashMessage from '../messages/AuthenticateUserFlashMessa
 import EmployeeDashboardComponent from './EmployeeDashboardComponent';
 import { UnauthorizedUserFlashMessage } from '../messages/UnauthorizedUserFlashMessage';
 import EmployeeDetailsComponent from '../employees-management/EmployeeDetailsComponent';
+import ScoreboardsListComponent from './ScoreboardsListComponent';
+import EditScoreboardFlashMessage from '../messages/EditScoreboardFlashMessage';
+import EditScoresComponent from './EditScoresComponent';
+import NoMatch404 from '../layouts/NoMatch404';
 
 export class EmployeeComponent extends Component {
   logout = e => {
@@ -19,6 +23,8 @@ export class EmployeeComponent extends Component {
       isAuthenticated,
       authenticateUser
     } = this.props.authenticateUserData;
+
+    const user = authenticateUser ? authenticateUser.userInformation : null;
 
     return (
       <div id="admin-component">
@@ -38,7 +44,11 @@ export class EmployeeComponent extends Component {
           </button>
 
           {/* 3D Branding */}
-          <NavLink activeClassName="active" className="navbar-brand" to="/">
+          <NavLink
+            activeClassName="active"
+            className="navbar-brand"
+            to="/employee"
+          >
             3D Services
           </NavLink>
 
@@ -58,6 +68,70 @@ export class EmployeeComponent extends Component {
                 </a>
               </li>
 
+              {/* Profile */}
+              <li className="nav-item dropdown d-sm-block d-md-none">
+                <a
+                  className="nav-link dropdown-toggle"
+                  href="#!"
+                  id="smallerscreenmenu"
+                  data-toggle="dropdown"
+                  aria-haspopup="true"
+                  aria-expanded="false"
+                >
+                  Profile
+                </a>
+                {/* Drop down menu */}
+                <div
+                  className="dropdown-menu text-center bg-dark"
+                  aria-labelledby="smallerscreenmenu"
+                >
+                  <NavLink
+                    className="dropdown-item bg-dark text-white"
+                    to="/employee/change-password"
+                  >
+                    Change Password
+                  </NavLink>
+                  <NavLink
+                    className="dropdown-item bg-dark text-white"
+                    to="/employee/settings"
+                  >
+                    Settings
+                  </NavLink>
+                </div>
+              </li>
+
+              {/* Dashboard */}
+              <li className="nav-item dropdown d-sm-block d-md-none">
+                <a
+                  className="nav-link dropdown-toggle"
+                  href="#!"
+                  id="smallerscreenmenu"
+                  data-toggle="dropdown"
+                  aria-haspopup="true"
+                  aria-expanded="false"
+                >
+                  Dashboards
+                </a>
+                {/* Drop down menu */}
+                <div
+                  className="dropdown-menu text-center bg-dark"
+                  aria-labelledby="smallerscreenmenu"
+                >
+                  <NavLink
+                    className="dropdown-item bg-dark text-white"
+                    to="/employee/"
+                  >
+                    Last Month
+                  </NavLink>
+                  <NavLink
+                    className="dropdown-item bg-dark text-white"
+                    to="/employee"
+                  >
+                    This Year
+                  </NavLink>
+                </div>
+              </li>
+
               {/* Scoreboard */}
               <li className="nav-item dropdown d-sm-block d-md-none">
                 <a
@@ -68,24 +142,24 @@ export class EmployeeComponent extends Component {
                   aria-haspopup="true"
                   aria-expanded="false"
                 >
-                  Scoreboard
+                  Scoreboards
                 </a>
                 <div
                   className="dropdown-menu text-center bg-dark"
                   aria-labelledby="smallerscreenmenu"
                 >
-                  <a
+                  <NavLink
                     className="dropdown-item bg-dark text-white"
-                    href="/employees/all-scoreboards"
+                    to="/admin/all-scoreboards"
                   >
                     All Scoreboards
-                  </a>
-                  <a
+                  </NavLink>
+                  <NavLink
                     className="dropdown-item bg-dark text-white"
-                    href="/employees/edit-scoreboard"
+                    to="/admin/edit-scoreboard"
                   >
-                    Edit Unapproved Scoreboards
-                  </a>
+                    Edit Scoreboard
+                  </NavLink>
                 </div>
               </li>
               {/* <!-- Smaller devices menu END --> */}
@@ -108,41 +182,8 @@ export class EmployeeComponent extends Component {
               <li className="list-group-item sidebar-separator-title text-muted d-flex align-items-center menu-collapsed">
                 <small>MAIN MENU</small>
               </li>
-              {/* <!-- /END Separator --> */}
+
               {/* <!-- Menu with submenu --> */}
-              <a
-                href="#submenu1"
-                data-toggle="collapse"
-                aria-expanded="false"
-                className="bg-dark list-group-item list-group-item-action flex-column align-items-start"
-              >
-                <div className="d-flex w-100 justify-content-start align-items-center">
-                  <span className="fa fa-dashboard fa-fw mr-3"></span>
-                  <span className="menu-collapsed">Dashboard</span>
-                  <span className="submenu-icon ml-auto"></span>
-                </div>
-              </a>
-              {/* <!-- Submenu content --> */}
-              <div id="submenu1" className="collapse sidebar-submenu">
-                <a
-                  href="#!"
-                  className="list-group-item list-group-item-action bg-dark text-white"
-                >
-                  <span className="menu-collapsed">Score Boards</span>
-                </a>
-                <a
-                  href="#!"
-                  className="list-group-item list-group-item-action bg-dark text-white"
-                >
-                  <span className="menu-collapsed">Charts</span>
-                </a>
-                <a
-                  href="#!"
-                  className="list-group-item list-group-item-action bg-dark text-white"
-                >
-                  <span className="menu-collapsed">Reports</span>
-                </a>
-              </div>
               <a
                 href="#submenu2"
                 data-toggle="collapse"
@@ -157,25 +198,57 @@ export class EmployeeComponent extends Component {
               </a>
               {/* <!-- Submenu content --> */}
               <div id="submenu2" className="collapse sidebar-submenu">
-                <a
-                  href="#!"
+                <NavLink
+                  to="/employee/settings"
                   className="list-group-item list-group-item-action bg-dark text-white"
                 >
                   <span className="menu-collapsed">Settings</span>
-                </a>
-                <a
-                  href="#!"
+                </NavLink>
+                <NavLink
+                  to="/employee/change-password"
                   className="list-group-item list-group-item-action bg-dark text-white"
                 >
-                  <span className="menu-collapsed">Password</span>
-                </a>
+                  <span className="menu-collapsed">Change Password</span>
+                </NavLink>
               </div>
+              <a
+                href="#submenu1"
+                data-toggle="collapse"
+                aria-expanded="false"
+                className="bg-dark list-group-item list-group-item-action flex-column align-items-start"
+              >
+                <div className="d-flex w-100 justify-content-start align-items-center">
+                  <span className="fa fa-dashboard fa-fw mr-3"></span>
+                  <span className="menu-collapsed">Dashboard</span>
+                  <span className="submenu-icon ml-auto"></span>
+                </div>
+              </a>
+              {/* <!-- Submenu content --> */}
+              <div id="submenu1" className="collapse sidebar-submenu">
+                <NavLink
+                  to="/employee/dashboard"
+                  className="list-group-item list-group-item-action bg-dark text-white"
+                >
+                  <span className="menu-collapsed">Last month</span>
+                </NavLink>
+                <NavLink
+                  to="#!"
+                  className="list-group-item list-group-item-action bg-dark text-white"
+                >
+                  <span className="menu-collapsed">This Year</span>
+                </NavLink>
+                <NavLink
+                  to="#!"
+                  className="list-group-item list-group-item-action bg-dark text-white"
+                >
+                  <span className="menu-collapsed">All</span>
+                </NavLink>
+              </div>
+
               {/* <!-- Separator with title --> */}
               <li className="list-group-item sidebar-separator-title text-muted d-flex align-items-center menu-collapsed">
                 <small>OPTIONS</small>
               </li>
-              {/* <!-- /END Separator --> */}
-              {/* <!-- Menu with submenu --> */}
 
               {/* Scoreboards Menu */}
               <a
@@ -195,32 +268,32 @@ export class EmployeeComponent extends Component {
                 id="scoreboards-submenu"
                 className="collapse sidebar-submenu"
               >
-                <a
-                  href="#!"
+                <NavLink
+                  to={`/employee/all-scoreboards/${user.id}`}
                   className="list-group-item list-group-item-action bg-dark text-white"
                 >
                   <span className="menu-collapsed">All Scoreboards</span>
-                </a>
-                <a
-                  href="#!"
+                </NavLink>
+                <NavLink
+                  to="/employee/edit-scoreboard"
                   className="list-group-item list-group-item-action bg-dark text-white"
                 >
                   <span className="menu-collapsed">Edit Scoreboard</span>
-                </a>
+                </NavLink>
               </div>
 
               {/* <!-- Separator without title --> */}
               <li className="list-group-item sidebar-separator menu-collapsed"></li>
               {/* <!-- /END Separator --> */}
-              <a
-                href="#!"
+              <NavLink
+                to="/employee/help"
                 className="bg-dark list-group-item list-group-item-action"
               >
                 <div className="d-flex w-100 justify-content-start align-items-center">
                   <span className="fa fa-question fa-fw mr-3"></span>
                   <span className="menu-collapsed">Help</span>
                 </div>
-              </a>
+              </NavLink>
             </ul>
             {/* List Group END */}
           </div>
@@ -230,21 +303,28 @@ export class EmployeeComponent extends Component {
           <div className="col">
             <AuthenticateUserFlashMessage />
             <UnauthorizedUserFlashMessage />
-
-            <Route
-              exact
-              path="/employee"
-              component={EmployeeDashboardComponent}
-            />
+            <EditScoreboardFlashMessage />
             <Switch>
               <Route
-                path={'/employee/profile/'}
-                component={EmployeeDetailsComponent}
+                exact
+                path="/employee"
+                component={EmployeeDashboardComponent}
               />
               <Route
-                path={'/employee/all-scoreboards'}
+                path={'/employee/details/:id'}
                 component={EmployeeDetailsComponent}
               />
+
+              <Route
+                path={'/employee/all-scoreboards/:id'}
+                component={ScoreboardsListComponent}
+              />
+
+              <Route
+                path={'/employee/edit-scores/:id'}
+                component={EditScoresComponent}
+              />
+              <Route component={NoMatch404} />
             </Switch>
           </div>
           {/* Main Col END  */}

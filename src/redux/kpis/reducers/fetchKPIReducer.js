@@ -1,8 +1,8 @@
 import {
-  FETCH_USER_REQUEST,
-  FETCH_USER_SUCCESS,
-  FETCH_USER_FAILURE
-} from '../actionsTypes/fetchUserActionTypes';
+  FETCH_KPIS_REQUEST,
+  FETCH_KPIS_SUCCESS,
+  FETCH_KPIS_FAILURE
+} from '../actionsTypes/fetchKPIsActionTypes';
 
 const initialState = {
   isLoading: false,
@@ -12,18 +12,18 @@ const initialState = {
 
 const fetchKPIReducer = (state = initialState, action) => {
   switch (action.type) {
-    case FETCH_USER_REQUEST:
+    case FETCH_KPIS_REQUEST:
       return {
         ...state,
         isLoading: true
       };
-    case FETCH_USER_SUCCESS:
+    case FETCH_KPIS_SUCCESS:
       return {
         isLoading: false,
         kpi: action.payload,
-        error: null
+        error: ''
       };
-    case FETCH_USER_FAILURE:
+    case FETCH_KPIS_FAILURE:
       return {
         isLoading: false,
         kpi: null,

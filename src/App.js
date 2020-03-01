@@ -10,7 +10,6 @@ import './App.css';
 import store from './redux/store';
 import NavigationBar from './components/layouts/NavigationBar';
 import AuthenticateUserComponent from './components/authentications/AuthenticateUserComponent';
-import FooterComponent from './components/layouts/FooterComponent';
 import UnauthorizedUserFlashMessage from './components/messages/UnauthorizedUserFlashMessage';
 import authorizeAdminComponent from './components/authentications/AuthorizeAdminComponent';
 import authorizeEmployeeComponent from './components/authentications/AuthorizeEmployeeComponent';
@@ -34,7 +33,6 @@ function App() {
                   <NavigationBar />
                   <UnauthorizedUserFlashMessage />
                   <AuthenticateUserComponent />
-                  <FooterComponent />
                 </React.Fragment>
               )}
             />

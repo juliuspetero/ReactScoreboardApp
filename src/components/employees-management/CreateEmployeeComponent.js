@@ -6,6 +6,7 @@ import CreateUserErrorMessage from '../messages/CreateUserErrorMessage';
 import { deleteCreateUserErrorMessage } from '../../redux/errorMessages/actions/errorMessagesActions';
 import { fetchRoles } from '../../redux/roles/actions/fetchRolesActions';
 import { fetchDepartments } from '../../redux/departments/actions/fetchDepartmentsActions';
+import { fetchJobtitles } from '../../redux/jobtitles/actions/fetchJobtitlesActions';
 
 export class CreateEmployeeComponent extends Component {
   constructor(props) {
@@ -18,7 +19,10 @@ export class CreateEmployeeComponent extends Component {
       phoneNumber: '',
       departmentId: '',
       sex: '',
-      roles: []
+      roles: [],
+      employeeType: '',
+      jobtitleId: '',
+      jobDescription: ''
     };
   }
 
@@ -38,6 +42,7 @@ export class CreateEmployeeComponent extends Component {
   componentDidMount() {
     this.props.fetchRoles();
     this.props.fetchDepartments();
+    this.props.fetchJobtitles();
   }
 
   // Call flash messages on successful user creation
@@ -50,7 +55,7 @@ export class CreateEmployeeComponent extends Component {
       this.props.addCreateUserFlashMessage(
         nextProps.createdUserData.createdUser
       );
-      this.props.history.push('/admin');
+      this.props.history.push('/admin/all-employees');
     }
   }
 
@@ -62,7 +67,10 @@ export class CreateEmployeeComponent extends Component {
       email,
       passwordConfirmation,
       phoneNumber,
-      departmentId
+      departmentId,
+      employeeType,
+      jobtitleId,
+      jobDescription
     } = this.state;
 
     const { isLoading, errors } = this.props.createdUserData;
@@ -102,10 +110,33 @@ export class CreateEmployeeComponent extends Component {
         ))
       : null;
 
+    // Find all the job titles in the system and insert in the DOM
+    let jobtitlesOptions = this.props.jobtitlesData.jobtitles
+      ? this.props.jobtitlesData.jobtitles
+      : null;
+
+    jobtitlesOptions = jobtitlesOptions
+      ? jobtitlesOptions.filter(jt => {
+          if (this.state.departmentId === '') {
+            return true;
+          }
+          if (this.state.departmentId === jt.departmentId) return true;
+          else return false;
+        })
+      : null;
+
+    jobtitlesOptions = jobtitlesOptions
+      ? jobtitlesOptions.map(jobtitle => (
+          <option key={jobtitle.id} value={jobtitle.id}>
+            {jobtitle.title}
+          </option>
+        ))
+      : null;
+
     return (
       <React.Fragment>
         <div className="cardbg-light mx-auto">
-          <article className="card-body mx-auto" style={{ width: '35rem' }}>
+          <article className="card-body mx-auto" style={{ width: 'auto' }}>
             <h4 className="card-title mt-3 text-center">
               Create an Employee's Account
             </h4>
@@ -161,6 +192,8 @@ export class CreateEmployeeComponent extends Component {
                   value={phoneNumber}
                 />
               </div>
+
+              {/* Departments */}
               <div className="form-group input-group">
                 <div className="input-group-prepend">
                   <span className="input-group-text">
@@ -178,7 +211,7 @@ export class CreateEmployeeComponent extends Component {
                 </select>
               </div>
 
-              {/* Role */}
+              {/* Hierachies */}
               <div className="form-group input-group">
                 <div className="input-group-prepend">
                   <span className="input-group-text">
@@ -190,9 +223,60 @@ export class CreateEmployeeComponent extends Component {
                   name="role"
                   className="form-control"
                 >
-                  <option value="">Select Employee Type</option>
+                  <option value="">Select Hierachy</option>
                   {rolesOptions}
                 </select>
+              </div>
+
+              {/* Employee Types */}
+              <div className="form-group input-group">
+                <div className="input-group-prepend">
+                  <span className="input-group-text">
+                    <i className="fa fa-building"></i>
+                  </span>
+                </div>
+                <select
+                  onChange={this.onChange}
+                  name="employeeType"
+                  className="form-control"
+                  value={employeeType}
+                >
+                  <option value="">Select Employee Type</option>
+                  <option value="fte">Full Time Employee</option>
+                  <option value="contract">Contract Employee</option>
+                  <option value="consultant">Consultant</option>
+                </select>
+              </div>
+
+              {/* Job titles*/}
+              <div className="form-group input-group">
+                <div className="input-group-prepend">
+                  <span className="input-group-text">
+                    <i className="fa fa-building"></i>
+                  </span>
+                </div>
+                <select
+                  onChange={this.onChange}
+                  name="jobtitleId"
+                  className="form-control"
+                  value={jobtitleId}
+                >
+                  <option value="">Select Job Title</option>
+                  {jobtitlesOptions}
+                </select>
+              </div>
+
+              {/* Job description */}
+              <div className="form-group">
+                <textarea
+                  onChange={this.onChange}
+                  name="jobDescription"
+                  className="form-control"
+                  rows="4"
+                  placeholder="Job Description"
+                  type="text"
+                  value={jobDescription}
+                ></textarea>
               </div>
 
               {/* Genger */}
@@ -277,6 +361,7 @@ export class CreateEmployeeComponent extends Component {
 const mapStateToProps = state => {
   return {
     createdUserData: state.createUserReducer,
+    jobtitlesData: state.fetchJobtitlesReducer,
     createUserflashMessages: state.createUserflashMessagesReducer,
     rolesData: state.fetchRolesReducer,
     departmentsData: state.fetchDepartmentsReducer
@@ -288,5 +373,6 @@ export default connect(mapStateToProps, {
   addCreateUserFlashMessage,
   deleteCreateUserErrorMessage,
   fetchRoles,
-  fetchDepartments
+  fetchDepartments,
+  fetchJobtitles
 })(CreateEmployeeComponent);

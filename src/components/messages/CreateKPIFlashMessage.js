@@ -14,7 +14,11 @@ export class CreateKPIFlashMessage extends Component {
             <span>&times;</span>
           </button>
           <h3>
-            You have successfully created KPI with Title {messageData.title}
+            {messageData.title && messageData.description
+              ? `You have successfully created KPI with Title ${messageData.title}`
+              : messageData.title && !messageData.description
+              ? 'Job title successfully created'
+              : 'You have successfully updated the KPI'}
           </h3>
         </div>
       </div>

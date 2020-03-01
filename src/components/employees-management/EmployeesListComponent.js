@@ -32,11 +32,7 @@ export class EmployeesListComponent extends Component {
       return (
         <React.Fragment key={employee.id}>
           <tr onClick={() => this.onRowClicked(employee)}>
-            <th scope="row">
-              <Link to={`${this.props.match.url}/${employee.id}`}>
-                {employee.username}
-              </Link>
-            </th>
+            <th scope="row">{employee.username}</th>
             <td>{employee.email}</td>
             <td>{employee.phoneNumber}</td>
             <td>{employee.department.title}</td>
@@ -51,7 +47,11 @@ export class EmployeesListComponent extends Component {
         <h3 className="mb-2">
           {isLoading ? <div className="spinner-border"></div> : ''} All
           Employees
+          <Link className="btn btn-secondary ml-3" to="/admin/search-employee">
+            Search Employee
+          </Link>
         </h3>
+
         <table
           className="table table-striped table-bordered table-hover text-left"
           style={{ width: '100%' }}

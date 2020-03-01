@@ -14,13 +14,25 @@ import CreateKPIComponent from '../kpis-management/CreateKPIComponent';
 import CreateKPIFlashMessagesList from '../messages/CreateKPIFlashMessagesList';
 import KPIsListComponent from '../kpis-management/KPIsListComponent';
 import ScoreboardsListComponent from '../scoreboards-management/ScoreboardsListComponent';
-import CreateScoreboardComponent from '../scoreboards-management/CreateScoreboardComponent';
+// import CreateScoreboardComponent from '../scoreboards-management/CreateScoreboardComponent';
 import CreateScoreboardFlashMessage from '../messages/CreateScoreboardFlashMessage';
 import AllScoreboardsComponent from '../scoreboards-management/AllScoreboardsComponent';
 import EditScoreboardComponent from '../scoreboards-management/EditScoreboardComponent';
 import EditScoreboardFlashMessage from '../messages/EditScoreboardFlashMessage';
 import EditScoresComponent from '../scoreboards-management/EditScoresComponent';
 import NoMatch404 from '../layouts/NoMatch404';
+import EditEmployeeComponent from '../employees-management/EditEmployeeComponent1';
+import ScoreboardDetailsComponent from '../scoreboards-management/ScoreboardDetailsComponent';
+import CreateScoreboardLayoutComponent from '../scoreboards-management/CreateScoreboardLayout';
+import SearchEmployeeComponent from '../employees/SearchEmployeeComponent';
+import CreateScoreboardEmployeesList from '../employees-management/CreateScoreboardEmployeesList';
+import EditKPIComponent from '../kpis-management/EditKPIComponent';
+import JobtitlesListComponent from '../jobtitles/JobtitlesListComponent';
+import CreateJobtitleComponent from '../jobtitles/CreateJobtitleComponent';
+import EditJobtitleComponent from '../jobtitles/EditJobtitleComponent';
+import DepartmentsListComponent from '../departments/DepartmentsListComponent';
+import CreateDepartmentComponent from '../departments/CreateDepartmentComponent';
+import EditDepartmentComponent from '../departments/EditDepartmentComponent';
 
 export class AdminComponent extends Component {
   logout = e => {
@@ -52,7 +64,11 @@ export class AdminComponent extends Component {
           </button>
 
           {/* 3D Branding */}
-          <NavLink activeClassName="active" className="navbar-brand" to="/">
+          <NavLink
+            activeClassName="active"
+            className="navbar-brand"
+            to="/admin"
+          >
             3D Services
           </NavLink>
 
@@ -231,24 +247,18 @@ export class AdminComponent extends Component {
               </a>
               {/* <!-- Submenu content --> */}
               <div id="submenu1" className="collapse sidebar-submenu">
-                <a
-                  href="#!"
+                <NavLink
+                  to="/admin/last-month"
                   className="list-group-item list-group-item-action bg-dark text-white"
                 >
-                  <span className="menu-collapsed">Score Boards</span>
-                </a>
-                <a
-                  href="#!"
-                  className="list-group-item list-group-item-action bg-dark text-white"
-                >
-                  <span className="menu-collapsed">Charts</span>
-                </a>
-                <a
-                  href="#!"
+                  <span className="menu-collapsed">Last Month Scoreboards</span>
+                </NavLink>
+                <NavLink
+                  to="/admin/last-month"
                   className="list-group-item list-group-item-action bg-dark text-white"
                 >
                   <span className="menu-collapsed">Reports</span>
-                </a>
+                </NavLink>
               </div>
               <a
                 href="#submenu2"
@@ -264,18 +274,18 @@ export class AdminComponent extends Component {
               </a>
               {/* <!-- Submenu content --> */}
               <div id="submenu2" className="collapse sidebar-submenu">
-                <a
-                  href="#!"
+                <NavLink
+                  to="/admin/update-settings"
                   className="list-group-item list-group-item-action bg-dark text-white"
                 >
                   <span className="menu-collapsed">Settings</span>
-                </a>
-                <a
-                  href="#!"
+                </NavLink>
+                <NavLink
+                  to="/admin/my-details"
                   className="list-group-item list-group-item-action bg-dark text-white"
                 >
-                  <span className="menu-collapsed">Password</span>
-                </a>
+                  <span className="menu-collapsed">My Details</span>
+                </NavLink>
               </div>
               {/* <!-- Separator with title --> */}
               <li className="list-group-item sidebar-separator-title text-muted d-flex align-items-center menu-collapsed">
@@ -311,6 +321,68 @@ export class AdminComponent extends Component {
                   <span className="menu-collapsed">Create Employee</span>
                 </NavLink>
               </div>
+
+              {/* Job title Menu */}
+              <a
+                href="#jobtitles-submenu"
+                data-toggle="collapse"
+                aria-expanded="false"
+                className="bg-dark list-group-item list-group-item-action flex-column align-items-start"
+              >
+                <div className="d-flex w-100 justify-content-start align-items-center">
+                  <span className="fa fa-dashboard fa-fw mr-3"></span>
+                  <span className="menu-collapsed">Job Titles</span>
+                  <span className="submenu-icon ml-auto"></span>
+                </div>
+              </a>
+              {/* <!-- job titles Submenu --> */}
+              <div id="jobtitles-submenu" className="collapse sidebar-submenu">
+                <NavLink
+                  to="/admin/all-jobtitles"
+                  className="list-group-item list-group-item-action bg-dark text-white"
+                >
+                  <span className="menu-collapsed">All Job Titles</span>
+                </NavLink>
+                <NavLink
+                  to="/admin/create-jobtitle"
+                  className="list-group-item list-group-item-action bg-dark text-white"
+                >
+                  <span className="menu-collapsed">Create Job Title</span>
+                </NavLink>
+              </div>
+
+              {/* Department menu */}
+              <a
+                href="#departments-submenu"
+                data-toggle="collapse"
+                aria-expanded="false"
+                className="bg-dark list-group-item list-group-item-action flex-column align-items-start"
+              >
+                <div className="d-flex w-100 justify-content-start align-items-center">
+                  <span className="fa fa-dashboard fa-fw mr-3"></span>
+                  <span className="menu-collapsed">Departments</span>
+                  <span className="submenu-icon ml-auto"></span>
+                </div>
+              </a>
+              {/* <!-- Department Submenu --> */}
+              <div
+                id="departments-submenu"
+                className="collapse sidebar-submenu"
+              >
+                <NavLink
+                  to="/admin/all-departments"
+                  className="list-group-item list-group-item-action bg-dark text-white"
+                >
+                  <span className="menu-collapsed">All Department</span>
+                </NavLink>
+                <NavLink
+                  to="/admin/create-department"
+                  className="list-group-item list-group-item-action bg-dark text-white"
+                >
+                  <span className="menu-collapsed">Create Department</span>
+                </NavLink>
+              </div>
+
               {/* KPIs Menu */}
               <a
                 href="#kpis-submenu"
@@ -361,28 +433,34 @@ export class AdminComponent extends Component {
                   to="/admin/all-scoreboards"
                   className="list-group-item list-group-item-action bg-dark text-white"
                 >
-                  <span className="menu-collapsed">All Scoreboards</span>
+                  <span className="menu-collapsed">Last Month</span>
                 </NavLink>
                 <NavLink
-                  to="/admin/create-scoreboard"
+                  to="/admin/all-scoreboards"
                   className="list-group-item list-group-item-action bg-dark text-white"
                 >
-                  <span className="menu-collapsed">Create Scoreboard</span>
+                  <span className="menu-collapsed">This Year</span>
+                </NavLink>
+                <NavLink
+                  to="/admin/create-scoreboards"
+                  className="list-group-item list-group-item-action bg-dark text-white"
+                >
+                  <span className="menu-collapsed">Create Scoreboards</span>
                 </NavLink>
               </div>
 
               {/* <!-- Separator without title --> */}
               <li className="list-group-item sidebar-separator menu-collapsed"></li>
               {/* <!-- /END Separator --> */}
-              <a
-                href="#!"
+              <NavLink
+                to="/admin/help"
                 className="bg-dark list-group-item list-group-item-action"
               >
                 <div className="d-flex w-100 justify-content-start align-items-center">
                   <span className="fa fa-question fa-fw mr-3"></span>
                   <span className="menu-collapsed">Help</span>
                 </div>
-              </a>
+              </NavLink>
             </ul>
             {/* List Group END */}
           </div>
@@ -408,7 +486,22 @@ export class AdminComponent extends Component {
                 path={'/admin/create-employee'}
                 component={CreateEmployeeComponent}
               />
+
+              <Route
+                path={'/admin/edit-employee/:id'}
+                component={EditEmployeeComponent}
+              />
+
               <Route path={'/admin/all-kpis'} component={KPIsListComponent} />
+              <Route
+                path={'/admin/all-jobtitles'}
+                component={JobtitlesListComponent}
+              />
+              <Route
+                path={'/admin/all-departments'}
+                component={DepartmentsListComponent}
+              />
+
               <Route
                 path={'/admin/all-employees/:id'}
                 component={EmployeeDetailsComponent}
@@ -420,25 +513,65 @@ export class AdminComponent extends Component {
               />
 
               <Route path="/admin/create-kpi" component={CreateKPIComponent} />
+              <Route
+                path="/admin/create-jobtitle"
+                component={CreateJobtitleComponent}
+              />
+              <Route
+                path="/admin/create-department"
+                component={CreateDepartmentComponent}
+              />
 
               <Route
                 path={'/admin/all-scoreboards/:id'}
                 component={ScoreboardsListComponent}
               />
+
+              <Route
+                path={'/admin/scoreboardlayout/:id'}
+                component={ScoreboardDetailsComponent}
+              />
+
               <Route
                 path={'/admin/all-scoreboards'}
                 component={AllScoreboardsComponent}
               />
 
               <Route
-                path={'/admin/create-scoreboard'}
-                component={CreateScoreboardComponent}
+                path={'/admin/create-scoreboards'}
+                component={CreateScoreboardEmployeesList}
+              />
+
+              <Route
+                path={'/admin/create-scoreboardlayout/:id'}
+                component={CreateScoreboardLayoutComponent}
               />
 
               <Route
                 path={'/admin/edit-scoreboard/:id'}
                 component={EditScoreboardComponent}
               />
+
+              <Route
+                path={'/admin/edit-kpi/:id'}
+                component={EditKPIComponent}
+              />
+
+              <Route
+                path={'/admin/edit-department/:id'}
+                component={EditDepartmentComponent}
+              />
+
+              <Route
+                path={'/admin/edit-jobtitle/:id'}
+                component={EditJobtitleComponent}
+              />
+
+              <Route
+                path={'/admin/search-employee'}
+                component={SearchEmployeeComponent}
+              />
+
               <Route
                 path={'/admin/edit-scores/:id'}
                 component={EditScoresComponent}

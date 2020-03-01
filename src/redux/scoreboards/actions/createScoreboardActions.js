@@ -11,7 +11,6 @@ import {
 
 // Action creators returns the action object
 export const createScoreboard = scoreboard => {
-  console.log(scoreboard);
   return dispatch => {
     dispatch(createScoreboardRequest());
     // Write client side validation here
@@ -19,7 +18,7 @@ export const createScoreboard = scoreboard => {
     if (!isValid) dispatch(createScoreboardFailure({ data: errors }));
     else {
       axios
-        .post(`${config.baseUrl}/scoreboards`, scoreboard)
+        .post(`${config.baseUrl}/scoreboardlayouts`, scoreboard)
         .then(response => {
           if (response.data) dispatch(createScoreboardSuccess(response.data));
           else

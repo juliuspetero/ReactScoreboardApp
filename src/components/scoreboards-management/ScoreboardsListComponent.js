@@ -1,11 +1,11 @@
 import React, { Component } from 'react';
 import cloneDeep from 'lodash/cloneDeep';
-import { NavLink } from 'react-router-dom';
 import moment from 'moment';
-import { connect } from 'react-redux';
 import axios from 'axios';
-import { fetchScoreboards } from '../../redux/scoreboards/actions/fetchScoreboardsActions';
+import isEmpty from 'lodash/isEmpty';
 import config from '../../config/config';
+import { connect } from 'react-redux';
+import { fetchScoreboards } from '../../redux/scoreboards/actions/fetchScoreboardsActions';
 import DeleteButtonComponent from './DeleteButtonComponent';
 
 export class ScoreboardsListComponent extends Component {
@@ -13,59 +13,52 @@ export class ScoreboardsListComponent extends Component {
     super(props);
 
     this.state = {
-      isApproved: false
+      number: 5
     };
   }
 
   // Toggle status of the the approval
-  onChangeApproval = () => {
-    this.setState({
-      isApproved: !this.state.isApproved
-    });
+  onChangeApproval = async id => {
+    // console.log(id);
+    await axios.put(`${config.baseUrl}/scoreboards/approval/${id}`);
+    await this.props.fetchScoreboards(this.props.match.params.id);
   };
 
-  componentDidMount() {
-    this.props.fetchScoreboards(this.props.match.params.id);
-  }
-
+  // Wipe the scoreboard out of memory
   deleteScoreboard = async id => {
     await axios.delete(`${config.baseUrl}/scoreboards/${id}`);
     this.props.fetchScoreboards(this.props.match.params.id);
   };
 
+  onChange = e => this.setState({ [e.target.name]: e.target.value });
+
+  componentDidMount() {
+    this.props.fetchScoreboards(this.props.match.params.id);
+  }
+
   render() {
     // Retrieve the current logged in user department
-    const { authenticateUser } = this.props.authenticateUserData;
-
     const { scoreboards, isLoading } = this.props.scoreboardsData;
+    // console.log(scoreboards);
 
-    if (scoreboards.length === 0) {
+    if (isLoading) {
+      return <div className="spinner-border mt-3"></div>;
+    }
+
+    if (isEmpty(scoreboards)) {
       return (
         <div>
           {' '}
           <h3 className="mt-5 text-info">
-            No scoreboard for employee with ID = {this.props.match.params.id}
+            Your scoreboard has not been created yet, please contach HRM
           </h3>
-          <NavLink to="/admin/create-scoreboard">
-            <button class="btn btn-light btn-outline-info m-2">
-              Create Scoreboard
-            </button>
-          </NavLink>
         </div>
       );
     }
 
-    let clonedDepartmentScoreboards = cloneDeep(scoreboards);
-    const departmentId = authenticateUser.userInformation.departmentId;
+    const number = this.state.number === 'all' ? 100000 : this.state.number;
 
-    // This is the admin, he should see all the users scoreboards
-    if (departmentId !== '3by786gk6s03j1h') {
-      clonedDepartmentScoreboards = clonedDepartmentScoreboards.filter(
-        scoreboard => {
-          return scoreboard.departmentId === departmentId;
-        }
-      );
-    }
+    const clonedDepartmentScoreboards = cloneDeep(scoreboards.slice(0, number));
 
     // Calculating cummulatibe average
     let averageScoresList = [];
@@ -112,17 +105,43 @@ export class ScoreboardsListComponent extends Component {
           averageScore += score;
         }
 
-        // cummulativeAverages.push(averageScore);
-
+        // Considering scores for each month
         const kpiTitles = scoreboard.kpis.map(kpi => {
           return <td key={kpi.id}>{kpi.title}</td>;
         });
+
+        const standardMeasures = scoreboard.kpis.map(kpi => {
+          return <td key={kpi.id}>100 %</td>;
+        });
         const kpiScores = scoreboard.kpis.map(kpi => {
+          const score =
+            kpi.kPIScoreBoard.KPIScore != null ? kpi.kPIScoreBoard.KPIScore : 0;
+
+          let style = null;
+          if (score < 50)
+            style = {
+              backgroundColor: '#cc6600'
+            };
+          else if (score < 60)
+            style = {
+              backgroundColor: '#ffcccc'
+            };
+          else if (score < 75)
+            style = {
+              backgroundColor: '#ffd11a'
+            };
+          else if (score < 90)
+            style = {
+              backgroundColor: '#4dd2ff'
+            };
+          else
+            style = {
+              backgroundColor: '#00cc44'
+            };
+
           return (
-            <td key={kpi.id}>
-              {kpi.kPIScoreBoard.KPIScore != null
-                ? kpi.kPIScoreBoard.KPIScore
-                : 0}
+            <td style={style} key={kpi.id}>
+              {score}
             </td>
           );
         });
@@ -155,7 +174,6 @@ export class ScoreboardsListComponent extends Component {
           <React.Fragment key={scoreboard.id}>
             <tr>
               <td>{moment(scoreboard.createdAt).format('DD/MM/YYYY')}</td>
-              <td>{moment(scoreboard.updated).format('DD/MM/YYYY')}</td>
               <td>
                 <table className="container">
                   <tbody>
@@ -164,7 +182,11 @@ export class ScoreboardsListComponent extends Component {
                       {kpiTitles}
                     </tr>
                     <tr>
-                      <th>Weight</th>
+                      <th>Standard Measure</th>
+                      {standardMeasures}
+                    </tr>
+                    <tr>
+                      <th>Weighted</th>
                       {kpiWeights}
                     </tr>
                     <tr>
@@ -182,47 +204,52 @@ export class ScoreboardsListComponent extends Component {
                 ).toFixed(1)}
               </td>
               <td className="">
+                {/* The approved value should be coming from the database */}
                 <p>
                   <button
+                    title="Clicking this button toggle approval status"
                     type="button"
-                    onClick={() =>
-                      this.props.history.push(
-                        `/admin/edit-scoreboard/${scoreboard.id}`
-                      )
-                    }
                     className="btn btn-light"
+                    onClick={() => this.onChangeApproval(scoreboard.id)}
                   >
-                    Update Scoreboard
+                    {scoreboard.isApproved ? 'Approved' : 'Not yet Approved'}
                   </button>
                 </p>
-                <p>
-                  <button
-                    type="button"
-                    onClick={this.onChangeApproval}
-                    className="btn btn-light"
-                  >
-                    {this.state.isApproved ? 'Approved' : 'Not Approved'}
-                  </button>
-                </p>
-                <p>
-                  <button
-                    type="button"
-                    onClick={() =>
-                      this.props.history.push(
-                        `/admin/edit-scores/${scoreboard.id}`
-                      )
-                    }
-                    className="btn btn-light"
-                  >
-                    Update Scores
-                  </button>
-                </p>
-                <p>
-                  <DeleteButtonComponent
-                    scoreboard={scoreboard}
-                    deleteScoreboard={this.deleteScoreboard}
-                  />
-                </p>
+                <div style={{ display: scoreboard.isApproved ? 'none' : '' }}>
+                  <p>
+                    <button
+                      type="button"
+                      onClick={() =>
+                        this.props.history.push(
+                          `/admin/edit-scores/${scoreboard.id}`
+                        )
+                      }
+                      className="btn btn-light"
+                    >
+                      Update Scores
+                    </button>
+                  </p>
+                  <p>
+                    <button
+                      title="This allow you to edit the scoreboard by adding more KPIs, editing KPI weight, etc."
+                      type="button"
+                      onClick={() =>
+                        this.props.history.push(
+                          `/admin/edit-scoreboard/${scoreboard.userId}`
+                        )
+                      }
+                      className="btn btn-light"
+                    >
+                      Update Scoreboard
+                    </button>
+                  </p>
+                  <p>
+                    <DeleteButtonComponent
+                      scoreboard={scoreboard}
+                      deleteScoreboard={this.deleteScoreboard}
+                    />
+                  </p>
+                </div>
               </td>
             </tr>
           </React.Fragment>
@@ -238,6 +265,24 @@ export class ScoreboardsListComponent extends Component {
             ? clonedDepartmentScoreboards[0].user.username + "'s Scoreboards"
             : 'No scoreboard to display'}
         </h3>
+        <div className="text-right">
+          <label className="mr-sm-2" htmlFor="number">
+            Number per page
+          </label>
+          <select
+            value={this.state.number}
+            name="number"
+            onChange={this.onChange}
+            id="number"
+            className=""
+          >
+            <option value="1">1</option>
+            <option value="5">5</option>
+            <option value="10">10</option>
+            <option value="25">25</option>
+            <option value="all">All</option>
+          </select>
+        </div>
         <table
           className="table table-striped table-bordered table-hover text-left"
           style={{ width: '100%' }}
@@ -246,14 +291,13 @@ export class ScoreboardsListComponent extends Component {
         >
           <thead>
             <tr>
-              <th scope="col">Created At</th>
-              <th scope="col">Updated At</th>
+              <th scope="col">Date</th>
               <th className="text-center" scope="col">
                 KPIs
               </th>
               <th>Average Score</th>
-              <th>Cummulative Score</th>
-              <th>Actions</th>
+              <th>Cummulative Avg Score</th>
+              <th>Status</th>
             </tr>
           </thead>
           <tbody>{departmentScoreboards}</tbody>

@@ -29,7 +29,7 @@ export class EditScoreboardComponent extends Component {
       isLoading: true
     });
     const res = await axios.get(
-      `${config.baseUrl}/scoreboards/${this.props.match.params.id}`
+      `${config.baseUrl}/scoreboardlayouts/get-user-scoreboardlayout?userId=${this.props.match.params.id}`
     );
     const scoreboard = await res.data;
     this.setState({
@@ -137,7 +137,7 @@ export class EditScoreboardComponent extends Component {
       );
 
       this.props.history.push(
-        `/admin/all-scoreboards/${this.state.scoreboard.userId}`
+        `/admin/scoreboardlayout/${this.state.scoreboard.userId}`
       );
     }
   }
@@ -169,8 +169,8 @@ export class EditScoreboardComponent extends Component {
               Edit{' '}
               {this.state.scoreboard
                 ? this.state.scoreboard.user.username
-                : null}
-              's Scoreboard
+                : 'employee'}
+              's KPIs
             </h4>
             <div>{errorMessages}</div>
             <form onSubmit={this.onSubmit}>

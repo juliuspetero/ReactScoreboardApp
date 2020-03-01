@@ -1,3 +1,14 @@
 .app {
   text-align: center;
 }
+
+a {
+  color: #181414;
+  font-family: helvetica;
+  text-decoration: none;
+}
+
+/* a:hover {
+  color: rgb(247, 15, 15);
+  text-decoration: none;
+} */

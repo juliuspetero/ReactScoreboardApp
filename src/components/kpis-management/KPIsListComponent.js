@@ -1,17 +1,21 @@
 import React, { Component } from 'react';
 import cloneDeep from 'lodash/cloneDeep';
-import moment from 'moment';
+import axios from 'axios';
+import isArray from 'lodash/isArray';
 import { connect } from 'react-redux';
-import { Link } from 'react-router-dom';
 import { fetchKPIs } from '../../redux/kpis/actions/fetchKPIsActions';
+import DeleteButtonComponent from './DeleteButtonComponent';
+import config from '../../config/config';
 
 export class KPIsListComponent extends Component {
   componentDidMount() {
     this.props.fetchKPIs();
   }
 
-  onRowClicked = kpi => {
-    this.props.history.push(`${this.props.match.url}/${kpi.id}`);
+  // Wipe the scoreboard out of memory
+  deleteKPI = async id => {
+    await axios.delete(`${config.baseUrl}/kpis/${id}`);
+    this.props.fetchKPIs();
   };
 
   render() {
@@ -25,33 +29,48 @@ export class KPIsListComponent extends Component {
     delete kpi.id;
     delete kpi.updatedAt;
 
-    // A function to capitalize a heading
-    function capitalize(heading) {
-      if (heading == null) return heading;
-      return heading.charAt(0).toUpperCase() + heading.slice(1);
-    }
+    const departmentId = this.props.authenticateUserData.authenticateUser
+      .userInformation.departmentId;
 
-    const columnHeaders = Object.keys(kpi).map((key, index) => (
-      <th scope="col" key={index}>
-        {capitalize(key)}
-      </th>
-    ));
+    // Filter out only the KPIs for the managers department
+    console.log(kpis);
+    const filteredKPIList = isArray(kpis)
+      ? kpis.filter(kpi => {
+          if (kpi.departmentId === departmentId) return true;
+          else if (departmentId === '3by786gk6s03j1h') return true;
+          else return false;
+        })
+      : null;
 
     // List all the KPIs created
-    const kpisList = cloneDeep(kpis).map((kpi, index) => {
-      const timeAgo = moment(kpi.createdAt).fromNow();
-      return (
-        <tr key={index} onClick={() => this.onRowClicked(kpi)}>
-          <th scope="row">
-            <Link to={`${this.props.match.url}/${kpi.id}`}>{kpi.title}</Link>
-          </th>
-          <td>{kpi.description}</td>
-          <td className="date timeago" title={timeAgo}>
-            {timeAgo}
-          </td>
-        </tr>
-      );
-    });
+    const kpisList = filteredKPIList
+      ? filteredKPIList.map((kpi, index) => {
+          // const timeAgo = moment(kpi.createdAt).fromNow();
+          return (
+            <tr key={index}>
+              <th scope="row">{kpi.title}</th>
+              <td>{kpi.description}</td>
+              <td>{kpi.department.title}</td>
+              <td>
+                <p>
+                  <button
+                    type="button"
+                    onClick={() =>
+                      this.props.history.push(`/admin/edit-kpi/${kpi.id}`)
+                    }
+                    className="btn btn-light"
+                  >
+                    Edit
+                  </button>
+                </p>
+                <p>
+                  <DeleteButtonComponent kpi={kpi} deleteKPI={this.deleteKPI} />
+                </p>
+              </td>
+            </tr>
+          );
+        })
+      : null;
     return (
       <div className="my-3">
         <div className="spin-loader"></div>
@@ -62,10 +81,14 @@ export class KPIsListComponent extends Component {
           className="table table-striped table-bordered table-hover text-left"
           style={{ width: '100%' }}
           id="employees-table"
-          // ref={el => (this.el = el)}
         >
           <thead>
-            <tr>{columnHeaders}</tr>
+            <tr>
+              <th>Title</th>
+              <th>Description</th>
+              <th>Department</th>
+              <th>Actions</th>
+            </tr>
           </thead>
           <tbody>{kpisList}</tbody>
         </table>
@@ -77,7 +100,8 @@ export class KPIsListComponent extends Component {
 export default connect(
   state => {
     return {
-      kpisData: state.fetchKPIsReducer
+      kpisData: state.fetchKPIsReducer,
+      authenticateUserData: state.authenticateUserReducer
     };
   },
   {
