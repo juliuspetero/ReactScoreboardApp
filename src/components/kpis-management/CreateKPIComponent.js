@@ -33,7 +33,7 @@ export class CreateKPIComponent extends Component {
         nextProps.createKPIData.createKPI &&
       nextProps.createKPIData.createKPI != null
     ) {
-      this.props.addCreateKPIFlashMessage(nextProps.createKPIData.createKPI);
+      // this.props.addCreateKPIFlashMessage(nextProps.createKPIData.createKPI);
       this.props.history.push('/admin/all-kpis');
     }
   }

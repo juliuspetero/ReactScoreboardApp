@@ -3,5 +3,6 @@
         "activityBar.background": "#173320",
         "titleBar.activeBackground": "#20472D",
         "titleBar.activeForeground": "#F8FCF9"
-    }
+    },
+    "peacock.color": "#07100a"
 }

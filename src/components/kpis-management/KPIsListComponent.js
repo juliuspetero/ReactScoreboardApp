@@ -33,7 +33,6 @@ export class KPIsListComponent extends Component {
       .userInformation.departmentId;
 
     // Filter out only the KPIs for the managers department
-    console.log(kpis);
     const filteredKPIList = isArray(kpis)
       ? kpis.filter(kpi => {
           if (kpi.departmentId === departmentId) return true;
@@ -75,7 +74,7 @@ export class KPIsListComponent extends Component {
       <div className="my-3">
         <div className="spin-loader"></div>
         <h3 className="mb-2">
-          {isLoading ? <div className="spinner-border"></div> : ''} All KPIs
+          {isLoading ? <div className="spinner-border"></div> : ''} KPIs
         </h3>
         <table
           className="table table-striped table-bordered table-hover text-left"

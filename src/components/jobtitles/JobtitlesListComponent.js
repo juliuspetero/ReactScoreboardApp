@@ -36,10 +36,46 @@ export class JobtitlesListComponent extends Component {
     // List all the KPIs created
     const jobtitlesList = filteredJobtitlesList
       ? filteredJobtitlesList.map((jobtitle, index) => {
-          // const timeAgo = moment(kpi.createdAt).fromNow();
+          // Considering KPI for each job title
+          const kpiTitles = jobtitle.scoreboardLayout
+            ? jobtitle.scoreboardLayout.kpis.map(kpi => {
+                return <td key={kpi.id}>{kpi.title}</td>;
+              })
+            : null;
+
+          const kpiWeights = jobtitle.scoreboardLayout
+            ? jobtitle.scoreboardLayout.kpis.map(kpi => {
+                return (
+                  <td key={kpi.id}>{kpi.kPIScoreboardLayout.KPIWeight}</td>
+                );
+              })
+            : null;
+
           return (
             <tr key={index}>
               <th scope="row">{jobtitle.title}</th>
+              <td>
+                <table className="container">
+                  {jobtitle.scoreboardLayout ? (
+                    <tbody>
+                      <tr>
+                        <th>Title</th>
+                        {kpiTitles}
+                      </tr>
+                      <tr>
+                        <th>Weighted</th>
+                        {kpiWeights}
+                      </tr>
+                    </tbody>
+                  ) : (
+                    <tbody>
+                      <tr>
+                        <th>No KPI</th>
+                      </tr>
+                    </tbody>
+                  )}
+                </table>
+              </td>
               <td>{jobtitle.department.title}</td>
               <td>
                 <p>
@@ -70,8 +106,7 @@ export class JobtitlesListComponent extends Component {
       <div className="my-3">
         <div className="spin-loader"></div>
         <h3 className="mb-2">
-          {isLoading ? <div className="spinner-border"></div> : ''} All Job
-          Titles
+          {isLoading ? <div className="spinner-border"></div> : ''} Job Titles
         </h3>
         <table
           className="table table-striped table-bordered table-hover text-left"
@@ -81,6 +116,7 @@ export class JobtitlesListComponent extends Component {
           <thead>
             <tr>
               <th>Title</th>
+              <th>KPIs</th>
               <th>Department</th>
               <th>Actions</th>
             </tr>

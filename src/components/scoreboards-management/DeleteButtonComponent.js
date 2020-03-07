@@ -17,7 +17,7 @@ function DeleteButtonComponent(props) {
       <Modal show={show} onHide={handleClose}>
         <Modal.Header closeButton>
           <Modal.Title>
-            {props.scoreboard ? props.scoreboard.user.username : null}
+            {/* {props.scoreboard ? props.scoreboard.user.username : null} */}
           </Modal.Title>
         </Modal.Header>
         <Modal.Body>Oops, you're about to delete this scoreboard</Modal.Body>

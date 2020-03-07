@@ -20,7 +20,7 @@ function DeleteButtonComponent(props) {
             {props.jobtitle ? props.jobtitle.title : null}
           </Modal.Title>
         </Modal.Header>
-        <Modal.Body>Oops, you're about to delete this KPI</Modal.Body>
+        <Modal.Body>Oops, you're about to delete this Job title</Modal.Body>
         <Modal.Footer>
           <Button variant="secondary" onClick={handleClose}>
             Cancel

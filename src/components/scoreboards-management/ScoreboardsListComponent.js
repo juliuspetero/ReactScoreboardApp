@@ -3,6 +3,7 @@ import cloneDeep from 'lodash/cloneDeep';
 import moment from 'moment';
 import axios from 'axios';
 import isEmpty from 'lodash/isEmpty';
+import isArray from 'lodash/isArray';
 import config from '../../config/config';
 import { connect } from 'react-redux';
 import { fetchScoreboards } from '../../redux/scoreboards/actions/fetchScoreboardsActions';
@@ -49,45 +50,23 @@ export class ScoreboardsListComponent extends Component {
       return (
         <div>
           {' '}
-          <h3 className="mt-5 text-info">
-            Your scoreboard has not been created yet, please contach HRM
-          </h3>
+          <h3 className="mt-3 text-info">No scoreboard</h3>
         </div>
       );
     }
 
     const number = this.state.number === 'all' ? 100000 : this.state.number;
 
-    const clonedDepartmentScoreboards = cloneDeep(scoreboards.slice(0, number));
+    const clonedDepartmentScoreboards = cloneDeep(
+      isArray(scoreboards) ? scoreboards.slice(0, number) : null
+    );
 
     // Calculating cummulatibe average
     let averageScoresList = [];
 
     // Push al the average score
-    clonedDepartmentScoreboards.forEach((scoreboard, index) => {
-      // Calculating average scores
-      let totalWeights = 0;
-
-      scoreboard.kpis.forEach(kpi => {
-        totalWeights += kpi.kPIScoreBoard.KPIWeight;
-      });
-
-      let averageScore = 0;
-
-      for (let i = 0; i < scoreboard.kpis.length; i++) {
-        const kpi = scoreboard.kpis[i];
-        const score =
-          (kpi.kPIScoreBoard.KPIScore * kpi.kPIScoreBoard.KPIWeight) /
-          totalWeights;
-        averageScore += score;
-      }
-
-      averageScoresList.push(averageScore);
-    });
-
-    // Create the page
-    const departmentScoreboards = clonedDepartmentScoreboards.map(
-      (scoreboard, index) => {
+    if (clonedDepartmentScoreboards !== null)
+      clonedDepartmentScoreboards.forEach((scoreboard, index) => {
         // Calculating average scores
         let totalWeights = 0;
 
@@ -105,165 +84,179 @@ export class ScoreboardsListComponent extends Component {
           averageScore += score;
         }
 
-        // Considering scores for each month
-        const kpiTitles = scoreboard.kpis.map(kpi => {
-          return <td key={kpi.id}>{kpi.title}</td>;
-        });
+        averageScoresList.push(averageScore);
+      });
 
-        const standardMeasures = scoreboard.kpis.map(kpi => {
-          return <td key={kpi.id}>100 %</td>;
-        });
-        const kpiScores = scoreboard.kpis.map(kpi => {
-          const score =
-            kpi.kPIScoreBoard.KPIScore != null ? kpi.kPIScoreBoard.KPIScore : 0;
+    // Create the page
+    const departmentScoreboards = clonedDepartmentScoreboards
+      ? clonedDepartmentScoreboards.map((scoreboard, index) => {
+          // Calculating average scores
+          let totalWeights = 0;
 
-          let style = null;
-          if (score < 50)
-            style = {
-              backgroundColor: '#cc6600'
-            };
-          else if (score < 60)
-            style = {
-              backgroundColor: '#ffcccc'
-            };
-          else if (score < 75)
-            style = {
-              backgroundColor: '#ffd11a'
-            };
-          else if (score < 90)
-            style = {
-              backgroundColor: '#4dd2ff'
-            };
-          else
-            style = {
-              backgroundColor: '#00cc44'
-            };
+          scoreboard.kpis.forEach(kpi => {
+            totalWeights += kpi.kPIScoreBoard.KPIWeight;
+          });
+
+          let averageScore = 0;
+
+          for (let i = 0; i < scoreboard.kpis.length; i++) {
+            const kpi = scoreboard.kpis[i];
+            const score =
+              (kpi.kPIScoreBoard.KPIScore * kpi.kPIScoreBoard.KPIWeight) /
+              totalWeights;
+            averageScore += score;
+          }
+
+          // Considering scores for each month
+          const kpiTitles = scoreboard.kpis.map(kpi => {
+            return <td key={kpi.id}>{kpi.title}</td>;
+          });
+
+          const standardMeasures = scoreboard.kpis.map(kpi => {
+            return <td key={kpi.id}>100 %</td>;
+          });
+          const kpiScores = scoreboard.kpis.map(kpi => {
+            const score =
+              kpi.kPIScoreBoard.KPIScore != null
+                ? kpi.kPIScoreBoard.KPIScore
+                : 0;
+
+            let style = null;
+            if (score < 50)
+              style = {
+                backgroundColor: '#cc6600'
+              };
+            else if (score < 60)
+              style = {
+                backgroundColor: '#ffcccc'
+              };
+            else if (score < 75)
+              style = {
+                backgroundColor: '#ffd11a'
+              };
+            else if (score < 90)
+              style = {
+                backgroundColor: '#4dd2ff'
+              };
+            else
+              style = {
+                backgroundColor: '#00cc44'
+              };
+
+            return (
+              <td style={style} key={kpi.id}>
+                {score}
+              </td>
+            );
+          });
+
+          // Calcualting cummulative average
+
+          let cummulativeAverageScores = 0;
+          for (
+            let current = index;
+            current < averageScoresList.length;
+            current++
+          ) {
+            cummulativeAverageScores += averageScoresList[current];
+            // console.log(cummulativeAverages[current]);
+          }
+
+          // console.log(averageScoresList);
+
+          const kpiWeights = scoreboard.kpis.map(kpi => {
+            return (
+              <td key={kpi.id}>
+                {kpi.kPIScoreBoard.KPIWeight != null
+                  ? kpi.kPIScoreBoard.KPIWeight
+                  : 0}
+              </td>
+            );
+          });
 
           return (
-            <td style={style} key={kpi.id}>
-              {score}
-            </td>
-          );
-        });
-
-        // Calcualting cummulative average
-
-        let cummulativeAverageScores = 0;
-        for (
-          let current = index;
-          current < averageScoresList.length;
-          current++
-        ) {
-          cummulativeAverageScores += averageScoresList[current];
-          // console.log(cummulativeAverages[current]);
-        }
-
-        // console.log(averageScoresList);
-
-        const kpiWeights = scoreboard.kpis.map(kpi => {
-          return (
-            <td key={kpi.id}>
-              {kpi.kPIScoreBoard.KPIWeight != null
-                ? kpi.kPIScoreBoard.KPIWeight
-                : 0}
-            </td>
-          );
-        });
-
-        return (
-          <React.Fragment key={scoreboard.id}>
-            <tr>
-              <td>{moment(scoreboard.createdAt).format('DD/MM/YYYY')}</td>
-              <td>
-                <table className="container">
-                  <tbody>
-                    <tr>
-                      <th>Title</th>
-                      {kpiTitles}
-                    </tr>
-                    <tr>
-                      <th>Standard Measure</th>
-                      {standardMeasures}
-                    </tr>
-                    <tr>
-                      <th>Weighted</th>
-                      {kpiWeights}
-                    </tr>
-                    <tr>
-                      <th>Score</th>
-                      {kpiScores}
-                    </tr>
-                  </tbody>
-                </table>
-              </td>
-              <td className="text-center">{averageScore.toFixed(1)}</td>
-              <td className="text-center">
-                {(
-                  cummulativeAverageScores /
-                  (averageScoresList.length - index)
-                ).toFixed(1)}
-              </td>
-              <td className="">
-                {/* The approved value should be coming from the database */}
-                <p>
-                  <button
-                    title="Clicking this button toggle approval status"
-                    type="button"
-                    className="btn btn-light"
-                    onClick={() => this.onChangeApproval(scoreboard.id)}
-                  >
-                    {scoreboard.isApproved ? 'Approved' : 'Not yet Approved'}
-                  </button>
-                </p>
-                <div style={{ display: scoreboard.isApproved ? 'none' : '' }}>
+            <React.Fragment key={scoreboard.id}>
+              <tr>
+                <td>{moment(scoreboard.createdAt).format('DD/MM/YYYY')}</td>
+                <td>
+                  <table className="container">
+                    <tbody>
+                      <tr>
+                        <th>Title</th>
+                        {kpiTitles}
+                      </tr>
+                      <tr>
+                        <th>Standard Measure</th>
+                        {standardMeasures}
+                      </tr>
+                      <tr>
+                        <th>Weighted</th>
+                        {kpiWeights}
+                      </tr>
+                      <tr>
+                        <th>Score</th>
+                        {kpiScores}
+                      </tr>
+                    </tbody>
+                  </table>
+                </td>
+                <td className="text-center">{averageScore.toFixed(1)}</td>
+                <td className="text-center">
+                  {(
+                    cummulativeAverageScores /
+                    (averageScoresList.length - index)
+                  ).toFixed(1)}
+                </td>
+                <td className="">
+                  {/* The approved value should be coming from the database */}
                   <p>
                     <button
+                      title="Clicking this button toggle approval status"
                       type="button"
-                      onClick={() =>
-                        this.props.history.push(
-                          `/admin/edit-scores/${scoreboard.id}`
-                        )
-                      }
                       className="btn btn-light"
+                      onClick={() => this.onChangeApproval(scoreboard.id)}
                     >
-                      Update Scores
+                      {scoreboard.isApproved ? 'Approved' : 'Not yet Approved'}
                     </button>
                   </p>
-                  <p>
-                    <button
-                      title="This allow you to edit the scoreboard by adding more KPIs, editing KPI weight, etc."
-                      type="button"
-                      onClick={() =>
-                        this.props.history.push(
-                          `/admin/edit-scoreboard/${scoreboard.userId}`
-                        )
-                      }
-                      className="btn btn-light"
-                    >
-                      Update Scoreboard
-                    </button>
-                  </p>
-                  <p>
-                    <DeleteButtonComponent
-                      scoreboard={scoreboard}
-                      deleteScoreboard={this.deleteScoreboard}
-                    />
-                  </p>
-                </div>
-              </td>
-            </tr>
-          </React.Fragment>
-        );
-      }
-    );
+                  <div style={{ display: scoreboard.isApproved ? 'none' : '' }}>
+                    <p>
+                      <button
+                        type="button"
+                        onClick={() =>
+                          this.props.history.push(
+                            `/admin/edit-scores/${scoreboard.id}`
+                          )
+                        }
+                        className="btn btn-light"
+                      >
+                        Update Scores
+                      </button>
+                    </p>
+                    <p>
+                      <DeleteButtonComponent
+                        scoreboard={scoreboard}
+                        deleteScoreboard={this.deleteScoreboard}
+                      />
+                    </p>
+                  </div>
+                </td>
+              </tr>
+            </React.Fragment>
+          );
+        })
+      : null;
+
     return (
       <div className="my-3">
         <div className="spin-loader"></div>
         <h3 className="mb-2">
           {isLoading ? <div className="spinner-border"></div> : ''}{' '}
-          {clonedDepartmentScoreboards.length > 0
-            ? clonedDepartmentScoreboards[0].user.username + "'s Scoreboards"
-            : 'No scoreboard to display'}
+          {clonedDepartmentScoreboards
+            ? clonedDepartmentScoreboards.length > 0
+              ? clonedDepartmentScoreboards[0].user.username + "'s Scoreboards"
+              : 'No scoreboard'
+            : 'No scoreboard'}
         </h3>
         <div className="text-right">
           <label className="mr-sm-2" htmlFor="number">

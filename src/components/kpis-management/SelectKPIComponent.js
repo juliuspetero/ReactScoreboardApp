@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { fetchKPIs } from '../../redux/kpis/actions/fetchKPIsActions';
+import isArray from 'lodash/isArray';
 
 export class SelectKPIComponent extends Component {
   constructor(props) {
@@ -22,7 +23,7 @@ export class SelectKPIComponent extends Component {
       id: this.props.id,
       KPIId: this.props.selectedKPI ? this.props.selectedKPI.id : '',
       KPIWeight: this.props.selectedKPI
-        ? this.props.selectedKPI.kPIScoreboardLayouts.KPIWeight
+        ? this.props.selectedKPI.kPIScoreboardLayout.KPIWeight
         : ''
     });
     this.props.fetchKPIs();
@@ -39,7 +40,7 @@ export class SelectKPIComponent extends Component {
   };
 
   render() {
-    const KPIsOptions = this.props.kpisData.kpis
+    const KPIsOptions = isArray(this.props.kpisData.kpis)
       ? this.props.kpisData.kpis.map(kpi => (
           <option key={kpi.id} value={kpi.id}>
             {kpi.title}
@@ -69,7 +70,7 @@ export class SelectKPIComponent extends Component {
             onChange={this.onChange}
             name="KPIWeight"
             className="form-control"
-            placeholder="KPI Weight from 0 - 10"
+            placeholder="KPI Weight from 0 - 100"
             type="number"
             value={this.state.KPIWeight}
           />

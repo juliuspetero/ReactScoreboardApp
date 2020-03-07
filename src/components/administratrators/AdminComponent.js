@@ -33,6 +33,7 @@ import EditJobtitleComponent from '../jobtitles/EditJobtitleComponent';
 import DepartmentsListComponent from '../departments/DepartmentsListComponent';
 import CreateDepartmentComponent from '../departments/CreateDepartmentComponent';
 import EditDepartmentComponent from '../departments/EditDepartmentComponent';
+import MyDetailsComponent from './MyDetailsComponent';
 
 export class AdminComponent extends Component {
   logout = e => {
@@ -231,35 +232,8 @@ export class AdminComponent extends Component {
               <li className="list-group-item sidebar-separator-title text-muted d-flex align-items-center menu-collapsed">
                 <small>MAIN MENU</small>
               </li>
-              {/* <!-- /END Separator --> */}
-              {/* <!-- Menu with submenu --> */}
-              <a
-                href="#submenu1"
-                data-toggle="collapse"
-                aria-expanded="false"
-                className="bg-dark list-group-item list-group-item-action flex-column align-items-start"
-              >
-                <div className="d-flex w-100 justify-content-start align-items-center">
-                  <span className="fa fa-dashboard fa-fw mr-3"></span>
-                  <span className="menu-collapsed">Dashboard</span>
-                  <span className="submenu-icon ml-auto"></span>
-                </div>
-              </a>
-              {/* <!-- Submenu content --> */}
-              <div id="submenu1" className="collapse sidebar-submenu">
-                <NavLink
-                  to="/admin/last-month"
-                  className="list-group-item list-group-item-action bg-dark text-white"
-                >
-                  <span className="menu-collapsed">Last Month Scoreboards</span>
-                </NavLink>
-                <NavLink
-                  to="/admin/last-month"
-                  className="list-group-item list-group-item-action bg-dark text-white"
-                >
-                  <span className="menu-collapsed">Reports</span>
-                </NavLink>
-              </div>
+
+              {/* PROFILE */}
               <a
                 href="#submenu2"
                 data-toggle="collapse"
@@ -287,6 +261,36 @@ export class AdminComponent extends Component {
                   <span className="menu-collapsed">My Details</span>
                 </NavLink>
               </div>
+
+              {/* DASHBOARD*/}
+              <a
+                href="#submenu1"
+                data-toggle="collapse"
+                aria-expanded="false"
+                className="bg-dark list-group-item list-group-item-action flex-column align-items-start"
+              >
+                <div className="d-flex w-100 justify-content-start align-items-center">
+                  <span className="fa fa-dashboard fa-fw mr-3"></span>
+                  <span className="menu-collapsed">Dashboard</span>
+                  <span className="submenu-icon ml-auto"></span>
+                </div>
+              </a>
+              {/* <!-- Submenu content --> */}
+              <div id="submenu1" className="collapse sidebar-submenu">
+                <NavLink
+                  to="/admin/last-month"
+                  className="list-group-item list-group-item-action bg-dark text-white"
+                >
+                  <span className="menu-collapsed">Last Month Scoreboards</span>
+                </NavLink>
+                <NavLink
+                  to="/admin/last-month"
+                  className="list-group-item list-group-item-action bg-dark text-white"
+                >
+                  <span className="menu-collapsed">Reports</span>
+                </NavLink>
+              </div>
+
               {/* <!-- Separator with title --> */}
               <li className="list-group-item sidebar-separator-title text-muted d-flex align-items-center menu-collapsed">
                 <small>OPTIONS</small>
@@ -570,6 +574,12 @@ export class AdminComponent extends Component {
               <Route
                 path={'/admin/search-employee'}
                 component={SearchEmployeeComponent}
+              />
+
+              {/* Information Regarding me */}
+              <Route
+                path={'/admin/my-details'}
+                component={MyDetailsComponent}
               />
 
               <Route

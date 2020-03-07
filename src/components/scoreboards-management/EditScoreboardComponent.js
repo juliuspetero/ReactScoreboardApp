@@ -21,8 +21,6 @@ export class EditScoreboardComponent extends Component {
     };
   }
 
-  // Clear the Redis
-
   // Fetch the user information from the server
   async componentDidMount() {
     this.setState({
@@ -47,7 +45,6 @@ export class EditScoreboardComponent extends Component {
 
   // Handle state change i.e. the query parameter
   onChange = e => {
-    this.loadSearchResults(e.target.value);
     this.setState({ [e.target.name]: e.target.value });
   };
 

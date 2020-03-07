@@ -34,6 +34,9 @@ export class SearchEmployeesComponent extends Component {
             <th scope="row">{employee.username}</th>
             <td>{employee.email}</td>
             <td>{employee.department.title}</td>
+            <td>
+              {employee.jobtitle ? employee.jobtitle.title : 'No Job Title'}
+            </td>
             <td>{employee.roles[0] ? employee.roles[0].name : ''}</td>
           </tr>
         </React.Fragment>
@@ -57,7 +60,8 @@ export class SearchEmployeesComponent extends Component {
               <th scope="col">User Name</th>
               <th scope="col">Email</th>
               <th scope="col">Department</th>
-              <th scope="col">Position</th>
+              <th scope="col">Job Title</th>
+              <th scope="col">Hierachy</th>
             </tr>
           </thead>
           <tbody>{searchEmployeesList}</tbody>

@@ -1,7 +1,7 @@
 import axios from 'axios';
 import isObject from 'lodash/isObject';
 import config from '../../../config/config';
-import validateCreateKPIInput from '../../../helpers/validateCreateKPIInput';
+import validateCreateJobtitle from '../../../helpers/validateCreateJotitle';
 
 import {
   CREATE_KPI_REQUEST,
@@ -15,13 +15,13 @@ export const createJobtitle = jobtitle => {
   return dispatch => {
     dispatch(createKPIRequest());
     // Write client side validation here
-    const { errors, isValid } = validateCreateKPIInput(jobtitle);
+    const { errors, isValid } = validateCreateJobtitle(jobtitle);
     // console.log(kpi);
     // return;
     if (!isValid) dispatch(createKPIFailure({ data: errors }));
     else {
       axios
-        .post(`${config.baseUrl}/jobtitles`, jobtitle)
+        .post(`${config.baseUrl}/scoreboardlayouts`, jobtitle)
         .then(response => {
           // console.log(response);
           if (response.data) dispatch(createKPISuccess(response.data));

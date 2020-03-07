@@ -1,17 +1,23 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import cloneDeep from 'lodash/cloneDeep';
 import { createJobtitle } from '../../redux/jobtitles/actions/createJobtitleActions';
 import { addCreateKPIFlashMessage } from '../../redux/flashMessages/actions/createKPIFlashMessagesActions';
 import CreateKPIErrorMessage from '../messages/CreateKPIErrorMessage';
 import { deleteCreateKPIErrorMessage } from '../../redux/errorMessages/actions/errorMessagesActions';
 import { fetchDepartments } from '../../redux/departments/actions/fetchDepartmentsActions';
+import { addSelectKPI } from '../../redux/kpis/actions/selectKPIActions';
+import SelectKPIListComponent from '../kpis-management/SelectKPIsListComponent';
 
 export class CreateJobtitleComponent extends Component {
   constructor(props) {
     super(props);
     this.state = {
       title: '',
-      departmentId: ''
+      departmentId: '',
+      componentIds: [],
+      KPIIds: [],
+      KPIWeights: []
     };
   }
 
@@ -25,6 +31,60 @@ export class CreateJobtitleComponent extends Component {
     this.props.createJobtitle(this.state);
   };
 
+  // Handle the KPIs to be added in the scoreboard
+  onKPIChange = kpi => {
+    const { componentIds, KPIIds, KPIWeights } = this.state;
+    // Populate the state for initial values
+    if (componentIds.length === 0) {
+      this.setState({
+        componentIds: [...componentIds, kpi.id],
+        KPIIds: [...KPIIds, kpi.KPIId],
+        KPIWeights: [...KPIWeights, kpi.KPIWeight]
+      });
+    } else {
+      let count = 0;
+      componentIds.forEach((componentId, index) => {
+        // A new component is coming
+        if (kpi.id !== componentId) count++;
+
+        if (kpi.id === componentId) {
+          // A component is to be updated
+          const KPIIds = this.state.KPIIds;
+          KPIIds[index] = kpi.KPIId;
+          const KPIWeights = this.state.KPIWeights;
+          KPIWeights[index] = kpi.KPIWeight;
+          this.setState({
+            KPIIds,
+            KPIWeights
+          });
+        }
+      });
+
+      // There is no id which matches the incoming one
+      if (count === componentIds.length) {
+        this.setState({
+          componentIds: [...componentIds, kpi.id],
+          KPIIds: [...KPIIds, kpi.KPIId],
+          KPIWeights: [...KPIWeights, kpi.KPIWeight]
+        });
+      }
+    }
+  };
+
+  // Handle deleteKPI event
+  onDeleteKPI = id => {
+    const { componentIds, KPIIds, KPIWeights } = cloneDeep(this.state);
+    const index = componentIds.indexOf(id);
+    componentIds.splice(index, 1);
+    KPIIds.splice(index, 1);
+    KPIWeights.splice(index, 1);
+    this.setState({
+      componentIds,
+      KPIIds,
+      KPIWeights
+    });
+  };
+
   // Call flash messages on successful user creation
   UNSAFE_componentWillReceiveProps(nextProps) {
     if (
@@ -32,9 +92,6 @@ export class CreateJobtitleComponent extends Component {
         nextProps.createJobtitleData.createJobtitle &&
       nextProps.createJobtitleData.createJobtitle != null
     ) {
-      this.props.addCreateKPIFlashMessage(
-        nextProps.createJobtitleData.createJobtitle
-      );
       this.props.history.push('/admin/all-jobtitles');
     }
   }
@@ -115,6 +172,22 @@ export class CreateJobtitleComponent extends Component {
                 </select>
               </div>
 
+              {/* Section for adding KPIs */}
+              {/* The select list for the KPIs to go in the dashboard */}
+              <SelectKPIListComponent
+                onKPIChange={this.onKPIChange}
+                onDeleteKPI={this.onDeleteKPI}
+              />
+              <div className="text-left">
+                <button
+                  type="button"
+                  onClick={() => this.props.addSelectKPI()}
+                  className="btn btn-light btn-outline-secondary mb-2"
+                >
+                  Add KPI
+                </button>
+              </div>
+
               <div className="form-group">
                 <button
                   disabled={isLoading}
@@ -149,6 +222,7 @@ const mapStateToProps = state => {
 };
 
 export default connect(mapStateToProps, {
+  addSelectKPI,
   createJobtitle,
   fetchDepartments,
   addCreateKPIFlashMessage,

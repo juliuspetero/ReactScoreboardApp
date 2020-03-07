@@ -36,6 +36,9 @@ export class EmployeesListComponent extends Component {
             <td>{employee.email}</td>
             <td>{employee.phoneNumber}</td>
             <td>{employee.department.title}</td>
+            <td>
+              {employee.jobtitle ? employee.jobtitle.title : 'No Job Title'}
+            </td>
             <td>{employee.roles[0] ? employee.roles[0].name : ''}</td>
           </tr>
         </React.Fragment>
@@ -45,11 +48,12 @@ export class EmployeesListComponent extends Component {
       <div className="my-3">
         <div className="spin-loader"></div>
         <h3 className="mb-2">
-          {isLoading ? <div className="spinner-border"></div> : ''} All
-          Employees
-          <Link className="btn btn-secondary ml-3" to="/admin/search-employee">
-            Search Employee
-          </Link>
+          {isLoading ? <div className="spinner-border"></div> : ''} Employees
+          <div className="text-right">
+            <Link className="btn btn-secondary" to="/admin/search-employee">
+              Search Employee
+            </Link>
+          </div>
         </h3>
 
         <table
@@ -64,7 +68,8 @@ export class EmployeesListComponent extends Component {
               <th scope="col">Email</th>
               <th scope="col">Phone Number</th>
               <th scope="col">Department</th>
-              <th scope="col">Position</th>
+              <th scope="col">Job Title</th>
+              <th scope="col">Hierachy</th>
             </tr>
           </thead>
           <tbody>{employees}</tbody>

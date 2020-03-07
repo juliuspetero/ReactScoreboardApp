@@ -1,40 +1,149 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import axios from 'axios';
+import cloneDeep from 'lodash/cloneDeep';
 import { editJobtitle } from '../../redux/jobtitles/actions/editJobtitleActions';
 import { fetchJobtitle } from '../../redux/jobtitles/actions/fetchJobtitleActions';
 import { addCreateKPIFlashMessage } from '../../redux/flashMessages/actions/createKPIFlashMessagesActions';
 import CreateKPIErrorMessage from '../messages/CreateKPIErrorMessage';
 import { deleteCreateKPIErrorMessage } from '../../redux/errorMessages/actions/errorMessagesActions';
 import { fetchDepartments } from '../../redux/departments/actions/fetchDepartmentsActions';
+import config from '../../config/config';
+import SelectKPIListComponent from '../kpis-management/SelectKPIsListComponent';
+import { addSelectKPI } from '../../redux/kpis/actions/selectKPIActions';
 
 export class EditJobtitleComponent extends Component {
   constructor(props) {
     super(props);
     this.state = {
       title: '',
-      departmentId: ''
+      departmentId: '',
+      jobtitle: null,
+      componentIds: [],
+      KPIIds: [],
+      KPIWeights: []
     };
   }
 
-  componentDidMount() {
+  async componentDidMount() {
     this.props.fetchJobtitle(this.props.match.params.id);
     this.props.fetchDepartments();
+
+    // Handle the current KPIs in the list
+    const response = await axios.get(
+      `${config.baseUrl}/jobtitles/${this.props.match.params.id}`
+    );
+    const jobtitle = await response.data;
+    this.setState({
+      jobtitle
+    });
+
+    // Add the KPIs in the select list for the user to begin with
+    if (jobtitle) {
+      if (jobtitle.scoreboardLayout) {
+        jobtitle.scoreboardLayout.kpis.forEach(kpi => {
+          this.props.addSelectKPI();
+        });
+      }
+    }
   }
 
   onChange = e => this.setState({ [e.target.name]: e.target.value });
+
+  // Handler for creation of a resource on the API
   onSubmit = e => {
     e.preventDefault();
-    this.props.editJobtitle(this.props.match.params.id, this.state);
+    const body = {
+      jobtitle: {
+        id: this.state.jobtitle.id,
+        title: this.state.title,
+        departmentId: this.state.departmentId
+      },
+      scoreboardLayoutId: this.state.jobtitle.scoreboardLayout.id,
+      KPIIds: this.state.KPIIds,
+      KPIWeights: this.state.KPIWeights
+    };
+
+    this.props.editJobtitle(body);
   };
 
-  // Call flash messages on successful user creation
+  // Handle the KPIs to be added in the scoreboard
+  onKPIChange = kpi => {
+    const { componentIds, KPIIds, KPIWeights } = this.state;
+    // Populate the state for initial values
+    if (componentIds.length === 0) {
+      this.setState({
+        componentIds: [...componentIds, kpi.id],
+        KPIIds: [...KPIIds, kpi.KPIId],
+        KPIWeights: [...KPIWeights, kpi.KPIWeight]
+      });
+    } else {
+      let count = 0;
+      componentIds.forEach((componentId, index) => {
+        // A new component is coming
+        if (kpi.id !== componentId) count++;
+
+        if (kpi.id === componentId) {
+          // A component is to be updated
+          const KPIIds = this.state.KPIIds;
+          KPIIds[index] = kpi.KPIId;
+          const KPIWeights = this.state.KPIWeights;
+          KPIWeights[index] = kpi.KPIWeight;
+          this.setState({
+            KPIIds,
+            KPIWeights
+          });
+        }
+      });
+
+      // There is no id which matches the incoming one
+      if (count === componentIds.length) {
+        this.setState({
+          componentIds: [...componentIds, kpi.id],
+          KPIIds: [...KPIIds, kpi.KPIId],
+          KPIWeights: [...KPIWeights, kpi.KPIWeight]
+        });
+      }
+    }
+  };
+
+  // Handle deleteKPI event
+  onDeleteKPI = id => {
+    const { componentIds, KPIIds, KPIWeights } = cloneDeep(this.state);
+    const index = componentIds.indexOf(id);
+    const KPIId = KPIIds[index];
+    componentIds.splice(index, 1);
+    KPIIds.splice(index, 1);
+    KPIWeights.splice(index, 1);
+    this.setState({
+      componentIds,
+      KPIIds,
+      KPIWeights
+    });
+
+    // Delete the KPI state scoreboard
+    const newKPIs = this.state.jobtitle.scoreboardLayout.kpis.filter(
+      kpi => kpi.id !== KPIId
+    );
+    let newJobtitleState = this.state.jobtitle;
+    newJobtitleState.scoreboardLayout.kpis = newKPIs;
+
+    this.setState({
+      jobtitle: newJobtitleState
+    });
+  };
+
+  // Redirect back to all the job on successful edit
   UNSAFE_componentWillReceiveProps(nextProps) {
     const jobtitle = nextProps.jobtitleData.jobtitle;
     if (jobtitle) {
-      this.setState({
-        title: jobtitle.title,
-        departmentId: jobtitle.departmentId
-      });
+      // console.log(jobtitle);
+      if (jobtitle.id) {
+        this.setState({
+          title: jobtitle.title,
+          departmentId: jobtitle.departmentId
+        });
+      }
     }
 
     if (
@@ -122,6 +231,28 @@ export class EditJobtitleComponent extends Component {
                 </select>
               </div>
 
+              {/* The select list for the KPIs to go in the dashboard */}
+              <SelectKPIListComponent
+                onKPIChange={this.onKPIChange}
+                onDeleteKPI={this.onDeleteKPI}
+                selectedKPIs={
+                  this.state.jobtitle
+                    ? this.state.jobtitle.scoreboardLayout
+                      ? this.state.jobtitle.scoreboardLayout.kpis
+                      : null
+                    : null
+                }
+              />
+              <div className="text-left">
+                <button
+                  type="button"
+                  onClick={() => this.props.addSelectKPI()}
+                  className="btn btn-light btn-outline-secondary mb-2"
+                >
+                  Add KPI
+                </button>
+              </div>
+
               <div className="form-group">
                 <button
                   disabled={isLoading}
@@ -161,5 +292,6 @@ export default connect(mapStateToProps, {
   fetchJobtitle,
   fetchDepartments,
   addCreateKPIFlashMessage,
-  deleteCreateKPIErrorMessage
+  deleteCreateKPIErrorMessage,
+  addSelectKPI
 })(EditJobtitleComponent);
