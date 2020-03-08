@@ -39,7 +39,11 @@ export class JobtitlesListComponent extends Component {
           // Considering KPI for each job title
           const kpiTitles = jobtitle.scoreboardLayout
             ? jobtitle.scoreboardLayout.kpis.map(kpi => {
-                return <td key={kpi.id}>{kpi.title}</td>;
+                return (
+                  <td title={kpi.description} key={kpi.id}>
+                    {kpi.title}
+                  </td>
+                );
               })
             : null;
 

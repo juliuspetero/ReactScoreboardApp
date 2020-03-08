@@ -1,33 +1,51 @@
 import axios from 'axios';
+import cloneDeep from 'lodash/cloneDeep';
 import isObject from 'lodash/isObject';
 import config from '../../../config/config';
-import validateCreateKPIInput from '../../../helpers/validateCreateKPIInput';
+import validateEditEmployee from '../../../helpers/validateEditEmployee';
 
 import {
-  CREATE_KPI_REQUEST,
-  CREATE_KPI_SUCCESS,
-  CREATE_KPI_FAILURE
-} from '../../kpis/actionsTypes/createKPIActionTypes';
+  EDIT_USER_FAILURE,
+  EDIT_USER_SUCCESS,
+  EDIT_USER_REQUEST
+} from '../../users/actionsTypes/editUserActionTypes';
 
 // Action creators returns the action object
 export const editEmployeee = (id, employee) => {
-  console.log(employee);
   return dispatch => {
-    dispatch(createKPIRequest());
+    dispatch(editEmployeeRequest());
     // Write client side validation here
-    const { errors, isValid } = validateCreateKPIInput(employee);
+    const { errors, isValid } = validateEditEmployee(cloneDeep(employee));
     // console.log(kpi);
     // return;
-    if (!isValid) dispatch(createKPIFailure({ data: errors }));
+    if (!isValid) dispatch(editEmployeeFailure({ data: errors }));
     else {
+      if (employee.password === '') {
+        delete employee.password;
+        delete employee.passwordConfirmation;
+      }
+
+      const formdata = new FormData();
+      formdata.append('profilePhoto', employee.profilePhoto);
+      formdata.append('username', employee.username);
+      formdata.append('email', employee.email);
+      formdata.append('password', employee.password);
+      formdata.append('passwordConfirmation', employee.passwordConfirmation);
+      formdata.append('phoneNumber', employee.phoneNumber);
+      formdata.append('sex', employee.sex);
+      formdata.append('address', employee.address);
+
       axios
-        .put(`${config.baseUrl}/users/${id}`, employee)
+        .put(
+          `${config.baseUrl}/users/${id}`,
+          employee.roles ? employee : formdata
+        )
         .then(response => {
           // console.log(response);
-          if (response.data) dispatch(createKPISuccess(response.data));
+          if (response.data) dispatch(editEmployeeSuccess(response.data));
           else
             dispatch(
-              createKPIFailure({
+              editEmployeeFailure({
                 data: {
                   message: 'Something occur try again later...'
                 }
@@ -37,10 +55,10 @@ export const editEmployeee = (id, employee) => {
         .catch(error => {
           if (error.response) {
             if (isObject(error.response.data))
-              dispatch(createKPIFailure(error.response));
+              dispatch(editEmployeeFailure(error.response));
             else
               dispatch(
-                createKPIFailure({
+                editEmployeeFailure({
                   data: {
                     message: 'Something occur try again later...'
                   }
@@ -48,7 +66,7 @@ export const editEmployeee = (id, employee) => {
               );
           } else {
             dispatch(
-              createKPIFailure({
+              editEmployeeFailure({
                 data: {
                   message: 'Something occur try again later...'
                 }
@@ -60,22 +78,22 @@ export const editEmployeee = (id, employee) => {
   };
 };
 
-export const createKPIRequest = () => {
+export const editEmployeeRequest = () => {
   return {
-    type: CREATE_KPI_REQUEST
+    type: EDIT_USER_REQUEST
   };
 };
 
-export const createKPISuccess = kpi => {
+export const editEmployeeSuccess = kpi => {
   return {
-    type: CREATE_KPI_SUCCESS,
+    type: EDIT_USER_SUCCESS,
     payload: kpi
   };
 };
 
-export const createKPIFailure = errors => {
+export const editEmployeeFailure = errors => {
   return {
-    type: CREATE_KPI_FAILURE,
+    type: EDIT_USER_FAILURE,
     payload: errors
   };
 };

@@ -1,37 +1,37 @@
 import {
-  CREATE_KPI_REQUEST,
-  CREATE_KPI_SUCCESS,
-  CREATE_KPI_FAILURE
-} from '../../kpis/actionsTypes/createKPIActionTypes';
+  EDIT_USER_FAILURE,
+  EDIT_USER_SUCCESS,
+  EDIT_USER_REQUEST
+} from '../actionsTypes/editUserActionTypes';
 
-import { DELETE_CREATE_KPI_ERROR_MESSAGE } from '../../errorMessages/actionTypes/errorMessagesActionType';
+import { DELETE_EDIT_EMPLOYEE_ERROR_MESSAGE } from '../../errorMessages/actionTypes/errorMessagesActionType';
 const initialState = {
   isLoading: false,
-  editJobtitle: null,
+  editEmployee: null,
   errors: null
 };
 
 const editEmployeeReducer = (state = initialState, action) => {
   switch (action.type) {
-    case CREATE_KPI_REQUEST:
+    case EDIT_USER_REQUEST:
       return {
         ...state,
         isLoading: true
       };
-    case CREATE_KPI_SUCCESS:
+    case EDIT_USER_SUCCESS:
       return {
         isLoading: false,
-        editJobtitle: action.payload,
+        editEmployee: action.payload,
         errors: null
       };
-    case CREATE_KPI_FAILURE:
+    case EDIT_USER_FAILURE:
       return {
         isLoading: false,
-        editJobtitle: null,
+        editEmployee: null,
         errors: action.payload
       };
 
-    case DELETE_CREATE_KPI_ERROR_MESSAGE:
+    case DELETE_EDIT_EMPLOYEE_ERROR_MESSAGE:
       delete state.errors.data[action.key];
       return {
         ...state

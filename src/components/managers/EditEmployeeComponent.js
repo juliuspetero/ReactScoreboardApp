@@ -73,7 +73,7 @@ export class EditEmployeeComponent extends Component {
         nextProps.editEmployeeData.editEmployee &&
       nextProps.editEmployeeData.editEmployee != null
     ) {
-      this.props.history.push('/admin/all-employees');
+      this.props.history.push('/manager/all-employees');
     }
   }
 

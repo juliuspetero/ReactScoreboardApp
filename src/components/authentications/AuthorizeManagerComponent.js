@@ -20,7 +20,7 @@ export default function(ComposedCompponent) {
         ) {
           // Non-admin members are not allow to access the resource
           this.props.addUnauthorizedUserFlashMessage(
-            'You need to login as Administrator to access this resource'
+            'You need to login as Manager to access this resource'
           );
           this.props.history.push('/login');
         }

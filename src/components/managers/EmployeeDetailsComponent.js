@@ -1,3 +1,4 @@
+import moment from 'moment';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import axios from 'axios';
@@ -5,7 +6,7 @@ import isEmpty from 'lodash/isEmpty';
 import { Link } from 'react-router-dom';
 import '../../assets/css/employeeComponent.css';
 import { fetchUser } from '../../redux/users/actions/fetchUserActions';
-import DeleteButtonComponent from './DeleteButtonComponent';
+import DeleteButtonComponent from './DeleteEmployeeButtonComponent';
 import config from '../../config/config';
 
 export class EmployeeComponent extends Component {
@@ -48,15 +49,6 @@ export class EmployeeComponent extends Component {
                       <tr>
                         <td>
                           <strong>
-                            <span className="fa fa-asterisk text-secondary mr-1"></span>
-                            Identification
-                          </strong>
-                        </td>
-                        <td className="text-primary">{user.id}</td>
-                      </tr>
-                      <tr>
-                        <td>
-                          <strong>
                             <span className="fa fa-user text-secondary mr-2"></span>
                             User Name
                           </strong>
@@ -83,11 +75,25 @@ export class EmployeeComponent extends Component {
                         <td className="text-primary">{user.phoneNumber}</td>
                       </tr>
 
+                      {/* Job title of the employee */}
+                      <tr>
+                        <td>
+                          <strong>
+                            <span className="fas fa-key text-secondary mr-2"></span>
+                            Job Title
+                          </strong>
+                        </td>
+                        <td className="text-primary">
+                          {user.jobtitle ? user.jobtitle.title : null}
+                        </td>
+                      </tr>
+
+                      {/* Job Hierachy */}
                       <tr>
                         <td>
                           <strong>
                             <span className="fas fa-user text-secondary mr-2"></span>
-                            Role
+                            Job Hierachy
                           </strong>
                         </td>
                         <td className="text-primary">
@@ -107,19 +113,12 @@ export class EmployeeComponent extends Component {
                         <td>
                           <strong>
                             <span className="fa fa-calendar text-secondary mr-2"></span>
-                            Created
+                            Created At
                           </strong>
                         </td>
-                        <td className="text-primary">{user.createdAt}</td>
-                      </tr>
-                      <tr>
-                        <td>
-                          <strong>
-                            <span className="fa fa-calendar text-secondary mr-2"></span>
-                            Modified
-                          </strong>
+                        <td className="text-primary">
+                          {moment(user.createdAt).format('DD/MM/YYYY')}
                         </td>
-                        <td className="text-primary">2{user.updatedAt}</td>
                       </tr>
                     </tbody>
                   </table>
@@ -132,19 +131,19 @@ export class EmployeeComponent extends Component {
                     deleteEmployee={this.deleteEmployee}
                   />
                   <Link
-                    to={`/admin/edit-employee/${user.id}`}
+                    to={`/manager/edit-employee/${user.id}`}
                     className="btn btn-primary mx-2"
                   >
                     Edit
                   </Link>
                   <Link
-                    to={`/admin/scoreboardlayout/${user.id}`}
+                    to={`/manager/scoreboardlayout/${user.id}`}
                     className="btn btn-primary mx-2"
                   >
                     View KPIs
                   </Link>
                   <Link
-                    to={`/admin/all-scoreboards/${user.id}`}
+                    to={`/manager/all-scoreboards/${user.id}`}
                     className="btn btn-primary mx-2"
                   >
                     View Scoreboards

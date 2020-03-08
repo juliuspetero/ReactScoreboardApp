@@ -50,7 +50,7 @@ export class EmployeesListComponent extends Component {
         <h3 className="mb-2">
           {isLoading ? <div className="spinner-border"></div> : ''} Employees
           <div className="text-right">
-            <Link className="btn btn-secondary" to="/admin/search-employee">
+            <Link className="btn btn-secondary" to="/manager/search-employee">
               Search Employee
             </Link>
           </div>

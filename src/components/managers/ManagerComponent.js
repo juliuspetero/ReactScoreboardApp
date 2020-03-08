@@ -6,8 +6,8 @@ import { logout } from '../../redux/authentications/actions/logoutActions';
 import AuthenticateUserFlashMessage from '../messages/AuthenticateUserFlashMessage';
 import ManagerDashboard from './ManagerDashboard';
 import { UnauthorizedUserFlashMessage } from '../messages/UnauthorizedUserFlashMessage';
-import EmployeesListComponent from '../employees-management/EmployeesListComponent';
-import EmployeeDetailsComponent from '../employees-management/EmployeeDetailsComponent';
+import EmployeesListComponent from './EmployeesListComponent';
+import EmployeeDetailsComponent from './EmployeeDetailsComponent';
 import CreateKPIComponent from './CreateKPIComponent';
 import CreateKPIFlashMessagesList from '../messages/CreateKPIFlashMessagesList';
 import KPIsListComponent from '../kpis-management/KPIsListComponent';
@@ -19,6 +19,11 @@ import EditScoreboardComponent from './EditScoreboardComponent';
 import EditScoreboardFlashMessage from '../messages/EditScoreboardFlashMessage';
 import EditScoresComponent from './EditScoresComponent';
 import NoMatch404 from '../layouts/NoMatch404';
+import MyDetailsComponent from './MyDetailsComponent';
+import SettingsComponent from './SetttingsComponent';
+import ScoreboardDetailsComponent from '../scoreboards-management/ScoreboardDetailsComponent';
+import EditEmployeeComponent from './EditEmployeeComponent';
+import SearchEmployeeComponent from '../employees/SearchEmployeeComponent';
 
 export class ManagerComponent extends Component {
   logout = e => {
@@ -217,41 +222,8 @@ export class ManagerComponent extends Component {
               <li className="list-group-item sidebar-separator-title text-muted d-flex align-items-center menu-collapsed">
                 <small>MAIN MENU</small>
               </li>
-              {/* <!-- /END Separator --> */}
-              {/* <!-- Menu with submenu --> */}
-              <a
-                href="#submenu1"
-                data-toggle="collapse"
-                aria-expanded="false"
-                className="bg-dark list-group-item list-group-item-action flex-column align-items-start"
-              >
-                <div className="d-flex w-100 justify-content-start align-items-center">
-                  <span className="fa fa-dashboard fa-fw mr-3"></span>
-                  <span className="menu-collapsed">Dashboard</span>
-                  <span className="submenu-icon ml-auto"></span>
-                </div>
-              </a>
-              {/* <!-- Submenu content --> */}
-              <div id="submenu1" className="collapse sidebar-submenu">
-                <a
-                  href="#!"
-                  className="list-group-item list-group-item-action bg-dark text-white"
-                >
-                  <span className="menu-collapsed">Score Boards</span>
-                </a>
-                <a
-                  href="#!"
-                  className="list-group-item list-group-item-action bg-dark text-white"
-                >
-                  <span className="menu-collapsed">Charts</span>
-                </a>
-                <a
-                  href="#!"
-                  className="list-group-item list-group-item-action bg-dark text-white"
-                >
-                  <span className="menu-collapsed">Reports</span>
-                </a>
-              </div>
+
+              {/* PROFILE */}
               <a
                 href="#submenu2"
                 data-toggle="collapse"
@@ -266,19 +238,60 @@ export class ManagerComponent extends Component {
               </a>
               {/* <!-- Submenu content --> */}
               <div id="submenu2" className="collapse sidebar-submenu">
-                <a
-                  href="#!"
+                <NavLink
+                  to="/manager/settings"
                   className="list-group-item list-group-item-action bg-dark text-white"
                 >
                   <span className="menu-collapsed">Settings</span>
-                </a>
-                <a
-                  href="#!"
+                </NavLink>
+                <NavLink
+                  to="/manager/my-details"
                   className="list-group-item list-group-item-action bg-dark text-white"
                 >
-                  <span className="menu-collapsed">Password</span>
-                </a>
+                  <span className="menu-collapsed">My Details</span>
+                </NavLink>
+
+                <NavLink
+                  to={`/manager/all-scoreboards/${
+                    isAuthenticated ? authenticateUser.userInformation.id : ''
+                  }`}
+                  className="list-group-item list-group-item-action bg-dark text-white"
+                >
+                  <span className="menu-collapsed">My Scoreboards</span>
+                </NavLink>
               </div>
+
+              {/* DASHBOARD */}
+
+              <a
+                href="#submenu1"
+                data-toggle="collapse"
+                aria-expanded="false"
+                className="bg-dark list-group-item list-group-item-action flex-column align-items-start"
+              >
+                <div className="d-flex w-100 justify-content-start align-items-center">
+                  <span className="fa fa-dashboard fa-fw mr-3"></span>
+                  <span className="menu-collapsed">Dashboard</span>
+                  <span className="submenu-icon ml-auto"></span>
+                </div>
+              </a>
+              {/* <!-- Submenu content --> */}
+              <div id="submenu1" className="collapse sidebar-submenu">
+                <NavLink
+                  to="/manager/last-month"
+                  className="list-group-item list-group-item-action bg-dark text-white"
+                >
+                  <span className="menu-collapsed">Last month scoreBoards</span>
+                </NavLink>
+
+                <NavLink
+                  to="/manager/reports"
+                  className="list-group-item list-group-item-action bg-dark text-white"
+                >
+                  <span className="menu-collapsed">Reports</span>
+                </NavLink>
+              </div>
+
               {/* <!-- Separator with title --> */}
               <li className="list-group-item sidebar-separator-title text-muted d-flex align-items-center menu-collapsed">
                 <small>OPTIONS</small>
@@ -357,28 +370,28 @@ export class ManagerComponent extends Component {
                   to="/manager/all-scoreboards"
                   className="list-group-item list-group-item-action bg-dark text-white"
                 >
-                  <span className="menu-collapsed">All Scoreboards</span>
+                  <span className="menu-collapsed">Last Month</span>
                 </NavLink>
                 <NavLink
-                  to="/manager/create-scoreboard"
+                  to="/manager/all-scoreboards"
                   className="list-group-item list-group-item-action bg-dark text-white"
                 >
-                  <span className="menu-collapsed">Create Scoreboard</span>
+                  <span className="menu-collapsed">This Year</span>
                 </NavLink>
               </div>
 
               {/* <!-- Separator without title --> */}
               <li className="list-group-item sidebar-separator menu-collapsed"></li>
               {/* <!-- /END Separator --> */}
-              <a
-                href="#!"
+              <NavLink
+                to="/manager/help"
                 className="bg-dark list-group-item list-group-item-action"
               >
                 <div className="d-flex w-100 justify-content-start align-items-center">
                   <span className="fa fa-question fa-fw mr-3"></span>
                   <span className="menu-collapsed">Help</span>
                 </div>
-              </a>
+              </NavLink>
             </ul>
             {/* List Group END */}
           </div>
@@ -430,8 +443,36 @@ export class ManagerComponent extends Component {
               />
 
               <Route
+                path={'/manager/scoreboardlayout/:id'}
+                component={ScoreboardDetailsComponent}
+              />
+
+              {/* Information Regarding me */}
+              <Route
+                path={'/manager/my-details'}
+                component={MyDetailsComponent}
+              />
+
+              <Route
+                path={'/mana/search-employee'}
+                component={SearchEmployeeComponent}
+              />
+
+              <Route path={'/manager/settings'} component={SettingsComponent} />
+
+              <Route
+                path={'/manager/all-scoreboards/:id'}
+                component={ScoreboardsListComponent}
+              />
+
+              <Route
                 path={'/manager/edit-scoreboard/:id'}
                 component={EditScoreboardComponent}
+              />
+
+              <Route
+                path={'/manager/edit-employee/:id'}
+                component={EditEmployeeComponent}
               />
               <Route
                 path={'/manager/edit-scores/:id'}

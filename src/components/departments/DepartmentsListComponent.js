@@ -69,7 +69,7 @@ export class DepartmentsListComponent extends Component {
       <div className="my-3">
         <div className="spin-loader"></div>
         <h3 className="mb-2">
-          {isLoading ? <div className="spinner-border"></div> : ''} All
+          {isLoading ? <div className="spinner-border"></div> : ''}
           Departments
         </h3>
         <table

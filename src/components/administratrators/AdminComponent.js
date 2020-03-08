@@ -21,7 +21,7 @@ import EditScoreboardComponent from '../scoreboards-management/EditScoreboardCom
 import EditScoreboardFlashMessage from '../messages/EditScoreboardFlashMessage';
 import EditScoresComponent from '../scoreboards-management/EditScoresComponent';
 import NoMatch404 from '../layouts/NoMatch404';
-import EditEmployeeComponent from '../employees-management/EditEmployeeComponent1';
+import EditEmployeeComponent from '../employees-management/EditEmployeeComponent';
 import ScoreboardDetailsComponent from '../scoreboards-management/ScoreboardDetailsComponent';
 import CreateScoreboardLayoutComponent from '../scoreboards-management/CreateScoreboardLayout';
 import SearchEmployeeComponent from '../employees/SearchEmployeeComponent';
@@ -34,6 +34,7 @@ import DepartmentsListComponent from '../departments/DepartmentsListComponent';
 import CreateDepartmentComponent from '../departments/CreateDepartmentComponent';
 import EditDepartmentComponent from '../departments/EditDepartmentComponent';
 import MyDetailsComponent from './MyDetailsComponent';
+import SettingsComponent from './SetttingsComponent';
 
 export class AdminComponent extends Component {
   logout = e => {
@@ -249,7 +250,7 @@ export class AdminComponent extends Component {
               {/* <!-- Submenu content --> */}
               <div id="submenu2" className="collapse sidebar-submenu">
                 <NavLink
-                  to="/admin/update-settings"
+                  to="/admin/settings"
                   className="list-group-item list-group-item-action bg-dark text-white"
                 >
                   <span className="menu-collapsed">Settings</span>
@@ -259,6 +260,14 @@ export class AdminComponent extends Component {
                   className="list-group-item list-group-item-action bg-dark text-white"
                 >
                   <span className="menu-collapsed">My Details</span>
+                </NavLink>
+                <NavLink
+                  to={`/admin/all-scoreboards/${
+                    isAuthenticated ? authenticateUser.userInformation.id : ''
+                  }`}
+                  className="list-group-item list-group-item-action bg-dark text-white"
+                >
+                  <span className="menu-collapsed">My Scoreboards</span>
                 </NavLink>
               </div>
 
@@ -570,6 +579,8 @@ export class AdminComponent extends Component {
                 path={'/admin/edit-jobtitle/:id'}
                 component={EditJobtitleComponent}
               />
+
+              <Route path={'/admin/settings'} component={SettingsComponent} />
 
               <Route
                 path={'/admin/search-employee'}

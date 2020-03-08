@@ -11,6 +11,9 @@ import ScoreboardsListComponent from './ScoreboardsListComponent';
 import EditScoreboardFlashMessage from '../messages/EditScoreboardFlashMessage';
 import EditScoresComponent from './EditScoresComponent';
 import NoMatch404 from '../layouts/NoMatch404';
+import MyDetailsComponent from './MyDetailsComponent';
+import SettingsComponent from './SetttingsComponent';
+import ScoreboardDetailsComponent from '../scoreboards-management/ScoreboardDetailsComponent';
 
 export class EmployeeComponent extends Component {
   logout = e => {
@@ -152,13 +155,13 @@ export class EmployeeComponent extends Component {
                     className="dropdown-item bg-dark text-white"
                     to="/admin/all-scoreboards"
                   >
-                    All Scoreboards
+                    My Scoreboards
                   </NavLink>
                   <NavLink
                     className="dropdown-item bg-dark text-white"
-                    to="/admin/edit-scoreboard"
+                    to={`/employee/kpis/${user.id}`}
                   >
-                    Edit Scoreboard
+                    My KPIs
                   </NavLink>
                 </div>
               </li>
@@ -205,10 +208,10 @@ export class EmployeeComponent extends Component {
                   <span className="menu-collapsed">Settings</span>
                 </NavLink>
                 <NavLink
-                  to="/employee/change-password"
+                  to="/employee/my-details"
                   className="list-group-item list-group-item-action bg-dark text-white"
                 >
-                  <span className="menu-collapsed">Change Password</span>
+                  <span className="menu-collapsed">My Details</span>
                 </NavLink>
               </div>
               <a
@@ -226,22 +229,16 @@ export class EmployeeComponent extends Component {
               {/* <!-- Submenu content --> */}
               <div id="submenu1" className="collapse sidebar-submenu">
                 <NavLink
-                  to="/employee/dashboard"
+                  to="/employee/last-month"
                   className="list-group-item list-group-item-action bg-dark text-white"
                 >
-                  <span className="menu-collapsed">Last month</span>
+                  <span className="menu-collapsed">Last month scoreboard</span>
                 </NavLink>
                 <NavLink
-                  to="#!"
+                  to="/employee/reports"
                   className="list-group-item list-group-item-action bg-dark text-white"
                 >
-                  <span className="menu-collapsed">This Year</span>
-                </NavLink>
-                <NavLink
-                  to="#!"
-                  className="list-group-item list-group-item-action bg-dark text-white"
-                >
-                  <span className="menu-collapsed">All</span>
+                  <span className="menu-collapsed">Reports</span>
                 </NavLink>
               </div>
 
@@ -272,13 +269,13 @@ export class EmployeeComponent extends Component {
                   to={`/employee/all-scoreboards/${user.id}`}
                   className="list-group-item list-group-item-action bg-dark text-white"
                 >
-                  <span className="menu-collapsed">All Scoreboards</span>
+                  <span className="menu-collapsed">My Scoreboards</span>
                 </NavLink>
                 <NavLink
-                  to="/employee/edit-scoreboard"
+                  to={`/employee/kpis/${user.id}`}
                   className="list-group-item list-group-item-action bg-dark text-white"
                 >
-                  <span className="menu-collapsed">Edit Scoreboard</span>
+                  <span className="menu-collapsed">My KPIs</span>
                 </NavLink>
               </div>
 
@@ -318,6 +315,20 @@ export class EmployeeComponent extends Component {
               <Route
                 path={'/employee/all-scoreboards/:id'}
                 component={ScoreboardsListComponent}
+              />
+
+              <Route
+                path={'/employee/kpis/:id'}
+                component={ScoreboardDetailsComponent}
+              />
+
+              <Route
+                path={'/employee/my-details'}
+                component={MyDetailsComponent}
+              />
+              <Route
+                path={'/employee/settings'}
+                component={SettingsComponent}
               />
 
               <Route

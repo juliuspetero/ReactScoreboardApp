@@ -1,33 +1,38 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { createUser } from '../../redux/users/actions/createUserActions';
-import { addCreateUserFlashMessage } from '../../redux/flashMessages/actions/createUserflashMessagesActions';
+import { editEmployeee } from '../../redux/users/actions/editUserActions';
 import CreateUserErrorMessage from '../messages/CreateUserErrorMessage';
-import { deleteCreateUserErrorMessage } from '../../redux/errorMessages/actions/errorMessagesActions';
+import { deleteEditEmployeeErrorMessage } from '../../redux/errorMessages/actions/errorMessagesActions';
 import { fetchRoles } from '../../redux/roles/actions/fetchRolesActions';
 import { fetchDepartments } from '../../redux/departments/actions/fetchDepartmentsActions';
+import { fetchJobtitles } from '../../redux/jobtitles/actions/fetchJobtitlesActions';
 import { fetchUser } from '../../redux/users/actions/fetchUserActions';
 
-export class EditEmployeeComponent extends Component {
+export class SettingsComponent extends Component {
   constructor(props) {
     super(props);
     this.state = {
       username: '',
       email: '',
+      address: '',
       password: '',
       passwordConfirmation: '',
       phoneNumber: '',
-      departmentId: '',
       sex: '',
-      roles: [],
-      employeeType: ''
+      profilePhoto: null
     };
   }
 
   onChange = e => this.setState({ [e.target.name]: e.target.value });
+
+  // Photo Upload
+  onFileChange = e => this.setState({ profilePhoto: e.target.files[0] });
   onSubmit = e => {
     e.preventDefault();
-    this.props.createUser(this.state);
+    this.props.editEmployeee(
+      this.props.authenticateUserData.authenticateUser.userInformation.id,
+      this.state
+    );
   };
 
   onRoleChange = e => {
@@ -37,61 +42,51 @@ export class EditEmployeeComponent extends Component {
     });
   };
 
-  async componentDidMount() {
+  componentDidMount() {
+    this.props.fetchUser(
+      this.props.authenticateUserData.authenticateUser.userInformation.id
+    );
     this.props.fetchRoles();
     this.props.fetchDepartments();
-    // console.log(this.props.match.params.id);
-    this.props.fetchUser(this.props.match.params.id);
+    this.props.fetchJobtitles();
   }
 
+  // Call flash messages on successful user creation
   UNSAFE_componentWillReceiveProps(nextProps) {
+    // Populate the user data to state
     const user = nextProps.userData.user;
     if (user) {
       this.setState({
         username: user.username,
         email: user.email,
-        passwordConfirmation: '',
+        address: user.address ? user.address : '',
         phoneNumber: user.phoneNumber,
-        departmentId: user.departmentId,
-        sex: user.sex,
-        roles: [user.roles[0].id]
+        sex: user.sex
       });
+    }
+
+    if (
+      this.props.editEmployeeData.editEmployee !==
+        nextProps.editEmployeeData.editEmployee &&
+      nextProps.editEmployeeData.editEmployee != null
+    ) {
+      this.props.history.push('/manager/my-details');
     }
   }
 
-  // Call flash messages on successful user creation
-  // UNSAFE_componentWillReceiveProps(nextProps) {
-  //   if (
-  //     this.props.createdUserData.createdUser !==
-  //       nextProps.createdUserData.createdUser &&
-  //     nextProps.createdUserData.createdUser != null
-  //   ) {
-  //     this.props.addCreateUserFlashMessage(
-  //       nextProps.createdUserData.createdUser
-  //     );
-  //     this.props.history.push('/admin');
-  //   }
-  // }
-
   // Render the UI
   render() {
-    const user = this.props.userData.user;
-    if (!user) {
-      return <div />;
-    }
-
     const {
       username,
       password,
       email,
+      address,
       passwordConfirmation,
-      phoneNumber,
-      departmentId,
-      roles,
-      sex
+      sex,
+      phoneNumber
     } = this.state;
 
-    const { isLoading, errors } = this.props.createdUserData;
+    const { isLoading, errors } = this.props.editEmployeeData;
 
     // Set up the error messages
     let errorMessages = '';
@@ -103,40 +98,20 @@ export class EditEmployeeComponent extends Component {
             messageKey={key}
             messageValue={errors.data[key]}
             deleteCreateUserErrorMessage={
-              this.props.deleteCreateUserErrorMessage
+              this.props.deleteEditEmployeeErrorMessage
             }
           ></CreateUserErrorMessage>
         ));
       }
     }
-    // Find all the roles in the system and insert in the DOM
-    let rolesOptions = null;
-    if (this.props.rolesData.roles) {
-      rolesOptions = this.props.rolesData.roles.map(role => (
-        <option key={role.id} value={role.id}>
-          {role.name}
-        </option>
-      ));
-    }
-
-    // Find all the departments in the system and insert in the DOM
-    const departmentsOptions = this.props.departmentsData.departments
-      ? this.props.departmentsData.departments.map(department => (
-          <option key={department.id} value={department.id}>
-            {department.title}
-          </option>
-        ))
-      : null;
 
     return (
       <React.Fragment>
         <div className="cardbg-light mx-auto">
           <article className="card-body mx-auto" style={{ width: 'auto' }}>
-            <h4 className="card-title mt-3 text-center">
-              Edit an Employee's Account
-            </h4>
+            <h4 className="card-title mt-3 text-center">Settings</h4>
             <div>{errorMessages}</div>
-            <form onSubmit={this.onSubmit}>
+            <form onSubmit={this.onSubmit} encType="multipart/form-data">
               {/* Username */}
               <div className="form-group input-group">
                 <div className="input-group-prepend">
@@ -172,7 +147,7 @@ export class EditEmployeeComponent extends Component {
               </div>
 
               {/* Phone Number */}
-              <div className="form-group input-group">
+              <div className="form-group input-group has-error">
                 <div className="input-group-prepend">
                   <span className="input-group-text">
                     <i className="fa fa-phone"></i>
@@ -182,78 +157,40 @@ export class EditEmployeeComponent extends Component {
                   onChange={this.onChange}
                   name="phoneNumber"
                   className="form-control"
-                  placeholder="Phone number"
-                  type="text"
+                  placeholder="Email address"
+                  type="Phone Number"
                   value={phoneNumber}
                 />
               </div>
 
-              {/* Departments */}
+              {/* Address */}
               <div className="form-group input-group">
                 <div className="input-group-prepend">
                   <span className="input-group-text">
-                    <i className="fa fa-building"></i>
+                    <i className="fa fa-home"></i>
                   </span>
                 </div>
-                <select
+                <input
                   onChange={this.onChange}
-                  name="departmentId"
-                  value={departmentId}
+                  name="address"
                   className="form-control"
-                >
-                  <option value="">Select Department</option>
-                  {departmentsOptions}
-                </select>
-              </div>
-
-              {/* Role */}
-              <div className="form-group input-group">
-                <div className="input-group-prepend">
-                  <span className="input-group-text">
-                    <i className="fa fa-building"></i>
-                  </span>
-                </div>
-                <select
-                  onChange={this.onRoleChange}
-                  name="role"
-                  value={roles[0]}
-                  className="form-control"
-                >
-                  <option value="">Select Employee Hierachy</option>
-                  {rolesOptions}
-                </select>
-              </div>
-
-              {/* Employee Types */}
-              <div className="form-group input-group">
-                <div className="input-group-prepend">
-                  <span className="input-group-text">
-                    <i className="fa fa-building"></i>
-                  </span>
-                </div>
-                <select
-                  onChange={this.onChange}
-                  name="employeeType"
-                  className="form-control"
-                >
-                  <option value="">Select Employee Type</option>
-                  <option value="fte">Full Time Employee</option>
-                  <option value="contract">Contract Employee</option>
-                  <option value="consultant">Consultant</option>
-                </select>
+                  placeholder="Address"
+                  type="text"
+                  value={address ? address : ''}
+                />
               </div>
 
               {/* Genger */}
-
               <div className="form-group input-group">
                 <div className="input-group-prepend">
                   <span className="input-group-text">
-                    <i className="fa fa-user"></i>
+                    <i className="fa fa-female"></i>
                   </span>
                 </div>
-                <div onChange={this.onChange}>
+                <div>
                   <label className="radio-inline mx-5">
                     <input
+                      onChange={this.onChange}
                       checked={sex === 'Male'}
                       type="radio"
                       name="sex"
@@ -263,6 +200,7 @@ export class EditEmployeeComponent extends Component {
                   </label>
                   <label className="radio-inline">
                     <input
+                      onChange={this.onChange}
                       checked={sex === 'Female'}
                       type="radio"
                       name="sex"
@@ -282,7 +220,7 @@ export class EditEmployeeComponent extends Component {
                 </div>
                 <input
                   className="form-control"
-                  placeholder="Create password"
+                  placeholder="New Password"
                   name="password"
                   type="password"
                   value={password}
@@ -299,11 +237,25 @@ export class EditEmployeeComponent extends Component {
                 </div>
                 <input
                   className="form-control"
-                  placeholder="Repeat password"
+                  placeholder="Repeat New Password"
                   type="password"
                   name="passwordConfirmation"
                   value={passwordConfirmation}
                   onChange={this.onChange}
+                />
+              </div>
+
+              {/* PROFILE PHOTO */}
+              <div className="form-group input-group">
+                <div className="input-group-prepend">
+                  <span className="input-group-text">
+                    <i className="fa fa-profile"></i>
+                  </span>
+                </div>
+                <input
+                  className="form-control"
+                  type="file"
+                  onChange={this.onFileChange}
                 />
               </div>
 
@@ -319,7 +271,7 @@ export class EditEmployeeComponent extends Component {
                       <div>Please Wait...</div>
                     </div>
                   ) : (
-                    ' Create Account'
+                    'Edit Employee'
                   )}
                 </button>
               </div>
@@ -334,19 +286,20 @@ export class EditEmployeeComponent extends Component {
 // This maps application state from the store to this component
 const mapStateToProps = state => {
   return {
-    createdUserData: state.createUserReducer,
-    createUserflashMessages: state.createUserflashMessagesReducer,
+    editEmployeeData: state.editEmployeeReducer,
+    jobtitlesData: state.fetchJobtitlesReducer,
     rolesData: state.fetchRolesReducer,
     departmentsData: state.fetchDepartmentsReducer,
+    authenticateUserData: state.authenticateUserReducer,
     userData: state.fetchUserReducer
   };
 };
 
 export default connect(mapStateToProps, {
-  createUser,
-  addCreateUserFlashMessage,
-  deleteCreateUserErrorMessage,
+  editEmployeee,
+  deleteEditEmployeeErrorMessage,
   fetchRoles,
   fetchDepartments,
+  fetchJobtitles,
   fetchUser
-})(EditEmployeeComponent);
+})(SettingsComponent);
