@@ -14,6 +14,10 @@ import NoMatch404 from '../layouts/NoMatch404';
 import MyDetailsComponent from './MyDetailsComponent';
 import SettingsComponent from './SetttingsComponent';
 import ScoreboardDetailsComponent from '../scoreboards-management/ScoreboardDetailsComponent';
+import OneYearDashboardComponent from './1YearDashboardComponent';
+import OneMonthDashboardComponent from './1MonthDashboardComponent';
+import ThreeMonthsDashboardComponent from './3MonthsDashboardComponent';
+import SixMonthsDashboardComponent from './6MonthsDashboardComponent';
 
 export class EmployeeComponent extends Component {
   logout = e => {
@@ -229,16 +233,30 @@ export class EmployeeComponent extends Component {
               {/* <!-- Submenu content --> */}
               <div id="submenu1" className="collapse sidebar-submenu">
                 <NavLink
-                  to="/employee/last-month"
+                  to="/employee/1month"
                   className="list-group-item list-group-item-action bg-dark text-white"
                 >
-                  <span className="menu-collapsed">Last month scoreboard</span>
+                  <span className="menu-collapsed">
+                    This Month's Scoreboards
+                  </span>
                 </NavLink>
                 <NavLink
-                  to="/employee/reports"
+                  to="/employee/3months"
                   className="list-group-item list-group-item-action bg-dark text-white"
                 >
-                  <span className="menu-collapsed">Reports</span>
+                  <span className="menu-collapsed">Last Three Months</span>
+                </NavLink>
+                <NavLink
+                  to="/employee/6months"
+                  className="list-group-item list-group-item-action bg-dark text-white"
+                >
+                  <span className="menu-collapsed">Last Six Months</span>
+                </NavLink>
+                <NavLink
+                  to="/employee/1year"
+                  className="list-group-item list-group-item-action bg-dark text-white"
+                >
+                  <span className="menu-collapsed">This Year</span>
                 </NavLink>
               </div>
 
@@ -335,6 +353,31 @@ export class EmployeeComponent extends Component {
                 path={'/employee/edit-scores/:id'}
                 component={EditScoresComponent}
               />
+
+              {/*Department employees performance for 1 month*/}
+              <Route
+                path={'/employee/1month'}
+                component={OneMonthDashboardComponent}
+              />
+
+              {/*Department employees performance for 1 year*/}
+              <Route
+                path={'/employee/1year'}
+                component={OneYearDashboardComponent}
+              />
+
+              {/*Department employees performance for 3 months*/}
+              <Route
+                path={'/employee/3months'}
+                component={ThreeMonthsDashboardComponent}
+              />
+
+              {/*Department employees performance for 6 months*/}
+              <Route
+                path={'/employee/6months'}
+                component={SixMonthsDashboardComponent}
+              />
+
               <Route component={NoMatch404} />
             </Switch>
           </div>

@@ -4,10 +4,10 @@ import '../../assets/css/404.css';
 export class NoMatch404 extends Component {
   render() {
     return (
-      <div class="container body mt-5">
-        <div class="row">
-          <div class="col-md-12">
-            <div class="error-template">
+      <div className="container body mt-5">
+        <div className="row">
+          <div className="col-md-12">
+            <div className="error-template">
               <h1>Oops!</h1>
               <h2>404 Not Found</h2>
               <div class="error-details">

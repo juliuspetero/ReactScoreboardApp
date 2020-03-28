@@ -177,6 +177,7 @@ export class ScoreboardsListComponent extends Component {
           return (
             <React.Fragment key={scoreboard.id}>
               <tr>
+                <td>{moment(scoreboard.updatedAt).format('DD/MM/YYYY')}</td>
                 <td>{moment(scoreboard.createdAt).format('DD/MM/YYYY')}</td>
                 <td>
                   <table className="container">
@@ -225,7 +226,7 @@ export class ScoreboardsListComponent extends Component {
                         type="button"
                         onClick={() =>
                           this.props.history.push(
-                            `/admin/edit-scores/${scoreboard.id}`
+                            `/manager/edit-scores/${scoreboard.id}`
                           )
                         }
                         className="btn btn-light"
@@ -284,7 +285,8 @@ export class ScoreboardsListComponent extends Component {
         >
           <thead>
             <tr>
-              <th scope="col">Date</th>
+              <th scope="col">Modified</th>
+              <th scope="col">Created</th>
               <th className="text-center" scope="col">
                 KPIs
               </th>

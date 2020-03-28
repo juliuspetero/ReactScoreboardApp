@@ -4,7 +4,6 @@ import { Route, NavLink, Switch } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { logout } from '../../redux/authentications/actions/logoutActions';
 import AuthenticateUserFlashMessage from '../messages/AuthenticateUserFlashMessage';
-import AdminDashboard from './AdminDashboard';
 import { UnauthorizedUserFlashMessage } from '../messages/UnauthorizedUserFlashMessage';
 import EmployeesListComponent from '../employees-management/EmployeesListComponent';
 import EmployeeDetailsComponent from '../employees-management/EmployeeDetailsComponent';
@@ -35,6 +34,10 @@ import CreateDepartmentComponent from '../departments/CreateDepartmentComponent'
 import EditDepartmentComponent from '../departments/EditDepartmentComponent';
 import MyDetailsComponent from './MyDetailsComponent';
 import SettingsComponent from './SetttingsComponent';
+import OneMonthDashboardComponent from './1MonthDashboardComponent';
+import OneYearDashboardComponent from './1YearDashboardComponent';
+import ThreeMonthsDashboardComponent from './3MonthsDashboardComponent';
+import SixMonthsDashboardComponent from './6MonthsDashboardComponent';
 
 export class AdminComponent extends Component {
   logout = e => {
@@ -280,23 +283,37 @@ export class AdminComponent extends Component {
               >
                 <div className="d-flex w-100 justify-content-start align-items-center">
                   <span className="fa fa-dashboard fa-fw mr-3"></span>
-                  <span className="menu-collapsed">Dashboard</span>
+                  <span className="menu-collapsed">Dashboards</span>
                   <span className="submenu-icon ml-auto"></span>
                 </div>
               </a>
               {/* <!-- Submenu content --> */}
               <div id="submenu1" className="collapse sidebar-submenu">
                 <NavLink
-                  to="/admin/last-month"
+                  to="/admin/1month"
                   className="list-group-item list-group-item-action bg-dark text-white"
                 >
-                  <span className="menu-collapsed">Last Month Scoreboards</span>
+                  <span className="menu-collapsed">
+                    This Month's Scoreboards
+                  </span>
                 </NavLink>
                 <NavLink
-                  to="/admin/last-month"
+                  to="/admin/3months"
                   className="list-group-item list-group-item-action bg-dark text-white"
                 >
-                  <span className="menu-collapsed">Reports</span>
+                  <span className="menu-collapsed">Last Three Months</span>
+                </NavLink>
+                <NavLink
+                  to="/admin/6months"
+                  className="list-group-item list-group-item-action bg-dark text-white"
+                >
+                  <span className="menu-collapsed">Last Six Months</span>
+                </NavLink>
+                <NavLink
+                  to="/admin/1year"
+                  className="list-group-item list-group-item-action bg-dark text-white"
+                >
+                  <span className="menu-collapsed">This Year</span>
                 </NavLink>
               </div>
 
@@ -446,13 +463,7 @@ export class AdminComponent extends Component {
                   to="/admin/all-scoreboards"
                   className="list-group-item list-group-item-action bg-dark text-white"
                 >
-                  <span className="menu-collapsed">Last Month</span>
-                </NavLink>
-                <NavLink
-                  to="/admin/all-scoreboards"
-                  className="list-group-item list-group-item-action bg-dark text-white"
-                >
-                  <span className="menu-collapsed">This Year</span>
+                  <span className="menu-collapsed">Search Employee</span>
                 </NavLink>
                 <NavLink
                   to="/admin/create-scoreboards"
@@ -488,7 +499,11 @@ export class AdminComponent extends Component {
             <CreateScoreboardFlashMessage />
             <EditScoreboardFlashMessage />
             <Switch>
-              <Route exact path="/admin" component={AdminDashboard} />
+              <Route
+                exact
+                path="/admin"
+                component={OneMonthDashboardComponent}
+              />
               <Route
                 exact
                 path={'/admin/all-employees'}
@@ -591,6 +606,30 @@ export class AdminComponent extends Component {
               <Route
                 path={'/admin/my-details'}
                 component={MyDetailsComponent}
+              />
+
+              {/*Department employees performance for 1 month*/}
+              <Route
+                path={'/admin/1month'}
+                component={OneMonthDashboardComponent}
+              />
+
+              {/*Department employees performance for 1 year*/}
+              <Route
+                path={'/admin/1year'}
+                component={OneYearDashboardComponent}
+              />
+
+              {/*Department employees performance for 3 months*/}
+              <Route
+                path={'/admin/3months'}
+                component={ThreeMonthsDashboardComponent}
+              />
+
+              {/*Department employees performance for 6 months*/}
+              <Route
+                path={'/admin/6months'}
+                component={SixMonthsDashboardComponent}
               />
 
               <Route

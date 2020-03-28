@@ -4,7 +4,6 @@ import { Route, NavLink, Switch } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { logout } from '../../redux/authentications/actions/logoutActions';
 import AuthenticateUserFlashMessage from '../messages/AuthenticateUserFlashMessage';
-import ManagerDashboard from './ManagerDashboard';
 import { UnauthorizedUserFlashMessage } from '../messages/UnauthorizedUserFlashMessage';
 import EmployeesListComponent from './EmployeesListComponent';
 import EmployeeDetailsComponent from './EmployeeDetailsComponent';
@@ -24,6 +23,11 @@ import SettingsComponent from './SetttingsComponent';
 import ScoreboardDetailsComponent from '../scoreboards-management/ScoreboardDetailsComponent';
 import EditEmployeeComponent from './EditEmployeeComponent';
 import SearchEmployeeComponent from '../employees/SearchEmployeeComponent';
+import OneMonthDashboardComponent from './1MonthDashboardComponent';
+import ThreeMonthsDashboardComponent from './3MonthsDashboardComponent';
+import SixMonthsDashboardComponent from './6MonthsDashboardComponent';
+import OneYearDashboardComponent from './1YearDashboardComponent';
+import CreateScoreboardEmployeesList from './CreateScoreboardEmployeesList';
 
 export class ManagerComponent extends Component {
   logout = e => {
@@ -278,17 +282,30 @@ export class ManagerComponent extends Component {
               {/* <!-- Submenu content --> */}
               <div id="submenu1" className="collapse sidebar-submenu">
                 <NavLink
-                  to="/manager/last-month"
+                  to="/manager/1month"
                   className="list-group-item list-group-item-action bg-dark text-white"
                 >
-                  <span className="menu-collapsed">Last month scoreBoards</span>
+                  <span className="menu-collapsed">
+                    This Month's ScoreBoards
+                  </span>
                 </NavLink>
-
                 <NavLink
-                  to="/manager/reports"
+                  to="/manager/3months"
                   className="list-group-item list-group-item-action bg-dark text-white"
                 >
-                  <span className="menu-collapsed">Reports</span>
+                  <span className="menu-collapsed">Last Three Months</span>
+                </NavLink>
+                <NavLink
+                  to="/manager/6months"
+                  className="list-group-item list-group-item-action bg-dark text-white"
+                >
+                  <span className="menu-collapsed">Last Six Months</span>
+                </NavLink>
+                <NavLink
+                  to="/manager/1year"
+                  className="list-group-item list-group-item-action bg-dark text-white"
+                >
+                  <span className="menu-collapsed">This Year</span>
                 </NavLink>
               </div>
 
@@ -370,13 +387,13 @@ export class ManagerComponent extends Component {
                   to="/manager/all-scoreboards"
                   className="list-group-item list-group-item-action bg-dark text-white"
                 >
-                  <span className="menu-collapsed">Last Month</span>
+                  <span className="menu-collapsed">Search Employee</span>
                 </NavLink>
                 <NavLink
-                  to="/manager/all-scoreboards"
+                  to="/manager/create-scoreboards"
                   className="list-group-item list-group-item-action bg-dark text-white"
                 >
-                  <span className="menu-collapsed">This Year</span>
+                  <span className="menu-collapsed">Create Scoreboards</span>
                 </NavLink>
               </div>
 
@@ -405,7 +422,11 @@ export class ManagerComponent extends Component {
             <CreateScoreboardFlashMessage />
             <EditScoreboardFlashMessage />
             <Switch>
-              <Route exact path="/manager" component={ManagerDashboard} />
+              <Route
+                exact
+                path="/manager"
+                component={OneMonthDashboardComponent}
+              />
               <Route
                 exact
                 path={'/manager/all-employees'}
@@ -454,7 +475,7 @@ export class ManagerComponent extends Component {
               />
 
               <Route
-                path={'/mana/search-employee'}
+                path={'/manager/search-employee'}
                 component={SearchEmployeeComponent}
               />
 
@@ -478,6 +499,32 @@ export class ManagerComponent extends Component {
                 path={'/manager/edit-scores/:id'}
                 component={EditScoresComponent}
               />
+
+              <Route
+                path={'/manager/1month'}
+                component={OneMonthDashboardComponent}
+              />
+
+              <Route
+                path={'/manager/3months'}
+                component={ThreeMonthsDashboardComponent}
+              />
+
+              <Route
+                path={'/manager/6months'}
+                component={SixMonthsDashboardComponent}
+              />
+
+              <Route
+                path={'/manager/create-scoreboards'}
+                component={CreateScoreboardEmployeesList}
+              />
+
+              <Route
+                path={'/manager/1year'}
+                component={OneYearDashboardComponent}
+              />
+
               <Route component={NoMatch404} />
             </Switch>
           </div>

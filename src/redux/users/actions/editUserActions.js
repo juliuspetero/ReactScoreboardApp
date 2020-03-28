@@ -20,20 +20,18 @@ export const editEmployeee = (id, employee) => {
     // return;
     if (!isValid) dispatch(editEmployeeFailure({ data: errors }));
     else {
-      if (employee.password === '') {
-        delete employee.password;
-        delete employee.passwordConfirmation;
-      }
-
       const formdata = new FormData();
       formdata.append('profilePhoto', employee.profilePhoto);
       formdata.append('username', employee.username);
       formdata.append('email', employee.email);
-      formdata.append('password', employee.password);
-      formdata.append('passwordConfirmation', employee.passwordConfirmation);
       formdata.append('phoneNumber', employee.phoneNumber);
       formdata.append('sex', employee.sex);
       formdata.append('address', employee.address);
+
+      if (employee.password !== '') {
+        formdata.append('password', employee.password);
+        formdata.append('passwordConfirmation', employee.passwordConfirmation);
+      }
 
       axios
         .put(

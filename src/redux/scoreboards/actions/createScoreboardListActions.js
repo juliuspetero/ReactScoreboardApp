@@ -8,14 +8,17 @@ import {
   CREATE_SCOREBOARD_SUCCESS,
   CREATE_SCOREBOARD_FAILURE
 } from '../actionsTypes/createScoreboardActionTypes';
+import cloneDeep from 'lodash/cloneDeep';
 
 // Action creators returns the action object
 export const createScoreboardList = scoreboard => {
   return dispatch => {
     dispatch(createScoreboardRequest());
     // Write client side validation here
-    const { errors, isValid } = validateCreateScoreboardList(scoreboard);
-    console.log(scoreboard);
+    const { errors, isValid } = validateCreateScoreboardList(
+      cloneDeep(scoreboard)
+    );
+
     if (!isValid) dispatch(createScoreboardFailure({ data: errors }));
     else {
       axios

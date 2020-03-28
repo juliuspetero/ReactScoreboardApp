@@ -71,7 +71,7 @@ export class AllScoreboardsComponent extends Component {
         <div className="cardbg-light mx-auto">
           <article className="card-body mx-auto" style={{ width: 'auto' }}>
             <h4 className="card-title mt-3 text-center">
-              Search an employee to access scoreboard
+              Search an employee to access their scoreboards
             </h4>
             <form onSubmit={this.onSubmit}>
               {/* Employee Details */}

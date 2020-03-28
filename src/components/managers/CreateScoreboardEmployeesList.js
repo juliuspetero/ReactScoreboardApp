@@ -7,6 +7,7 @@ import { createScoreboardList } from '../../redux/scoreboards/actions/createScor
 import { deleteCreateScoreboardErrorMessage } from '../../redux/errorMessages/actions/errorMessagesActions';
 import { addCreateScoreboardFlashMessage } from '../../redux/flashMessages/actions/createScoreboardFlashMessagesAction';
 import '../../assets/css/checkbox.css';
+import isEmpty from 'lodash/isEmpty';
 
 export class CreateScoreboardEmployeesList extends Component {
   constructor(props) {
@@ -59,15 +60,28 @@ export class CreateScoreboardEmployeesList extends Component {
   }
 
   UNSAFE_componentWillReceiveProps(nextProps) {
+    const { authenticateUser } = nextProps.authenticateUserData;
+
+    // const { searchEmployees, isLoading } = this.prop.employees;
+    let departmentEmployees = cloneDeep(nextProps.usersData.users);
+
+    const departmentId = authenticateUser.userInformation.departmentId;
+
+    // Let the manager creates scroreboards for only members in that department
+    departmentEmployees = departmentEmployees.filter(employee => {
+      return employee.departmentId === departmentId;
+    });
+
     // Create checklist
-    const employees = nextProps.usersData.users.map(user => {
+    departmentEmployees = departmentEmployees.map(user => {
       return {
         id: user.id,
         isChecked: false
       };
     });
+
     this.setState({
-      employees
+      employees: departmentEmployees
     });
 
     if (
@@ -79,13 +93,22 @@ export class CreateScoreboardEmployeesList extends Component {
         nextProps.createScoreboardData.createScoreboard
       );
 
-      this.props.history.push('/admin');
+      this.props.history.push('/manager');
     }
   }
 
   render() {
+    // Retrieve the current logged in user department
+    const { authenticateUser } = this.props.authenticateUserData;
+
     // const { searchEmployees, isLoading } = this.prop.employees;
     let departmentEmployees = cloneDeep(this.props.usersData.users);
+    const departmentId = authenticateUser.userInformation.departmentId;
+
+    // Let the manager creates scroreboards for only members in that department
+    departmentEmployees = departmentEmployees.filter(employee => {
+      return employee.departmentId === departmentId;
+    });
 
     if (departmentEmployees.length === 0 && this.props.usersData.isLoading) {
       return <div className="spinner-border mt-3"></div>;
@@ -126,7 +149,7 @@ export class CreateScoreboardEmployeesList extends Component {
                     value={employee.id}
                     onChange={() => this.onToggle(employee.id)}
                     checked={
-                      this.state.employees
+                      !isEmpty(this.state.employees)
                         ? this.state.employees[index].isChecked
                         : false
                     }

@@ -1,40 +1,17 @@
 import React, { Component } from 'react';
 import cloneDeep from 'lodash/cloneDeep';
-import moment from 'moment';
-import axios from 'axios';
 import isEmpty from 'lodash/isEmpty';
 import isArray from 'lodash/isArray';
-import config from '../../config/config';
 import { connect } from 'react-redux';
-import { fetchScoreboards } from '../../redux/scoreboards/actions/fetchScoreboardsActions';
-import DeleteButtonComponent from './DeleteButtonComponent';
+import { fetchPeriodicScoreboards } from '../../redux/scoreboards/actions/fetchPeriodicScoreboardsActions';
 
-export class ScoreboardsListComponent extends Component {
-  constructor(props) {
-    super(props);
-
-    this.state = {
-      number: 5
-    };
-  }
-
-  // Toggle status of the the approval
-  onChangeApproval = async id => {
-    // console.log(id);
-    await axios.put(`${config.baseUrl}/scoreboards/approval/${id}`);
-    await this.props.fetchScoreboards(this.props.match.params.id);
-  };
-
-  // Wipe the scoreboard out of memory
-  deleteScoreboard = async id => {
-    await axios.delete(`${config.baseUrl}/scoreboards/${id}`);
-    this.props.fetchScoreboards(this.props.match.params.id);
-  };
-
-  onChange = e => this.setState({ [e.target.name]: e.target.value });
-
+export class OneYearDashboardComponent extends Component {
   componentDidMount() {
-    this.props.fetchScoreboards(this.props.match.params.id);
+    this.props.fetchPeriodicScoreboards(
+      '1year',
+      this.props.authenticateUserData.authenticateUser.userInformation
+        .department.id
+    );
   }
 
   render() {
@@ -46,27 +23,100 @@ export class ScoreboardsListComponent extends Component {
       return <div className="spinner-border mt-3"></div>;
     }
 
-    if (isEmpty(scoreboards)) {
-      return (
-        <div>
-          {' '}
-          <h3 className="mt-3 text-info">No scoreboard</h3>
-        </div>
-      );
-    }
-
-    const number = this.state.number === 'all' ? 100000 : this.state.number;
-
-    const clonedDepartmentScoreboards = cloneDeep(
-      isArray(scoreboards) ? scoreboards.slice(0, number) : null
+    let clonedDepartmentScoreboards = cloneDeep(
+      isArray(scoreboards) ? scoreboards : null
     );
+
+    // CALCULATION FOR ONE YEAR PERFORMANCE
+
+    // Store all the department employees here
+    let employeesInDepartment = [];
+
+    const deptScoreboards = cloneDeep(clonedDepartmentScoreboards);
+
+    deptScoreboards.forEach((sb, index) => {
+      if (index === 0) employeesInDepartment.push(sb.user);
+
+      let isPresent = false;
+      employeesInDepartment.forEach(employee => {
+        if (employee.id === sb.user.id) isPresent = true;
+      });
+
+      if (!isPresent) {
+        employeesInDepartment.push(sb.user);
+      }
+    });
+
+    let yearlyScoreboards = [];
+
+    employeesInDepartment.forEach((employee, eIndex) => {
+      //Retrieve all scoreboards for a specific employee
+      const employeeScoreboards = deptScoreboards.filter(
+        sb => sb.user.id === employee.id
+      );
+
+      // Store all the KPIs for a specific employee here
+      let employeeKPIs = [];
+      employeeScoreboards.forEach(
+        (employeeScoreboard, employeeScoreboardIndex) => {
+          employeeScoreboard.kpis.forEach((kpi, kpiIndex) => {
+            if (employeeKPIs.length === 0) employeeKPIs.push(kpi);
+
+            let isPresent = false;
+            employeeKPIs.forEach(employeeKPI => {
+              if (employeeKPI.id === kpi.id) isPresent = true;
+            });
+
+            if (!isPresent) employeeKPIs.push(kpi);
+          });
+        }
+      );
+
+      // Calculate the average employee KPI weights and scores one by one
+      employeeKPIs.forEach((employeeKPI, employeeKPIIndex) => {
+        let employeeKPIScores = [];
+        let employeeKPIWeights = [];
+        employeeScoreboards.forEach(
+          (employeeScoreboard, employeeScoreboardIndex) => {
+            employeeScoreboard.kpis.forEach((kpi, kpiIndex) => {
+              if (kpi.id === employeeKPI.id) {
+                employeeKPIScores.push(kpi.kPIScoreBoard.KPIScore);
+                employeeKPIWeights.push(kpi.kPIScoreBoard.KPIWeight);
+              }
+            });
+          }
+        );
+
+        // Calculate the average of KPI score and weight
+        let totalScores = 0;
+        employeeKPIScores.forEach(score => {
+          totalScores += score;
+        });
+        const averageScore = totalScores / employeeKPIScores.length;
+
+        let totalWeights = 0;
+        employeeKPIWeights.forEach(weight => {
+          totalWeights += weight;
+        });
+        const averageWeight = totalWeights / employeeKPIWeights.length;
+
+        employeeKPIs[employeeKPIIndex].kPIScoreBoard.KPIWeight = averageWeight;
+        employeeKPIs[employeeKPIIndex].kPIScoreBoard.KPIScore = averageScore;
+      });
+
+      // Add this altered yearly scoreboard to the array
+      let yearlyEmployeeScoreboard = employeeScoreboards[0];
+      yearlyEmployeeScoreboard.kpis = employeeKPIs;
+
+      yearlyScoreboards.push(yearlyEmployeeScoreboard);
+    });
 
     // Calculating cummulatibe average
     let averageScoresList = [];
 
     // Push al the average score
-    if (clonedDepartmentScoreboards !== null)
-      clonedDepartmentScoreboards.forEach((scoreboard, index) => {
+    if (yearlyScoreboards !== null)
+      yearlyScoreboards.forEach((scoreboard, index) => {
         // Calculating average scores
         let totalWeights = 0;
 
@@ -87,9 +137,21 @@ export class ScoreboardsListComponent extends Component {
         averageScoresList.push(averageScore);
       });
 
+    // Calculating the score for a department
+    let totalAverageScoreList = 0;
+    let departmentScore = 0;
+
+    if (!isEmpty(averageScoresList)) {
+      averageScoresList.forEach(as => {
+        totalAverageScoreList += as;
+      });
+
+      departmentScore = totalAverageScoreList / averageScoresList.length;
+    }
+
     // Create the page
-    const departmentScoreboards = clonedDepartmentScoreboards
-      ? clonedDepartmentScoreboards.map((scoreboard, index) => {
+    const departmentScoreboards = yearlyScoreboards
+      ? yearlyScoreboards.map((scoreboard, index) => {
           // Calculating average scores
           let totalWeights = 0;
 
@@ -150,20 +212,7 @@ export class ScoreboardsListComponent extends Component {
             );
           });
 
-          // Calcualting cummulative average
-
-          let cummulativeAverageScores = 0;
-          for (
-            let current = index;
-            current < averageScoresList.length;
-            current++
-          ) {
-            cummulativeAverageScores += averageScoresList[current];
-            // console.log(cummulativeAverages[current]);
-          }
-
-          // console.log(averageScoresList);
-
+          // KPI Weights
           const kpiWeights = scoreboard.kpis.map(kpi => {
             return (
               <td key={kpi.id}>
@@ -177,8 +226,7 @@ export class ScoreboardsListComponent extends Component {
           return (
             <React.Fragment key={scoreboard.id}>
               <tr>
-                <td>{moment(scoreboard.updatedAt).format('DD/MM/YYYY')}</td>
-                <td>{moment(scoreboard.createdAt).format('DD/MM/YYYY')}</td>
+                <td>{scoreboard.user.username}</td>
                 <td>
                   <table className="container">
                     <tbody>
@@ -202,46 +250,6 @@ export class ScoreboardsListComponent extends Component {
                   </table>
                 </td>
                 <td className="text-center">{averageScore.toFixed(1)}</td>
-                <td className="text-center">
-                  {(
-                    cummulativeAverageScores /
-                    (averageScoresList.length - index)
-                  ).toFixed(1)}
-                </td>
-                <td className="">
-                  {/* The approved value should be coming from the database */}
-                  <p>
-                    <button
-                      title="Clicking this button toggle approval status"
-                      type="button"
-                      className="btn btn-light"
-                      onClick={() => this.onChangeApproval(scoreboard.id)}
-                    >
-                      {scoreboard.isApproved ? 'Approved' : 'Not yet Approved'}
-                    </button>
-                  </p>
-                  <div style={{ display: scoreboard.isApproved ? 'none' : '' }}>
-                    <p>
-                      <button
-                        type="button"
-                        onClick={() =>
-                          this.props.history.push(
-                            `/admin/edit-scores/${scoreboard.id}`
-                          )
-                        }
-                        className="btn btn-light"
-                      >
-                        Update Scores
-                      </button>
-                    </p>
-                    <p>
-                      <DeleteButtonComponent
-                        scoreboard={scoreboard}
-                        deleteScoreboard={this.deleteScoreboard}
-                      />
-                    </p>
-                  </div>
-                </td>
               </tr>
             </React.Fragment>
           );
@@ -252,31 +260,20 @@ export class ScoreboardsListComponent extends Component {
       <div className="my-3">
         <div className="spin-loader"></div>
         <h3 className="mb-2">
-          {isLoading ? <div className="spinner-border"></div> : ''}{' '}
-          {clonedDepartmentScoreboards
-            ? clonedDepartmentScoreboards.length > 0
-              ? clonedDepartmentScoreboards[0].user.username + "'s Scoreboards"
-              : 'No scoreboard'
-            : 'No scoreboard'}
+          {isLoading ? <div className="spinner-border"></div> : ''}
         </h3>
-        <div className="text-right">
-          <label className="mr-sm-2" htmlFor="number">
-            Number per page
-          </label>
-          <select
-            value={this.state.number}
-            name="number"
-            onChange={this.onChange}
-            id="number"
-            className=""
-          >
-            <option value="1">1</option>
-            <option value="5">5</option>
-            <option value="10">10</option>
-            <option value="25">25</option>
-            <option value="all">All</option>
-          </select>
+
+        <div className="mb-2 row h5">
+          {/* Show the performance of the department */}
+          <div className="text-left col-sm-6">
+            <label className="mr-sm-2">This Year Department's Score</label>
+            {departmentScore.toFixed(1)} %
+          </div>
+
+          {/* Show which department employees to be displayed on the page */}
+          <div className="text-right col-sm-6"></div>
         </div>
+
         <table
           className="table table-striped table-bordered table-hover text-left"
           style={{ width: '100%' }}
@@ -285,14 +282,11 @@ export class ScoreboardsListComponent extends Component {
         >
           <thead>
             <tr>
-              <th scope="col">Modified</th>
-              <th scope="col">Created</th>
+              <th scope="col">Name</th>
               <th className="text-center" scope="col">
                 KPIs
               </th>
-              <th>Average Score</th>
-              <th>Cummulative Avg Score</th>
-              <th>Status</th>
+              <th>Yearly Score</th>
             </tr>
           </thead>
           <tbody>{departmentScoreboards}</tbody>
@@ -310,6 +304,6 @@ export default connect(
     };
   },
   {
-    fetchScoreboards
+    fetchPeriodicScoreboards
   }
-)(ScoreboardsListComponent);
+)(OneYearDashboardComponent);

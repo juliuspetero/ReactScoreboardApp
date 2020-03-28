@@ -271,7 +271,7 @@ export class SettingsComponent extends Component {
                       <div>Please Wait...</div>
                     </div>
                   ) : (
-                    'Edit Employee'
+                    'Update'
                   )}
                 </button>
               </div>
