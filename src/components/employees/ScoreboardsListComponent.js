@@ -228,6 +228,32 @@ export class ScoreboardsListComponent extends Component {
                         Update Scores
                       </button>
                     </p>
+                    <p>
+                      <button
+                        type="button"
+                        onClick={() =>
+                          this.props.history.push(
+                            `/employee/upload-report/${scoreboard.id}`
+                          )
+                        }
+                        className="btn btn-light"
+                      >
+                        Upload Reports
+                      </button>
+                    </p>
+                    <p>
+                      <button
+                        type="button"
+                        onClick={() =>
+                          this.props.history.push(
+                            `/employee/reports/${scoreboard.id}`
+                          )
+                        }
+                        className="btn btn-light"
+                      >
+                        View Reports
+                      </button>
+                    </p>
                   </div>
                 </td>
               </tr>
@@ -280,7 +306,7 @@ export class ScoreboardsListComponent extends Component {
               </th>
               <th>Average Score</th>
               <th>Cummulative Avg Score</th>
-              <th>Status</th>
+              <th>Actions</th>
             </tr>
           </thead>
           <tbody>{departmentScoreboards}</tbody>

@@ -9,8 +9,7 @@ export class OneYearDashboardComponent extends Component {
   componentDidMount() {
     this.props.fetchUserPeriodicScoreboards(
       '1year',
-      this.props.authenticateUserData.authenticateUser.userInformation
-        .department.id
+      this.props.authenticateUserData.authenticateUser.userInformation.id
     );
   }
 

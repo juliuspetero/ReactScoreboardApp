@@ -234,6 +234,21 @@ export class ScoreboardsListComponent extends Component {
                         Update Scores
                       </button>
                     </p>
+
+                    <p>
+                      <button
+                        type="button"
+                        onClick={() =>
+                          this.props.history.push(
+                            `/admin/reports/${scoreboard.id}`
+                          )
+                        }
+                        className="btn btn-light"
+                      >
+                        View Reports
+                      </button>
+                    </p>
+
                     <p>
                       <DeleteButtonComponent
                         scoreboard={scoreboard}
@@ -292,7 +307,7 @@ export class ScoreboardsListComponent extends Component {
               </th>
               <th>Average Score</th>
               <th>Cummulative Avg Score</th>
-              <th>Status</th>
+              <th>Actions</th>
             </tr>
           </thead>
           <tbody>{departmentScoreboards}</tbody>

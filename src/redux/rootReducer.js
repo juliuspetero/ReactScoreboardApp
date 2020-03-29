@@ -31,6 +31,10 @@ import createDepartmentReducer from './departments/reducers/createDepartmentRedu
 import editDepartmentReducer from './departments/reducers/editDepartmentReducer';
 import fetchDepartmentReducer from './departments/reducers/fetchDepartmentReducer';
 import editEmployeeReducer from './users/reducers/editUserReducer';
+import createReportReducer from './reports/reducers/createReportReducer';
+import editReportReducer from './reports/reducers/editReportReducer';
+import fetchReportsReducer from './reports/reducers/fetchReportsReducer';
+import fetchReportReducer from './reports/reducers/fetchReportReducer';
 
 // Give appropriate names for the state
 const rootReducer = combineReducers({
@@ -65,7 +69,11 @@ const rootReducer = combineReducers({
   createDepartmentReducer,
   editDepartmentReducer,
   fetchDepartmentReducer,
-  editEmployeeReducer
+  editEmployeeReducer,
+  createReportReducer,
+  editReportReducer,
+  fetchReportsReducer,
+  fetchReportReducer
 });
 
 export default rootReducer;

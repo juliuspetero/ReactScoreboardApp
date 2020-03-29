@@ -374,7 +374,7 @@ export class ManagerComponent extends Component {
               >
                 <div className="d-flex w-100 justify-content-start align-items-center">
                   <span className="fa fa-dashboard fa-fw mr-3"></span>
-                  <span className="menu-collapsed">Score Boards</span>
+                  <span className="menu-collapsed">Scoreboards</span>
                   <span className="submenu-icon ml-auto"></span>
                 </div>
               </a>

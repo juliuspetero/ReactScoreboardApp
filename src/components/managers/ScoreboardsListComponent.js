@@ -292,7 +292,7 @@ export class ScoreboardsListComponent extends Component {
               </th>
               <th>Average Score</th>
               <th>Cummulative Avg Score</th>
-              <th>Status</th>
+              <th>Actions</th>
             </tr>
           </thead>
           <tbody>{departmentScoreboards}</tbody>

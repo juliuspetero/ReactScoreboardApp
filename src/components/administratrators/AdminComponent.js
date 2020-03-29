@@ -38,6 +38,7 @@ import OneMonthDashboardComponent from './1MonthDashboardComponent';
 import OneYearDashboardComponent from './1YearDashboardComponent';
 import ThreeMonthsDashboardComponent from './3MonthsDashboardComponent';
 import SixMonthsDashboardComponent from './6MonthsDashboardComponent';
+import ReportsListComponent from '../reports/ReportsListComponent';
 
 export class AdminComponent extends Component {
   logout = e => {
@@ -612,6 +613,12 @@ export class AdminComponent extends Component {
               <Route
                 path={'/admin/1month'}
                 component={OneMonthDashboardComponent}
+              />
+
+              {/* Show all the reports created for the scoreboard */}
+              <Route
+                path={'/admin/reports/:id'}
+                component={ReportsListComponent}
               />
 
               {/*Department employees performance for 1 year*/}

@@ -4,7 +4,6 @@ import { Route, NavLink, Switch } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { logout } from '../../redux/authentications/actions/logoutActions';
 import AuthenticateUserFlashMessage from '../messages/AuthenticateUserFlashMessage';
-import EmployeeDashboardComponent from './EmployeeDashboardComponent';
 import { UnauthorizedUserFlashMessage } from '../messages/UnauthorizedUserFlashMessage';
 import EmployeeDetailsComponent from '../employees-management/EmployeeDetailsComponent';
 import ScoreboardsListComponent from './ScoreboardsListComponent';
@@ -18,6 +17,9 @@ import OneYearDashboardComponent from './1YearDashboardComponent';
 import OneMonthDashboardComponent from './1MonthDashboardComponent';
 import ThreeMonthsDashboardComponent from './3MonthsDashboardComponent';
 import SixMonthsDashboardComponent from './6MonthsDashboardComponent';
+import CreateReportComponent from '../reports/CreateReportComponent';
+import EditReportComponent from '../reports/EditReportComponent';
+import ReportsListComponent from '../reports/ReportsListComponent';
 
 export class EmployeeComponent extends Component {
   logout = e => {
@@ -265,6 +267,29 @@ export class EmployeeComponent extends Component {
                 <small>OPTIONS</small>
               </li>
 
+              {/* KPIs Menu */}
+              <a
+                href="#kpis-submenu"
+                data-toggle="collapse"
+                aria-expanded="false"
+                className="bg-dark list-group-item list-group-item-action flex-column align-items-start"
+              >
+                <div className="d-flex w-100 justify-content-start align-items-center">
+                  <span className="fa fa-dashboard fa-fw mr-3"></span>
+                  <span className="menu-collapsed">KPIs</span>
+                  <span className="submenu-icon ml-auto"></span>
+                </div>
+              </a>
+              {/* <!-- Employees Submenu --> */}
+              <div id="kpis-submenu" className="collapse sidebar-submenu">
+                <NavLink
+                  to={`/employee/kpis/${user.id}`}
+                  className="list-group-item list-group-item-action bg-dark text-white"
+                >
+                  <span className="menu-collapsed">My KPIs</span>
+                </NavLink>
+              </div>
+
               {/* Scoreboards Menu */}
               <a
                 href="#scoreboards-submenu"
@@ -274,7 +299,7 @@ export class EmployeeComponent extends Component {
               >
                 <div className="d-flex w-100 justify-content-start align-items-center">
                   <span className="fa fa-dashboard fa-fw mr-3"></span>
-                  <span className="menu-collapsed">Score Boards</span>
+                  <span className="menu-collapsed">Scoreboards</span>
                   <span className="submenu-icon ml-auto"></span>
                 </div>
               </a>
@@ -288,12 +313,6 @@ export class EmployeeComponent extends Component {
                   className="list-group-item list-group-item-action bg-dark text-white"
                 >
                   <span className="menu-collapsed">My Scoreboards</span>
-                </NavLink>
-                <NavLink
-                  to={`/employee/kpis/${user.id}`}
-                  className="list-group-item list-group-item-action bg-dark text-white"
-                >
-                  <span className="menu-collapsed">My KPIs</span>
                 </NavLink>
               </div>
 
@@ -323,7 +342,7 @@ export class EmployeeComponent extends Component {
               <Route
                 exact
                 path="/employee"
-                component={EmployeeDashboardComponent}
+                component={OneMonthDashboardComponent}
               />
               <Route
                 path={'/employee/details/:id'}
@@ -376,6 +395,23 @@ export class EmployeeComponent extends Component {
               <Route
                 path={'/employee/6months'}
                 component={SixMonthsDashboardComponent}
+              />
+
+              {/* Scoreboard Report section */}
+              <Route
+                path={'/employee/upload-report/:id'}
+                component={CreateReportComponent}
+              />
+
+              {/* Show all the reports created for the scoreboard */}
+              <Route
+                path={'/employee/reports/:id'}
+                component={ReportsListComponent}
+              />
+
+              <Route
+                path={'/employee/edit-report/:id'}
+                component={EditReportComponent}
               />
 
               <Route component={NoMatch404} />
