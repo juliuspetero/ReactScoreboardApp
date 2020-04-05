@@ -206,7 +206,7 @@ export class OneYearDashboardComponent extends Component {
 
             return (
               <td style={style} key={kpi.id}>
-                {score}
+                {score.toFixed(1)}
               </td>
             );
           });
@@ -216,7 +216,7 @@ export class OneYearDashboardComponent extends Component {
             return (
               <td key={kpi.id}>
                 {kpi.kPIScoreBoard.KPIWeight != null
-                  ? kpi.kPIScoreBoard.KPIWeight
+                  ? kpi.kPIScoreBoard.KPIWeight.toFixed(1)
                   : 0}
               </td>
             );

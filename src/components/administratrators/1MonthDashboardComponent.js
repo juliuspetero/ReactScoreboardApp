@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import cloneDeep from 'lodash/cloneDeep';
 import moment from 'moment';
+import html2canvas from 'html2canvas';
+import jsPDF from 'jspdf';
 import isEmpty from 'lodash/isEmpty';
 import isArray from 'lodash/isArray';
 import { connect } from 'react-redux';
@@ -15,6 +17,29 @@ export class OneMonthDashboardComponent extends Component {
       departmentId: ''
     };
   }
+
+  // Allows the entire dashboard to be exported as a PDF
+  exportToPdf = () => {
+    const input = document.getElementById('a1monthDashboard');
+    html2canvas(input).then(canvas => {
+      const imgData = canvas.toDataURL('image/png');
+      const imgWidth = 210;
+      const pageHeight = 295;
+      const imgHeight = (canvas.height * imgWidth) / canvas.width;
+      let heightLeft = imgHeight;
+      const doc = new jsPDF('p', 'mm');
+      let position = 0;
+      doc.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
+      heightLeft -= pageHeight;
+      while (heightLeft >= 0) {
+        position = heightLeft - imgHeight;
+        doc.addPage();
+        doc.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
+        heightLeft -= pageHeight;
+      }
+      doc.save('1monthDashboard.pdf');
+    });
+  };
 
   onChange = e => {
     this.setState({ [e.target.name]: e.target.value });
@@ -279,61 +304,74 @@ export class OneMonthDashboardComponent extends Component {
       : null;
 
     return (
-      <div className="my-3">
-        <div className="spin-loader"></div>
-        <h3 className="mb-2">
-          {isLoading ? <div className="spinner-border"></div> : ''}
-          {this.props.departmentsData.departments
-            ? this.props.departmentsData.departments.filter(
-                d => d.id === this.state.departmentId
-              )[0]
-              ? this.props.departmentsData.departments.filter(
-                  d => d.id === this.state.departmentId
-                )[0].title
-              : 'No Department Selected'
-            : ''}
-        </h3>
-
-        <div className="mb-2 row h5">
-          {/* Show the performance of the department */}
-          <div className="text-left col-sm-6">
-            <label className="mr-sm-2">This Month Department's Score</label>
-            {departmentScore.toFixed(1)} %
-          </div>
-
-          {/* Show which department scores to be displayed on the page */}
-          <div className="text-right col-sm-6">
-            <label className="mr-sm-2" htmlFor="departmentId">
-              Departments
-            </label>
-            <select
-              onChange={this.onChange}
-              name="departmentId"
-              value={this.state.departmentId}
-            >
-              <option value="">Select Department</option>
-              {departmentsOptions}
-            </select>
-          </div>
+      <React.Fragment>
+        {/* Dowlnload button */}
+        <div className="text-left my-3">
+          <button
+            onClick={this.exportToPdf}
+            id="exportButton"
+            className="btn btn-lg btn-danger clearfix"
+          >
+            <span className="fa fa-file-pdf-o"></span> Export to PDF
+          </button>
         </div>
 
-        <table
-          className="table table-striped table-bordered table-hover text-left"
-          style={{ width: '100%' }}
-        >
-          <thead>
-            <tr>
-              <th scope="col">Name</th>
-              <th scope="col">Date</th>
-              <th className="text-center" scope="col">
-                KPIs
-              </th>
-              <th>Monthly Score</th>
-            </tr>
-          </thead>
-          <tbody>{departmentScoreboards}</tbody>
-        </table>
-      </div>
+        <div className="my-3" id="a1monthDashboard">
+          <div className="spin-loader"></div>
+          <h3 className="mb-2">
+            {isLoading ? <div className="spinner-border"></div> : ''}
+            {this.props.departmentsData.departments
+              ? this.props.departmentsData.departments.filter(
+                  d => d.id === this.state.departmentId
+                )[0]
+                ? this.props.departmentsData.departments.filter(
+                    d => d.id === this.state.departmentId
+                  )[0].title
+                : 'No Department Selected'
+              : ''}
+          </h3>
+
+          <div className="mb-2 row h5">
+            {/* Show the performance of the department */}
+            <div className="text-left col-sm-6">
+              <label className="mr-sm-2">This Month Department's Score</label>
+              {departmentScore.toFixed(1)} %
+            </div>
+
+            {/* Show which department scores to be displayed on the page */}
+            <div className="text-right col-sm-6">
+              <label className="mr-sm-2" htmlFor="departmentId">
+                Departments
+              </label>
+              <select
+                onChange={this.onChange}
+                name="departmentId"
+                value={this.state.departmentId}
+              >
+                <option value="">Select Department</option>
+                {departmentsOptions}
+              </select>
+            </div>
+          </div>
+
+          <table
+            className="table table-striped table-bordered table-hover text-left"
+            style={{ width: '100%' }}
+          >
+            <thead>
+              <tr>
+                <th scope="col">Name</th>
+                <th scope="col">Date</th>
+                <th className="text-center" scope="col">
+                  KPIs
+                </th>
+                <th>Monthly Score</th>
+              </tr>
+            </thead>
+            <tbody>{departmentScoreboards}</tbody>
+          </table>
+        </div>
+      </React.Fragment>
     );
   }
 }

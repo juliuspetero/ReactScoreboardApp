@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import cloneDeep from 'lodash/cloneDeep';
 import moment from 'moment';
+import html2canvas from 'html2canvas';
+import jsPDF from 'jspdf';
 import axios from 'axios';
 import isEmpty from 'lodash/isEmpty';
 import isArray from 'lodash/isArray';
@@ -17,6 +19,33 @@ export class ScoreboardsListComponent extends Component {
       number: 5
     };
   }
+
+  // Allows the the tablle to be exported as a PDF
+  exportToPdf = () => {
+    const allRows = document.getElementById('ascoreboards').rows;
+    for (let i = 0; i < allRows.length; i++) {
+      allRows[i].deleteCell(-1);
+    }
+    const input = document.getElementById('ascoreboards');
+    html2canvas(input).then(canvas => {
+      const imgData = canvas.toDataURL('image/png');
+      const imgWidth = 210;
+      const pageHeight = 295;
+      const imgHeight = (canvas.height * imgWidth) / canvas.width;
+      let heightLeft = imgHeight;
+      const doc = new jsPDF('p', 'mm');
+      let position = 0;
+      doc.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
+      heightLeft -= pageHeight;
+      while (heightLeft >= 0) {
+        position = heightLeft - imgHeight;
+        doc.addPage();
+        doc.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
+        heightLeft -= pageHeight;
+      }
+      doc.save('scoreboards.pdf');
+    });
+  };
 
   // Toggle status of the the approval
   onChangeApproval = async id => {
@@ -291,11 +320,22 @@ export class ScoreboardsListComponent extends Component {
             <option value="all">All</option>
           </select>
         </div>
+
+        {/* Dowlnload button */}
+        <div className="text-left mb-2">
+          <button
+            onClick={this.exportToPdf}
+            id="exportButton"
+            className="btn btn-lg btn-danger clearfix"
+          >
+            <span className="fa fa-file-pdf-o"></span> Export to PDF
+          </button>
+        </div>
+
         <table
+          id="ascoreboards"
           className="table table-striped table-bordered table-hover text-left"
           style={{ width: '100%' }}
-          id="employees-table"
-          // ref={el => (this.el = el)}
         >
           <thead>
             <tr>

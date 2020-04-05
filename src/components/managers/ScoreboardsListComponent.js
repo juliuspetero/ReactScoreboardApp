@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import cloneDeep from 'lodash/cloneDeep';
 import moment from 'moment';
-// import html2canvas from 'html2canvas';
-// import jsPDF from 'jspdf';
+import html2canvas from 'html2canvas';
+import jsPDF from 'jspdf';
 import axios from 'axios';
 import isEmpty from 'lodash/isEmpty';
 import isArray from 'lodash/isArray';
@@ -21,29 +21,29 @@ export class ScoreboardsListComponent extends Component {
   }
 
   exportToPdf = () => {
-    // const allRows = document.getElementById('mscoreboards').rows;
-    // for (let i = 0; i < allRows.length; i++) {
-    //   allRows[i].deleteCell(-1);
-    // }
-    // const input = document.getElementById('mscoreboards');
-    // html2canvas(input).then(canvas => {
-    //   const imgData = canvas.toDataURL('image/png');
-    //   const imgWidth = 210;
-    //   const pageHeight = 295;
-    //   const imgHeight = (canvas.height * imgWidth) / canvas.width;
-    //   let heightLeft = imgHeight;
-    //   const doc = new jsPDF('p', 'mm');
-    //   let position = 0;
-    //   doc.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
-    //   heightLeft -= pageHeight;
-    //   while (heightLeft >= 0) {
-    //     position = heightLeft - imgHeight;
-    //     doc.addPage();
-    //     doc.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
-    //     heightLeft -= pageHeight;
-    //   }
-    //   doc.save('scoreboards.pdf');
-    // });
+    const allRows = document.getElementById('mscoreboards').rows;
+    for (let i = 0; i < allRows.length; i++) {
+      allRows[i].deleteCell(-1);
+    }
+    const input = document.getElementById('mscoreboards');
+    html2canvas(input).then(canvas => {
+      const imgData = canvas.toDataURL('image/png');
+      const imgWidth = 210;
+      const pageHeight = 295;
+      const imgHeight = (canvas.height * imgWidth) / canvas.width;
+      let heightLeft = imgHeight;
+      const doc = new jsPDF('p', 'mm');
+      let position = 0;
+      doc.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
+      heightLeft -= pageHeight;
+      while (heightLeft >= 0) {
+        position = heightLeft - imgHeight;
+        doc.addPage();
+        doc.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
+        heightLeft -= pageHeight;
+      }
+      doc.save('scoreboards.pdf');
+    });
   };
 
   // Toggle status of the the approval
@@ -333,7 +333,6 @@ export class ScoreboardsListComponent extends Component {
           id="mscoreboards"
           className="table table-striped table-bordered table-hover text-left"
           style={{ width: '100%' }}
-          // ref={el => (this.el = el)}
         >
           <thead>
             <tr>

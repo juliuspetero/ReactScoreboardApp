@@ -10,6 +10,7 @@
     "axios": "^0.19.2",
     "classnames": "^2.2.6",
     "datatables.net": "^1.10.20",
+    "html2canvas": "^1.0.0-rc.5",
     "jquery": "^3.4.1",
     "jsonwebtoken": "^8.5.1",
     "jspdf": "^1.5.3",
