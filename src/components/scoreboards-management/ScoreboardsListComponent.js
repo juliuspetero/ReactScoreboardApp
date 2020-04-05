@@ -220,42 +220,41 @@ export class ScoreboardsListComponent extends Component {
                       {scoreboard.isApproved ? 'Approved' : 'Not yet Approved'}
                     </button>
                   </p>
-                  <div style={{ display: scoreboard.isApproved ? 'none' : '' }}>
-                    <p>
-                      <button
-                        type="button"
-                        onClick={() =>
-                          this.props.history.push(
-                            `/admin/edit-scores/${scoreboard.id}`
-                          )
-                        }
-                        className="btn btn-light"
-                      >
-                        Update Scores
-                      </button>
-                    </p>
 
-                    <p>
-                      <button
-                        type="button"
-                        onClick={() =>
-                          this.props.history.push(
-                            `/admin/reports/${scoreboard.id}`
-                          )
-                        }
-                        className="btn btn-light"
-                      >
-                        View Reports
-                      </button>
-                    </p>
+                  <p>
+                    <button
+                      type="button"
+                      onClick={() =>
+                        this.props.history.push(
+                          `/admin/edit-scores/${scoreboard.id}`
+                        )
+                      }
+                      className="btn btn-light"
+                    >
+                      Update Scores
+                    </button>
+                  </p>
 
-                    <p>
-                      <DeleteButtonComponent
-                        scoreboard={scoreboard}
-                        deleteScoreboard={this.deleteScoreboard}
-                      />
-                    </p>
-                  </div>
+                  <p>
+                    <button
+                      type="button"
+                      onClick={() =>
+                        this.props.history.push(
+                          `/admin/reports/${scoreboard.id}`
+                        )
+                      }
+                      className="btn btn-light"
+                    >
+                      View Reports
+                    </button>
+                  </p>
+
+                  <p>
+                    <DeleteButtonComponent
+                      scoreboard={scoreboard}
+                      deleteScoreboard={this.deleteScoreboard}
+                    />
+                  </p>
                 </td>
               </tr>
             </React.Fragment>

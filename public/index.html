@@ -25,6 +25,11 @@
       integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh"
       crossorigin="anonymous"
     />
+
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/tachyons@4.10.0/css/tachyons.min.css"
+    />
     <title>3D Services Soreboard</title>
   </head>
   <body class="bg-light">
@@ -56,5 +61,55 @@
       src="https://kit.fontawesome.com/76e8376f76.js"
       crossorigin="anonymous"
     ></script>
+
+    <script type="text/javascript">
+      jQuery(function($) {
+        $('#exportButton').click(function() {
+          // parse the HTML table element having an id=exportTable
+          var dataSource = shield.DataSource.create({
+            data: '#exportTable',
+            schema: {
+              type: 'table',
+              fields: {
+                Name: { type: String },
+                Age: { type: Number },
+                Email: { type: String }
+              }
+            }
+          });
+
+          // when parsing is done, export the data to PDF
+          dataSource.read().then(function(data) {
+            var pdf = new shield.exp.PDFDocument({
+              author: 'PrepBootstrap',
+              created: new Date()
+            });
+
+            pdf.addPage('a4', 'portrait');
+
+            pdf.table(
+              50,
+              50,
+              data,
+              [
+                { field: 'Name', title: 'Person Name', width: 200 },
+                { field: 'Age', title: 'Age', width: 50 },
+                { field: 'Email', title: 'Email Address', width: 200 }
+              ],
+              {
+                margins: {
+                  top: 50,
+                  left: 50
+                }
+              }
+            );
+
+            pdf.saveAs({
+              fileName: 'PrepBootstrapPDF'
+            });
+          });
+        });
+      });
+    </script>
   </body>
 </html>

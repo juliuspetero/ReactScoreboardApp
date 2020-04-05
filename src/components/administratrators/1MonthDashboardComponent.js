@@ -301,9 +301,9 @@ export class OneMonthDashboardComponent extends Component {
             {departmentScore.toFixed(1)} %
           </div>
 
-          {/* Show which department employees to be displayed on the page */}
+          {/* Show which department scores to be displayed on the page */}
           <div className="text-right col-sm-6">
-            <label className="mr-sm-2" htmlFor="number">
+            <label className="mr-sm-2" htmlFor="departmentId">
               Departments
             </label>
             <select
@@ -320,8 +320,6 @@ export class OneMonthDashboardComponent extends Component {
         <table
           className="table table-striped table-bordered table-hover text-left"
           style={{ width: '100%' }}
-          id="employees-table"
-          // ref={el => (this.el = el)}
         >
           <thead>
             <tr>

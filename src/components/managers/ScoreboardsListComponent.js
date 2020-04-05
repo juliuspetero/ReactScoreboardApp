@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import cloneDeep from 'lodash/cloneDeep';
 import moment from 'moment';
+// import html2canvas from 'html2canvas';
+// import jsPDF from 'jspdf';
 import axios from 'axios';
 import isEmpty from 'lodash/isEmpty';
 import isArray from 'lodash/isArray';
@@ -17,6 +19,32 @@ export class ScoreboardsListComponent extends Component {
       number: 5
     };
   }
+
+  exportToPdf = () => {
+    // const allRows = document.getElementById('mscoreboards').rows;
+    // for (let i = 0; i < allRows.length; i++) {
+    //   allRows[i].deleteCell(-1);
+    // }
+    // const input = document.getElementById('mscoreboards');
+    // html2canvas(input).then(canvas => {
+    //   const imgData = canvas.toDataURL('image/png');
+    //   const imgWidth = 210;
+    //   const pageHeight = 295;
+    //   const imgHeight = (canvas.height * imgWidth) / canvas.width;
+    //   let heightLeft = imgHeight;
+    //   const doc = new jsPDF('p', 'mm');
+    //   let position = 0;
+    //   doc.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
+    //   heightLeft -= pageHeight;
+    //   while (heightLeft >= 0) {
+    //     position = heightLeft - imgHeight;
+    //     doc.addPage();
+    //     doc.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
+    //     heightLeft -= pageHeight;
+    //   }
+    //   doc.save('scoreboards.pdf');
+    // });
+  };
 
   // Toggle status of the the approval
   onChangeApproval = async id => {
@@ -208,7 +236,7 @@ export class ScoreboardsListComponent extends Component {
                     (averageScoresList.length - index)
                   ).toFixed(1)}
                 </td>
-                <td className="">
+                <td className="last">
                   {/* The approved value should be coming from the database */}
                   <p>
                     <button
@@ -220,27 +248,40 @@ export class ScoreboardsListComponent extends Component {
                       {scoreboard.isApproved ? 'Approved' : 'Not yet Approved'}
                     </button>
                   </p>
-                  <div style={{ display: scoreboard.isApproved ? 'none' : '' }}>
-                    <p>
-                      <button
-                        type="button"
-                        onClick={() =>
-                          this.props.history.push(
-                            `/manager/edit-scores/${scoreboard.id}`
-                          )
-                        }
-                        className="btn btn-light"
-                      >
-                        Update Scores
-                      </button>
-                    </p>
-                    <p>
-                      <DeleteButtonComponent
-                        scoreboard={scoreboard}
-                        deleteScoreboard={this.deleteScoreboard}
-                      />
-                    </p>
-                  </div>
+                  {/* <div style={{ display: scoreboard.isApproved ? 'none' : '' }}> */}
+                  <p>
+                    <button
+                      type="button"
+                      onClick={() =>
+                        this.props.history.push(
+                          `/manager/edit-scores/${scoreboard.id}`
+                        )
+                      }
+                      className="btn btn-light"
+                    >
+                      Update Scores
+                    </button>
+                  </p>
+                  <p>
+                    <button
+                      type="button"
+                      onClick={() =>
+                        this.props.history.push(
+                          `/manager/reports/${scoreboard.id}`
+                        )
+                      }
+                      className="btn btn-light"
+                    >
+                      View Reports
+                    </button>
+                  </p>
+                  <p>
+                    <DeleteButtonComponent
+                      scoreboard={scoreboard}
+                      deleteScoreboard={this.deleteScoreboard}
+                    />
+                  </p>
+                  {/* </div> */}
                 </td>
               </tr>
             </React.Fragment>
@@ -277,10 +318,21 @@ export class ScoreboardsListComponent extends Component {
             <option value="all">All</option>
           </select>
         </div>
+        {/* Dowlnload button */}
+        <div className="text-left mb-2">
+          <button
+            onClick={this.exportToPdf}
+            id="exportButton"
+            className="btn btn-lg btn-danger clearfix"
+          >
+            <span className="fa fa-file-pdf-o"></span> Export to PDF
+          </button>
+        </div>
+
         <table
+          id="mscoreboards"
           className="table table-striped table-bordered table-hover text-left"
           style={{ width: '100%' }}
-          id="employees-table"
           // ref={el => (this.el = el)}
         >
           <thead>
@@ -292,7 +344,7 @@ export class ScoreboardsListComponent extends Component {
               </th>
               <th>Average Score</th>
               <th>Cummulative Avg Score</th>
-              <th>Actions</th>
+              <th className="last">Actions</th>
             </tr>
           </thead>
           <tbody>{departmentScoreboards}</tbody>

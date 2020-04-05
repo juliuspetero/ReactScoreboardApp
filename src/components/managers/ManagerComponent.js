@@ -28,6 +28,7 @@ import ThreeMonthsDashboardComponent from './3MonthsDashboardComponent';
 import SixMonthsDashboardComponent from './6MonthsDashboardComponent';
 import OneYearDashboardComponent from './1YearDashboardComponent';
 import CreateScoreboardEmployeesList from './CreateScoreboardEmployeesList';
+import ReportsListComponent from '../reports/ReportsListComponent';
 
 export class ManagerComponent extends Component {
   logout = e => {
@@ -523,6 +524,12 @@ export class ManagerComponent extends Component {
               <Route
                 path={'/manager/1year'}
                 component={OneYearDashboardComponent}
+              />
+
+              {/* Show all the reports created for the scoreboard */}
+              <Route
+                path={'/manager/reports/:id'}
+                component={ReportsListComponent}
               />
 
               <Route component={NoMatch404} />
