@@ -273,6 +273,7 @@ export class OneMonthDashboardComponent extends Component {
             <React.Fragment key={scoreboard.id}>
               <tr>
                 <td>{scoreboard.user.username}</td>
+                <td>{moment(scoreboard.updatedAt).format('DD/MM/YYYY')}</td>
                 <td>{moment(scoreboard.createdAt).format('DD/MM/YYYY')}</td>
                 <td>
                   <table className="container">
@@ -361,7 +362,8 @@ export class OneMonthDashboardComponent extends Component {
             <thead>
               <tr>
                 <th scope="col">Name</th>
-                <th scope="col">Date</th>
+                <th scope="col">Modified</th>
+                <th scope="col">Created</th>
                 <th className="text-center" scope="col">
                   KPIs
                 </th>

@@ -104,15 +104,57 @@ export class ManagerComponent extends Component {
                   className="dropdown-menu text-center bg-dark"
                   aria-labelledby="smallerscreenmenu"
                 >
-                  <NavLink className="dropdown-item bg-dark text-white" to="#!">
-                    Dashboard 1
+                  <NavLink
+                    className="dropdown-item bg-dark text-white"
+                    to="/manager/1month"
+                  >
+                    This Months's Scoreboard
                   </NavLink>
-                  <NavLink className="dropdown-item bg-dark text-white" to="#!">
-                    Dashboard 2
+                  <NavLink
+                    className="dropdown-item bg-dark text-white"
+                    to="/manager/3months"
+                  >
+                    Last Three Months
+                  </NavLink>
+                  <NavLink
+                    className="dropdown-item bg-dark text-white"
+                    to="/manager/6months"
+                  >
+                    Last Six Months
+                  </NavLink>
+                  <NavLink
+                    className="dropdown-item bg-dark text-white"
+                    to="/manager/1year"
+                  >
+                    This Year
                   </NavLink>
                 </div>
               </li>
-
+              {/* Employees */}
+              <li className="nav-item dropdown d-sm-block d-md-none">
+                <a
+                  className="nav-link dropdown-toggle"
+                  href="#!"
+                  id="smallerscreenmenu"
+                  data-toggle="dropdown"
+                  aria-haspopup="true"
+                  aria-expanded="false"
+                >
+                  Employees
+                </a>
+                {/* Drop down menu */}
+                <div
+                  className="dropdown-menu text-center bg-dark"
+                  aria-labelledby="smallerscreenmenu"
+                >
+                  <NavLink
+                    className="dropdown-item bg-dark text-white"
+                    to="/manager/all-employees"
+                  >
+                    All Employees
+                  </NavLink>
+                </div>
+              </li>
               {/* KPIs */}
               <li className="nav-item dropdown d-sm-block d-md-none">
                 <a
@@ -138,46 +180,14 @@ export class ManagerComponent extends Component {
                   </NavLink>
                   <NavLink
                     className="dropdown-item bg-dark text-white"
-                    to="/manager/create-employee"
+                    to="/manager/create-kpi"
                   >
                     Create KPI
                   </NavLink>
                 </div>
               </li>
 
-              {/* Employees */}
-              <li className="nav-item dropdown d-sm-block d-md-none">
-                <a
-                  className="nav-link dropdown-toggle"
-                  href="#!"
-                  id="smallerscreenmenu"
-                  data-toggle="dropdown"
-                  aria-haspopup="true"
-                  aria-expanded="false"
-                >
-                  Employees
-                </a>
-                {/* Drop down menu */}
-                <div
-                  className="dropdown-menu text-center bg-dark"
-                  aria-labelledby="smallerscreenmenu"
-                >
-                  <NavLink
-                    className="dropdown-item bg-dark text-white"
-                    to="/manager/all-employees"
-                  >
-                    All Employees
-                  </NavLink>
-                  <NavLink
-                    className="dropdown-item bg-dark text-white"
-                    to="/manager/create-employee"
-                  >
-                    Create Employee
-                  </NavLink>
-                </div>
-              </li>
-
-              {/* Scoreboard */}
+              {/* SCOREBOARDS */}
               <li className="nav-item dropdown d-sm-block d-md-none">
                 <a
                   className="nav-link dropdown-toggle"
@@ -197,11 +207,11 @@ export class ManagerComponent extends Component {
                     className="dropdown-item bg-dark text-white"
                     to="/manager/all-scoreboards"
                   >
-                    All Scoreboards
+                    Search Employee
                   </NavLink>
                   <NavLink
                     className="dropdown-item bg-dark text-white"
-                    to="/manager/create-employee"
+                    to="/manager/create-scoreboards"
                   >
                     Create Scoreboard
                   </NavLink>
@@ -276,7 +286,7 @@ export class ManagerComponent extends Component {
               >
                 <div className="d-flex w-100 justify-content-start align-items-center">
                   <span className="fa fa-dashboard fa-fw mr-3"></span>
-                  <span className="menu-collapsed">Dashboard</span>
+                  <span className="menu-collapsed">Dashboards</span>
                   <span className="submenu-icon ml-auto"></span>
                 </div>
               </a>

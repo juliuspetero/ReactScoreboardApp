@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import cloneDeep from 'lodash/cloneDeep';
 import html2canvas from 'html2canvas';
+import moment from 'moment';
 import jsPDF from 'jspdf';
 import isEmpty from 'lodash/isEmpty';
 import isArray from 'lodash/isArray';
@@ -270,6 +271,8 @@ export class SixMonthsDashboardComponent extends Component {
             <React.Fragment key={scoreboard.id}>
               <tr>
                 <td>{scoreboard.user.username}</td>
+                <td>{moment(scoreboard.updatedAt).format('DD/MM/YYYY')}</td>
+                <td>{moment(scoreboard.createdAt).format('DD/MM/YYYY')}</td>
                 <td>
                   <table className="container">
                     <tbody>
@@ -361,6 +364,8 @@ export class SixMonthsDashboardComponent extends Component {
             <thead>
               <tr>
                 <th scope="col">Name</th>
+                <th scope="col">Modified</th>
+                <th scope="col">Created</th>
                 <th className="text-center" scope="col">
                   KPIs
                 </th>

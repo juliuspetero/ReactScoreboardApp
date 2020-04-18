@@ -13,7 +13,6 @@ import CreateKPIComponent from '../kpis-management/CreateKPIComponent';
 import CreateKPIFlashMessagesList from '../messages/CreateKPIFlashMessagesList';
 import KPIsListComponent from '../kpis-management/KPIsListComponent';
 import ScoreboardsListComponent from '../scoreboards-management/ScoreboardsListComponent';
-// import CreateScoreboardComponent from '../scoreboards-management/CreateScoreboardComponent';
 import CreateScoreboardFlashMessage from '../messages/CreateScoreboardFlashMessage';
 import AllScoreboardsComponent from '../scoreboards-management/AllScoreboardsComponent';
 import EditScoreboardComponent from '../scoreboards-management/EditScoreboardComponent';
@@ -114,47 +113,32 @@ export class AdminComponent extends Component {
                   className="dropdown-menu text-center bg-dark"
                   aria-labelledby="smallerscreenmenu"
                 >
-                  <NavLink className="dropdown-item bg-dark text-white" to="#!">
-                    Dashboard 1
-                  </NavLink>
-                  <NavLink className="dropdown-item bg-dark text-white" to="#!">
-                    Dashboard 2
-                  </NavLink>
-                </div>
-              </li>
-
-              {/* KPIs */}
-              <li className="nav-item dropdown d-sm-block d-md-none">
-                <a
-                  className="nav-link dropdown-toggle"
-                  href="#!"
-                  id="smallerscreenmenu"
-                  data-toggle="dropdown"
-                  aria-haspopup="true"
-                  aria-expanded="false"
-                >
-                  KPIs
-                </a>
-                {/* Drop down menu */}
-                <div
-                  className="dropdown-menu text-center bg-dark"
-                  aria-labelledby="smallerscreenmenu"
-                >
                   <NavLink
                     className="dropdown-item bg-dark text-white"
-                    to="/admin/all-kpis"
+                    to="/admin/1month"
                   >
-                    All KPIs
+                    This Months's Scoreboard
                   </NavLink>
                   <NavLink
                     className="dropdown-item bg-dark text-white"
-                    to="/admin/create-employee"
+                    to="/admin/3months"
                   >
-                    Create KPI
+                    Last Three Months
+                  </NavLink>
+                  <NavLink
+                    className="dropdown-item bg-dark text-white"
+                    to="/admin/6months"
+                  >
+                    Last Six Months
+                  </NavLink>
+                  <NavLink
+                    className="dropdown-item bg-dark text-white"
+                    to="/admin/1year"
+                  >
+                    This Year
                   </NavLink>
                 </div>
               </li>
-
               {/* Employees */}
               <li className="nav-item dropdown d-sm-block d-md-none">
                 <a
@@ -186,8 +170,103 @@ export class AdminComponent extends Component {
                   </NavLink>
                 </div>
               </li>
+              {/* Job titles */}
+              <li className="nav-item dropdown d-sm-block d-md-none">
+                <a
+                  className="nav-link dropdown-toggle"
+                  href="#!"
+                  id="smallerscreenmenu"
+                  data-toggle="dropdown"
+                  aria-haspopup="true"
+                  aria-expanded="false"
+                >
+                  Job Titles
+                </a>
+                {/* Drop down menu */}
+                <div
+                  className="dropdown-menu text-center bg-dark"
+                  aria-labelledby="smallerscreenmenu"
+                >
+                  <NavLink
+                    className="dropdown-item bg-dark text-white"
+                    to="/admin/all-jobtitles"
+                  >
+                    All Job Titles
+                  </NavLink>
+                  <NavLink
+                    className="dropdown-item bg-dark text-white"
+                    to="/admin/create-jobtitle"
+                  >
+                    Create Job Title
+                  </NavLink>
+                </div>
+              </li>
 
-              {/* Scoreboard */}
+              {/* DEPARTMENTS */}
+              <li className="nav-item dropdown d-sm-block d-md-none">
+                <a
+                  className="nav-link dropdown-toggle"
+                  href="#!"
+                  id="smallerscreenmenu"
+                  data-toggle="dropdown"
+                  aria-haspopup="true"
+                  aria-expanded="false"
+                >
+                  Departments
+                </a>
+                {/* Drop down menu */}
+                <div
+                  className="dropdown-menu text-center bg-dark"
+                  aria-labelledby="smallerscreenmenu"
+                >
+                  <NavLink
+                    className="dropdown-item bg-dark text-white"
+                    to="/admin/all-departments"
+                  >
+                    All Departments
+                  </NavLink>
+                  <NavLink
+                    className="dropdown-item bg-dark text-white"
+                    to="/admin/create-department"
+                  >
+                    Create Department
+                  </NavLink>
+                </div>
+              </li>
+
+              {/* KPIs */}
+              <li className="nav-item dropdown d-sm-block d-md-none">
+                <a
+                  className="nav-link dropdown-toggle"
+                  href="#!"
+                  id="smallerscreenmenu"
+                  data-toggle="dropdown"
+                  aria-haspopup="true"
+                  aria-expanded="false"
+                >
+                  KPIs
+                </a>
+                {/* Drop down menu */}
+                <div
+                  className="dropdown-menu text-center bg-dark"
+                  aria-labelledby="smallerscreenmenu"
+                >
+                  <NavLink
+                    className="dropdown-item bg-dark text-white"
+                    to="/admin/all-kpis"
+                  >
+                    All KPIs
+                  </NavLink>
+                  <NavLink
+                    className="dropdown-item bg-dark text-white"
+                    to="/admin/create-kpi"
+                  >
+                    Create KPI
+                  </NavLink>
+                </div>
+              </li>
+
+              {/* SCOREBOARDS */}
               <li className="nav-item dropdown d-sm-block d-md-none">
                 <a
                   className="nav-link dropdown-toggle"
@@ -207,11 +286,11 @@ export class AdminComponent extends Component {
                     className="dropdown-item bg-dark text-white"
                     to="/admin/all-scoreboards"
                   >
-                    All Scoreboards
+                    Search Employee
                   </NavLink>
                   <NavLink
                     className="dropdown-item bg-dark text-white"
-                    to="/admin/create-employee"
+                    to="/admin/create-scoreboards"
                   >
                     Create Scoreboard
                   </NavLink>
@@ -404,7 +483,7 @@ export class AdminComponent extends Component {
                   to="/admin/all-departments"
                   className="list-group-item list-group-item-action bg-dark text-white"
                 >
-                  <span className="menu-collapsed">All Department</span>
+                  <span className="menu-collapsed">All Departments</span>
                 </NavLink>
                 <NavLink
                   to="/admin/create-department"
