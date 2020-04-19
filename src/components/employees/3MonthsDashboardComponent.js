@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import cloneDeep from 'lodash/cloneDeep';
+import moment from 'moment';
 import isEmpty from 'lodash/isEmpty';
 import isArray from 'lodash/isArray';
 import { connect } from 'react-redux';
@@ -226,6 +227,8 @@ export class ThreeMonthsDashboardComponent extends Component {
             <React.Fragment key={scoreboard.id}>
               <tr>
                 <td>{scoreboard.user.username}</td>
+                <td>{moment(scoreboard.updatedAt).format('DD/MM/YYYY')}</td>
+                <td>{moment(scoreboard.createdAt).format('DD/MM/YYYY')}</td>
                 <td>
                   <table className="container">
                     <tbody>
@@ -284,6 +287,8 @@ export class ThreeMonthsDashboardComponent extends Component {
           <thead>
             <tr>
               <th scope="col">Name</th>
+              <th scope="col">Modified</th>
+              <th scope="col">Created</th>
               <th className="text-center" scope="col">
                 KPIs
               </th>

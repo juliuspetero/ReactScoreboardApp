@@ -2,9 +2,7 @@ import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import isArray from 'lodash/isArray';
 import { connect } from 'react-redux';
-import axios from 'axios';
 import { fetchScoreboardLayout } from '../../redux/scoreboards/actions/fetchScoreboardAction';
-import config from '../../config/config';
 import { fetchUser } from '../../redux/users/actions/fetchUserActions';
 
 export class ScoreboardDetailsComponent extends Component {
@@ -12,14 +10,6 @@ export class ScoreboardDetailsComponent extends Component {
     this.props.fetchScoreboardLayout(this.props.match.params.id);
     this.props.fetchUser(this.props.match.params.id);
   }
-
-  deleteScoreboardLayout = async id => {
-    // console.log(id);
-    await axios.delete(`${config.baseUrl}/scoreboardlayouts/${id}`);
-    this.props.history.push(
-      `/admin/all-employees/${this.props.match.params.id}`
-    );
-  };
 
   render() {
     // Retrieve all the KPIs in from the API
@@ -65,7 +55,10 @@ export class ScoreboardDetailsComponent extends Component {
     return (
       <div className="my-5">
         {isLoading ? <div className="spinner-border"></div> : ''}
-        <h3 className="mb-2">{this.props.userData.user.username}'s KPIs</h3>
+        <h3 className="mb-2">
+          {this.props.userData.user ? this.props.userData.user.username : null}
+          's KPIs
+        </h3>
         <table
           className="table table-striped table-bordered table-hover text-left"
           style={{ width: '100%' }}
@@ -80,21 +73,6 @@ export class ScoreboardDetailsComponent extends Component {
           </thead>
           <tbody>{kpisList}</tbody>
         </table>
-
-        {/* The emloyee KPIs cannot be deleted or edited */}
-        {/* <div className="text-center">
-          <Link
-            to={`/admin/edit-scoreboard/${this.props.match.params.id}`}
-            className="btn btn-primary mr-3"
-          >
-            Edit{' '}
-          </Link>
-
-          <DeleteButtonComponent
-            scoreboard={scoreboards}
-            deleteScoreboard={this.deleteScoreboardLayout}
-          />
-        </div> */}
       </div>
     );
   }

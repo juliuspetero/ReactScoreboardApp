@@ -11,7 +11,7 @@ export class EditReportComponent extends Component {
     this.state = {
       description: '',
       scoreBoardId: this.props.match.params.id,
-      reportDocument: null
+      reportDocument: null,
     };
   }
 
@@ -19,23 +19,33 @@ export class EditReportComponent extends Component {
     this.props.fetchReport(this.props.match.params.id);
   }
 
-  onChange = e => this.setState({ [e.target.name]: e.target.value });
+  onChange = (e) => this.setState({ [e.target.name]: e.target.value });
 
   // Upload document to support the scoreboard
-  onFileChange = e => this.setState({ reportDocument: e.target.files[0] });
-  onSubmit = e => {
+  onFileChange = (e) => this.setState({ reportDocument: e.target.files[0] });
+  onSubmit = (e) => {
     e.preventDefault();
     this.props.editReport(this.props.match.params.id, this.state);
   };
 
   // Call flash messages on successful user creation
   UNSAFE_componentWillReceiveProps(nextProps) {
+    const roleId = this.props.authenticateUserData.authenticateUser
+      .userInformation.roles[0].id;
+    let pushTo = null;
+    if (roleId === '3by786gk6s03iu2') {
+      pushTo = 'admin';
+    } else if (roleId === '3by786gk6s03iu3') {
+      pushTo = 'manager';
+    } else if (roleId === '3by786gk6s03iu4') {
+      pushTo = 'employee';
+    }
     // Populate the report data to state
     const report = nextProps.reportData.report;
     if (report) {
       this.setState({
         description: report.description,
-        scoreBoardId: report.scoreBoardId
+        scoreBoardId: report.scoreBoardId,
       });
     }
 
@@ -44,7 +54,7 @@ export class EditReportComponent extends Component {
         nextProps.editReportData.editReport &&
       nextProps.editReportData.editReport != null
     ) {
-      this.props.history.push(`/employee/reports/${report.scoreBoardId}`);
+      this.props.history.push(`/${pushTo}/reports/${report.scoreBoardId}`);
     }
   }
 
@@ -131,15 +141,16 @@ export class EditReportComponent extends Component {
 }
 
 // This maps application state from the store to this component
-const mapStateToProps = state => {
+const mapStateToProps = (state) => {
   return {
     editReportData: state.editReportReducer,
-    reportData: state.fetchReportReducer
+    authenticateUserData: state.authenticateUserReducer,
+    reportData: state.fetchReportReducer,
   };
 };
 
 export default connect(mapStateToProps, {
   editReport,
   fetchReport,
-  deleteEditReportErrorMessage
+  deleteEditReportErrorMessage,
 })(EditReportComponent);

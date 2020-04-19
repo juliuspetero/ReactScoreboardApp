@@ -38,7 +38,7 @@ export class OneMonthDashboardComponent extends Component {
       if (index === 0) employeesInDepartment.push(sb.user);
 
       let isPresent = false;
-      employeesInDepartment.forEach(employee => {
+      employeesInDepartment.forEach((employee) => {
         if (employee.id === sb.user.id) isPresent = true;
       });
 
@@ -52,7 +52,7 @@ export class OneMonthDashboardComponent extends Component {
     employeesInDepartment.forEach((employee, eIndex) => {
       //Retrieve all scoreboards for a specific employee
       const employeeScoreboards = deptScoreboards.filter(
-        sb => sb.user.id === employee.id
+        (sb) => sb.user.id === employee.id
       );
 
       // Store all the KPIs for a specific employee here
@@ -63,7 +63,7 @@ export class OneMonthDashboardComponent extends Component {
             if (employeeKPIs.length === 0) employeeKPIs.push(kpi);
 
             let isPresent = false;
-            employeeKPIs.forEach(employeeKPI => {
+            employeeKPIs.forEach((employeeKPI) => {
               if (employeeKPI.id === kpi.id) isPresent = true;
             });
 
@@ -89,13 +89,13 @@ export class OneMonthDashboardComponent extends Component {
 
         // Calculate the average of KPI score and weight
         let totalScores = 0;
-        employeeKPIScores.forEach(score => {
+        employeeKPIScores.forEach((score) => {
           totalScores += score;
         });
         const averageScore = totalScores / employeeKPIScores.length;
 
         let totalWeights = 0;
-        employeeKPIWeights.forEach(weight => {
+        employeeKPIWeights.forEach((weight) => {
           totalWeights += weight;
         });
         const averageWeight = totalWeights / employeeKPIWeights.length;
@@ -120,7 +120,7 @@ export class OneMonthDashboardComponent extends Component {
         // Calculating average scores
         let totalWeights = 0;
 
-        scoreboard.kpis.forEach(kpi => {
+        scoreboard.kpis.forEach((kpi) => {
           totalWeights += kpi.kPIScoreBoard.KPIWeight;
         });
 
@@ -142,7 +142,7 @@ export class OneMonthDashboardComponent extends Component {
     let departmentScore = 0;
 
     if (!isEmpty(averageScoresList)) {
-      averageScoresList.forEach(as => {
+      averageScoresList.forEach((as) => {
         totalAverageScoreList += as;
       });
 
@@ -155,7 +155,7 @@ export class OneMonthDashboardComponent extends Component {
           // Calculating average scores
           let totalWeights = 0;
 
-          scoreboard.kpis.forEach(kpi => {
+          scoreboard.kpis.forEach((kpi) => {
             totalWeights += kpi.kPIScoreBoard.KPIWeight;
           });
 
@@ -170,14 +170,14 @@ export class OneMonthDashboardComponent extends Component {
           }
 
           // Considering scores for each month
-          const kpiTitles = scoreboard.kpis.map(kpi => {
+          const kpiTitles = scoreboard.kpis.map((kpi) => {
             return <td key={kpi.id}>{kpi.title}</td>;
           });
 
-          const standardMeasures = scoreboard.kpis.map(kpi => {
+          const standardMeasures = scoreboard.kpis.map((kpi) => {
             return <td key={kpi.id}>100 %</td>;
           });
-          const kpiScores = scoreboard.kpis.map(kpi => {
+          const kpiScores = scoreboard.kpis.map((kpi) => {
             const score =
               kpi.kPIScoreBoard.KPIScore != null
                 ? kpi.kPIScoreBoard.KPIScore
@@ -186,23 +186,23 @@ export class OneMonthDashboardComponent extends Component {
             let style = null;
             if (score < 50)
               style = {
-                backgroundColor: '#cc6600'
+                backgroundColor: '#cc6600',
               };
             else if (score < 60)
               style = {
-                backgroundColor: '#ffcccc'
+                backgroundColor: '#ffcccc',
               };
             else if (score < 75)
               style = {
-                backgroundColor: '#ffd11a'
+                backgroundColor: '#ffd11a',
               };
             else if (score < 90)
               style = {
-                backgroundColor: '#4dd2ff'
+                backgroundColor: '#4dd2ff',
               };
             else
               style = {
-                backgroundColor: '#00cc44'
+                backgroundColor: '#00cc44',
               };
 
             return (
@@ -213,7 +213,7 @@ export class OneMonthDashboardComponent extends Component {
           });
 
           // KPI Weights
-          const kpiWeights = scoreboard.kpis.map(kpi => {
+          const kpiWeights = scoreboard.kpis.map((kpi) => {
             return (
               <td key={kpi.id}>
                 {kpi.kPIScoreBoard.KPIWeight != null
@@ -227,6 +227,7 @@ export class OneMonthDashboardComponent extends Component {
             <React.Fragment key={scoreboard.id}>
               <tr>
                 <td>{scoreboard.user.username}</td>
+                <td>{moment(scoreboard.updatedAt).format('DD/MM/YYYY')}</td>
                 <td>{moment(scoreboard.createdAt).format('DD/MM/YYYY')}</td>
                 <td>
                   <table className="container">
@@ -284,7 +285,8 @@ export class OneMonthDashboardComponent extends Component {
           <thead>
             <tr>
               <th scope="col">Name</th>
-              <th scope="col">Date</th>
+              <th scope="col">Modified</th>
+              <th scope="col">Created</th>
               <th className="text-center" scope="col">
                 KPIs
               </th>
@@ -299,13 +301,13 @@ export class OneMonthDashboardComponent extends Component {
 }
 
 export default connect(
-  state => {
+  (state) => {
     return {
       scoreboardsData: state.fetchScoreboardsReducer,
-      authenticateUserData: state.authenticateUserReducer
+      authenticateUserData: state.authenticateUserReducer,
     };
   },
   {
-    fetchUserPeriodicScoreboards
+    fetchUserPeriodicScoreboards,
   }
 )(OneMonthDashboardComponent);

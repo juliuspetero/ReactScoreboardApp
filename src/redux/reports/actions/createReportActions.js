@@ -5,14 +5,13 @@ import validateInput from '../../../helpers/validateCreateReport';
 import {
   CREATE_REPORT_REQUEST,
   CREATE_REPORT_SUCCESS,
-  CREATE_REPORT_FAILURE
+  CREATE_REPORT_FAILURE,
 } from '../actionsTypes/createReportActionTypes';
 import cloneDeep from 'lodash/cloneDeep';
 
 // Action creators returns the action object
-export const createReport = report => {
-  console.log(report);
-  return dispatch => {
+export const createReport = (report) => {
+  return (dispatch) => {
     dispatch(createReportRequest());
     // Write client side validation here
     const { errors, isValid } = validateInput(cloneDeep(report));
@@ -24,18 +23,18 @@ export const createReport = report => {
       formdata.append('scoreBoardId', report.scoreBoardId);
       axios
         .post(`${config.baseUrl}/reports`, formdata)
-        .then(response => {
+        .then((response) => {
           // console.log(response.data);
           dispatch(createReportSuccess(response.data));
         })
-        .catch(error => {
+        .catch((error) => {
           if (error.response) dispatch(createReportFailure(error.response));
           else
             dispatch(
               createReportFailure({
                 data: {
-                  message: 'Something occur try again later...'
-                }
+                  message: 'Something occur try again later...',
+                },
               })
             );
         });
@@ -45,20 +44,20 @@ export const createReport = report => {
 
 export const createReportRequest = () => {
   return {
-    type: CREATE_REPORT_REQUEST
+    type: CREATE_REPORT_REQUEST,
   };
 };
 
-export const createReportSuccess = user => {
+export const createReportSuccess = (user) => {
   return {
     type: CREATE_REPORT_SUCCESS,
-    payload: user
+    payload: user,
   };
 };
 
-export const createReportFailure = errors => {
+export const createReportFailure = (errors) => {
   return {
     type: CREATE_REPORT_FAILURE,
-    payload: errors
+    payload: errors,
   };
 };

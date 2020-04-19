@@ -38,9 +38,11 @@ import OneYearDashboardComponent from './1YearDashboardComponent';
 import ThreeMonthsDashboardComponent from './3MonthsDashboardComponent';
 import SixMonthsDashboardComponent from './6MonthsDashboardComponent';
 import ReportsListComponent from '../reports/ReportsListComponent';
+import EditReportComponent from '../reports/EditReportComponent';
+import CreateReportComponent from '../reports/CreateReportComponent';
 
 export class AdminComponent extends Component {
-  logout = e => {
+  logout = (e) => {
     e.preventDefault();
     this.props.logout();
     this.props.history.push('/login');
@@ -48,7 +50,7 @@ export class AdminComponent extends Component {
   render() {
     const {
       isAuthenticated,
-      authenticateUser
+      authenticateUser,
     } = this.props.authenticateUserData;
 
     return (
@@ -95,6 +97,46 @@ export class AdminComponent extends Component {
 
               {/* <!-- This menu is hidden in bigger devices with d-sm-none.  */}
               {/* The sidebar isn't proper for smaller screens imo, so this dropdown menu can keep all the useful sidebar itens exclusively for smaller screens  --> */}
+
+              {/* PROFILE */}
+              <li className="nav-item dropdown d-sm-block d-md-none">
+                <a
+                  className="nav-link dropdown-toggle"
+                  href="#!"
+                  id="smallerscreenmenu"
+                  data-toggle="dropdown"
+                  aria-haspopup="true"
+                  aria-expanded="false"
+                >
+                  Profile
+                </a>
+                {/* Drop down menu */}
+                <div
+                  className="dropdown-menu text-center bg-dark"
+                  aria-labelledby="smallerscreenmenu"
+                >
+                  <NavLink
+                    className="dropdown-item bg-dark text-white"
+                    to="/admin/settings"
+                  >
+                    Settings
+                  </NavLink>
+                  <NavLink
+                    className="dropdown-item bg-dark text-white"
+                    to="/admin/my-details"
+                  >
+                    My Details
+                  </NavLink>
+                  <NavLink
+                    className="dropdown-item bg-dark text-white"
+                    to={`/admin/all-scoreboards/${
+                      isAuthenticated ? authenticateUser.userInformation.id : ''
+                    }`}
+                  >
+                    My Scoreboards
+                  </NavLink>
+                </div>
+              </li>
 
               {/* Dashboard */}
               <li className="nav-item dropdown d-sm-block d-md-none">
@@ -718,6 +760,17 @@ export class AdminComponent extends Component {
                 component={SixMonthsDashboardComponent}
               />
 
+              {/* Edit report */}
+              <Route
+                path={'/admin/edit-report/:id'}
+                component={EditReportComponent}
+              />
+              {/* Scoreboard Report section */}
+              <Route
+                path={'/admin/upload-report/:id'}
+                component={CreateReportComponent}
+              />
+
               <Route
                 path={'/admin/edit-scores/:id'}
                 component={EditScoresComponent}
@@ -734,7 +787,7 @@ export class AdminComponent extends Component {
 }
 
 export default connect(
-  state => {
+  (state) => {
     return { authenticateUserData: state.authenticateUserReducer };
   },
   { logout }

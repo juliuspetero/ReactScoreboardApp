@@ -16,7 +16,7 @@ export class ScoreboardsListComponent extends Component {
     super(props);
 
     this.state = {
-      number: 5
+      number: 5,
     };
   }
 
@@ -26,7 +26,7 @@ export class ScoreboardsListComponent extends Component {
       allRows[i].deleteCell(-1);
     }
     const input = document.getElementById('mscoreboards');
-    html2canvas(input).then(canvas => {
+    html2canvas(input).then((canvas) => {
       const imgData = canvas.toDataURL('image/png');
       const imgWidth = 210;
       const pageHeight = 295;
@@ -47,19 +47,19 @@ export class ScoreboardsListComponent extends Component {
   };
 
   // Toggle status of the the approval
-  onChangeApproval = async id => {
+  onChangeApproval = async (id) => {
     // console.log(id);
     await axios.put(`${config.baseUrl}/scoreboards/approval/${id}`);
     await this.props.fetchScoreboards(this.props.match.params.id);
   };
 
   // Wipe the scoreboard out of memory
-  deleteScoreboard = async id => {
+  deleteScoreboard = async (id) => {
     await axios.delete(`${config.baseUrl}/scoreboards/${id}`);
     this.props.fetchScoreboards(this.props.match.params.id);
   };
 
-  onChange = e => this.setState({ [e.target.name]: e.target.value });
+  onChange = (e) => this.setState({ [e.target.name]: e.target.value });
 
   componentDidMount() {
     this.props.fetchScoreboards(this.props.match.params.id);
@@ -98,7 +98,7 @@ export class ScoreboardsListComponent extends Component {
         // Calculating average scores
         let totalWeights = 0;
 
-        scoreboard.kpis.forEach(kpi => {
+        scoreboard.kpis.forEach((kpi) => {
           totalWeights += kpi.kPIScoreBoard.KPIWeight;
         });
 
@@ -121,7 +121,7 @@ export class ScoreboardsListComponent extends Component {
           // Calculating average scores
           let totalWeights = 0;
 
-          scoreboard.kpis.forEach(kpi => {
+          scoreboard.kpis.forEach((kpi) => {
             totalWeights += kpi.kPIScoreBoard.KPIWeight;
           });
 
@@ -136,14 +136,14 @@ export class ScoreboardsListComponent extends Component {
           }
 
           // Considering scores for each month
-          const kpiTitles = scoreboard.kpis.map(kpi => {
+          const kpiTitles = scoreboard.kpis.map((kpi) => {
             return <td key={kpi.id}>{kpi.title}</td>;
           });
 
-          const standardMeasures = scoreboard.kpis.map(kpi => {
+          const standardMeasures = scoreboard.kpis.map((kpi) => {
             return <td key={kpi.id}>100 %</td>;
           });
-          const kpiScores = scoreboard.kpis.map(kpi => {
+          const kpiScores = scoreboard.kpis.map((kpi) => {
             const score =
               kpi.kPIScoreBoard.KPIScore != null
                 ? kpi.kPIScoreBoard.KPIScore
@@ -152,23 +152,23 @@ export class ScoreboardsListComponent extends Component {
             let style = null;
             if (score < 50)
               style = {
-                backgroundColor: '#cc6600'
+                backgroundColor: '#cc6600',
               };
             else if (score < 60)
               style = {
-                backgroundColor: '#ffcccc'
+                backgroundColor: '#ffcccc',
               };
             else if (score < 75)
               style = {
-                backgroundColor: '#ffd11a'
+                backgroundColor: '#ffd11a',
               };
             else if (score < 90)
               style = {
-                backgroundColor: '#4dd2ff'
+                backgroundColor: '#4dd2ff',
               };
             else
               style = {
-                backgroundColor: '#00cc44'
+                backgroundColor: '#00cc44',
               };
 
             return (
@@ -192,7 +192,7 @@ export class ScoreboardsListComponent extends Component {
 
           // console.log(averageScoresList);
 
-          const kpiWeights = scoreboard.kpis.map(kpi => {
+          const kpiWeights = scoreboard.kpis.map((kpi) => {
             return (
               <td key={kpi.id}>
                 {kpi.kPIScoreBoard.KPIWeight != null
@@ -260,6 +260,19 @@ export class ScoreboardsListComponent extends Component {
                       className="btn btn-light"
                     >
                       Update Scores
+                    </button>
+                  </p>
+                  <p>
+                    <button
+                      type="button"
+                      onClick={() =>
+                        this.props.history.push(
+                          `/manager/upload-report/${scoreboard.id}`
+                        )
+                      }
+                      className="btn btn-light"
+                    >
+                      Upload Reports
                     </button>
                   </p>
                   <p>
@@ -354,13 +367,13 @@ export class ScoreboardsListComponent extends Component {
 }
 
 export default connect(
-  state => {
+  (state) => {
     return {
       scoreboardsData: state.fetchScoreboardsReducer,
-      authenticateUserData: state.authenticateUserReducer
+      authenticateUserData: state.authenticateUserReducer,
     };
   },
   {
-    fetchScoreboards
+    fetchScoreboards,
   }
 )(ScoreboardsListComponent);

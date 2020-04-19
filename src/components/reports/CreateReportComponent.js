@@ -10,28 +10,38 @@ export class CreateReportComponent extends Component {
     this.state = {
       description: '',
       scoreBoardId: this.props.match.params.id,
-      reportDocument: null
+      reportDocument: null,
     };
   }
 
-  onChange = e => this.setState({ [e.target.name]: e.target.value });
+  onChange = (e) => this.setState({ [e.target.name]: e.target.value });
 
   // Upload document to support the scoreboard
-  onFileChange = e => this.setState({ reportDocument: e.target.files[0] });
-  onSubmit = e => {
+  onFileChange = (e) => this.setState({ reportDocument: e.target.files[0] });
+  onSubmit = (e) => {
     e.preventDefault();
     this.props.createReport(this.state);
   };
 
   // Call flash messages on successful user creation
   UNSAFE_componentWillReceiveProps(nextProps) {
+    const roleId = this.props.authenticateUserData.authenticateUser
+      .userInformation.roles[0].id;
+    let pushTo = null;
+    if (roleId === '3by786gk6s03iu2') {
+      pushTo = 'admin';
+    } else if (roleId === '3by786gk6s03iu3') {
+      pushTo = 'manager';
+    } else if (roleId === '3by786gk6s03iu4') {
+      pushTo = 'employee';
+    }
     if (
       this.props.createReportData.createReport !==
         nextProps.createReportData.createReport &&
       nextProps.createReportData.createReport != null
     ) {
       this.props.history.push(
-        `/employee/reports/${this.props.match.params.id}`
+        `/${pushTo}/reports/${this.props.match.params.id}`
       );
     }
   }
@@ -118,13 +128,14 @@ export class CreateReportComponent extends Component {
 }
 
 // This maps application state from the store to this component
-const mapStateToProps = state => {
+const mapStateToProps = (state) => {
   return {
-    createReportData: state.createReportReducer
+    createReportData: state.createReportReducer,
+    authenticateUserData: state.authenticateUserReducer,
   };
 };
 
 export default connect(mapStateToProps, {
   createReport,
-  deleteCreateReportErrorMessage
+  deleteCreateReportErrorMessage,
 })(CreateReportComponent);

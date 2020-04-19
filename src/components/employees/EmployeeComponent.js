@@ -76,8 +76,10 @@ export class EmployeeComponent extends Component {
                     : ''}
                 </a>
               </li>
+              {/* <!-- This menu is hidden in bigger devices with d-sm-none.  */}
+              {/* The sidebar isn't proper for smaller screens imo, so this dropdown menu can keep all the useful sidebar itens exclusively for smaller screens  --> */}
 
-              {/* Profile */}
+              {/* PROFILE */}
               <li className="nav-item dropdown d-sm-block d-md-none">
                 <a
                   className="nav-link dropdown-toggle"
@@ -96,15 +98,21 @@ export class EmployeeComponent extends Component {
                 >
                   <NavLink
                     className="dropdown-item bg-dark text-white"
-                    to="/employee/change-password"
-                  >
-                    Change Password
-                  </NavLink>
-                  <NavLink
-                    className="dropdown-item bg-dark text-white"
                     to="/employee/settings"
                   >
                     Settings
+                  </NavLink>
+                  <NavLink
+                    className="dropdown-item bg-dark text-white"
+                    to="/employee/my-details"
+                  >
+                    My Details
+                  </NavLink>
+                  <NavLink
+                    className="dropdown-item bg-dark text-white"
+                    to={`/employee/all-scoreboards/${user.id}`}
+                  >
+                    My Scoreboards
                   </NavLink>
                 </div>
               </li>
@@ -128,20 +136,57 @@ export class EmployeeComponent extends Component {
                 >
                   <NavLink
                     className="dropdown-item bg-dark text-white"
-                    to="/employee/"
+                    to="/employee/1month"
                   >
-                    Last Month
+                    This Months's Scoreboard
                   </NavLink>
                   <NavLink
                     className="dropdown-item bg-dark text-white"
-                    to="/employee"
+                    to="/employee/3months"
+                  >
+                    Last Three Months
+                  </NavLink>
+                  <NavLink
+                    className="dropdown-item bg-dark text-white"
+                    to="/employee/6months"
+                  >
+                    Last Six Months
+                  </NavLink>
+                  <NavLink
+                    className="dropdown-item bg-dark text-white"
+                    to="/employee/1year"
                   >
                     This Year
                   </NavLink>
                 </div>
               </li>
+              {/* KPIs */}
+              <li className="nav-item dropdown d-sm-block d-md-none">
+                <a
+                  className="nav-link dropdown-toggle"
+                  href="#!"
+                  id="smallerscreenmenu"
+                  data-toggle="dropdown"
+                  aria-haspopup="true"
+                  aria-expanded="false"
+                >
+                  KPIs
+                </a>
+                {/* Drop down menu */}
+                <div
+                  className="dropdown-menu text-center bg-dark"
+                  aria-labelledby="smallerscreenmenu"
+                >
+                  <NavLink
+                    className="dropdown-item bg-dark text-white"
+                    to={`/employee/kpis/${user.id}`}
+                  >
+                    My KPIs
+                  </NavLink>
+                </div>
+              </li>
 
-              {/* Scoreboard */}
+              {/* SCOREBOARDS */}
               <li className="nav-item dropdown d-sm-block d-md-none">
                 <a
                   className="nav-link dropdown-toggle"
@@ -159,15 +204,9 @@ export class EmployeeComponent extends Component {
                 >
                   <NavLink
                     className="dropdown-item bg-dark text-white"
-                    to="/admin/all-scoreboards"
+                    to={`/employee/all-scoreboards/${user.id}`}
                   >
                     My Scoreboards
-                  </NavLink>
-                  <NavLink
-                    className="dropdown-item bg-dark text-white"
-                    to={`/employee/kpis/${user.id}`}
-                  >
-                    My KPIs
                   </NavLink>
                 </div>
               </li>
@@ -219,6 +258,12 @@ export class EmployeeComponent extends Component {
                 >
                   <span className="menu-collapsed">My Details</span>
                 </NavLink>
+                <NavLink
+                  to={`/employee/all-scoreboards/${user.id}`}
+                  className="list-group-item list-group-item-action bg-dark text-white"
+                >
+                  <span className="menu-collapsed">My Scoreboards</span>
+                </NavLink>
               </div>
               <a
                 href="#submenu1"
@@ -228,7 +273,7 @@ export class EmployeeComponent extends Component {
               >
                 <div className="d-flex w-100 justify-content-start align-items-center">
                   <span className="fa fa-dashboard fa-fw mr-3"></span>
-                  <span className="menu-collapsed">Dashboard</span>
+                  <span className="menu-collapsed">Dashboards</span>
                   <span className="submenu-icon ml-auto"></span>
                 </div>
               </a>
