@@ -1,12 +1,37 @@
 import React, { Component } from 'react';
 import cloneDeep from 'lodash/cloneDeep';
 import moment from 'moment';
+import html2canvas from 'html2canvas';
+import jsPDF from 'jspdf';
 import isEmpty from 'lodash/isEmpty';
 import isArray from 'lodash/isArray';
 import { connect } from 'react-redux';
 import { fetchUserPeriodicScoreboards } from '../../redux/scoreboards/actions/fetchUserPeriodicScoreboardsActions';
 
 export class OneMonthDashboardComponent extends Component {
+  // Allows the entire dashboard to be exported as a PDF
+  exportToPdf = () => {
+    const input = document.getElementById('e1monthDashboard');
+    html2canvas(input).then((canvas) => {
+      const imgData = canvas.toDataURL('image/png');
+      const imgWidth = 210;
+      const pageHeight = 295;
+      const imgHeight = (canvas.height * imgWidth) / canvas.width;
+      let heightLeft = imgHeight;
+      const doc = new jsPDF('p', 'mm');
+      let position = 0;
+      doc.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
+      heightLeft -= pageHeight;
+      while (heightLeft >= 0) {
+        position = heightLeft - imgHeight;
+        doc.addPage();
+        doc.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
+        heightLeft -= pageHeight;
+      }
+      doc.save('1monthDashboard.pdf');
+    });
+  };
+
   componentDidMount() {
     this.props.fetchUserPeriodicScoreboards(
       '1month',
@@ -259,43 +284,56 @@ export class OneMonthDashboardComponent extends Component {
       : null;
 
     return (
-      <div className="my-3">
-        <div className="spin-loader"></div>
-        <h3 className="mb-2">
-          {isLoading ? <div className="spinner-border"></div> : ''}
-        </h3>
-
-        <div className="mb-2 row h5">
-          {/* Show the performance of the department */}
-          <div className="text-left col-sm-6">
-            <label className="mr-sm-2">This Month Employee's Score</label>
-            {departmentScore.toFixed(1)} %
-          </div>
-
-          {/* Show which department employees to be displayed on the page */}
-          <div className="text-right col-sm-6"></div>
+      <React.Fragment>
+        {/* Dowlnload button */}
+        <div className="text-left my-3">
+          <button
+            onClick={this.exportToPdf}
+            id="exportButton"
+            className="btn btn-lg btn-danger clearfix"
+          >
+            <span className="fa fa-file-pdf-o"></span> Export to PDF
+          </button>
         </div>
 
-        <table
-          className="table table-striped table-bordered table-hover text-left"
-          style={{ width: '100%' }}
-          id="employees-table"
-          // ref={el => (this.el = el)}
-        >
-          <thead>
-            <tr>
-              <th scope="col">Name</th>
-              <th scope="col">Modified</th>
-              <th scope="col">Created</th>
-              <th className="text-center" scope="col">
-                KPIs
-              </th>
-              <th>Monthly Score</th>
-            </tr>
-          </thead>
-          <tbody>{departmentScoreboards}</tbody>
-        </table>
-      </div>
+        <div className="my-3" id="e1monthDashboard">
+          <div className="spin-loader"></div>
+          <h3 className="mb-2">
+            {isLoading ? <div className="spinner-border"></div> : ''}
+          </h3>
+
+          <div className="mb-2 row h5">
+            {/* Show the performance of the department */}
+            <div className="text-left col-sm-6">
+              <label className="mr-sm-2">This Month Employee's Score</label>
+              {departmentScore.toFixed(1)} %
+            </div>
+
+            {/* Show which department employees to be displayed on the page */}
+            <div className="text-right col-sm-6"></div>
+          </div>
+
+          <table
+            className="table table-striped table-bordered table-hover text-left"
+            style={{ width: '100%' }}
+            id="employees-table"
+            // ref={el => (this.el = el)}
+          >
+            <thead>
+              <tr>
+                <th scope="col">Name</th>
+                <th scope="col">Modified</th>
+                <th scope="col">Created</th>
+                <th className="text-center" scope="col">
+                  KPIs
+                </th>
+                <th>Monthly Score</th>
+              </tr>
+            </thead>
+            <tbody>{departmentScoreboards}</tbody>
+          </table>
+        </div>
+      </React.Fragment>
     );
   }
 }

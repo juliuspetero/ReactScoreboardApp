@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
 import cloneDeep from 'lodash/cloneDeep';
+import html2canvas from 'html2canvas';
+import jsPDF from 'jspdf';
 import moment from 'moment';
 import isEmpty from 'lodash/isEmpty';
 import isArray from 'lodash/isArray';
@@ -7,6 +9,28 @@ import { connect } from 'react-redux';
 import { fetchUserPeriodicScoreboards } from '../../redux/scoreboards/actions/fetchUserPeriodicScoreboardsActions';
 
 export class ThreeMonthsDashboardComponent extends Component {
+  // Allows the entire dashboard to be exported as a PDF
+  exportToPdf = () => {
+    const input = document.getElementById('e3monthsDashboard');
+    html2canvas(input).then((canvas) => {
+      const imgData = canvas.toDataURL('image/png');
+      const imgWidth = 210;
+      const pageHeight = 295;
+      const imgHeight = (canvas.height * imgWidth) / canvas.width;
+      let heightLeft = imgHeight;
+      const doc = new jsPDF('p', 'mm');
+      let position = 0;
+      doc.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
+      heightLeft -= pageHeight;
+      while (heightLeft >= 0) {
+        position = heightLeft - imgHeight;
+        doc.addPage();
+        doc.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
+        heightLeft -= pageHeight;
+      }
+      doc.save('3monthsDashboard.pdf');
+    });
+  };
   componentDidMount() {
     this.props.fetchUserPeriodicScoreboards(
       '3months',
@@ -38,7 +62,7 @@ export class ThreeMonthsDashboardComponent extends Component {
       if (index === 0) employeesInDepartment.push(sb.user);
 
       let isPresent = false;
-      employeesInDepartment.forEach(employee => {
+      employeesInDepartment.forEach((employee) => {
         if (employee.id === sb.user.id) isPresent = true;
       });
 
@@ -52,7 +76,7 @@ export class ThreeMonthsDashboardComponent extends Component {
     employeesInDepartment.forEach((employee, eIndex) => {
       //Retrieve all scoreboards for a specific employee
       const employeeScoreboards = deptScoreboards.filter(
-        sb => sb.user.id === employee.id
+        (sb) => sb.user.id === employee.id
       );
 
       // Store all the KPIs for a specific employee here
@@ -63,7 +87,7 @@ export class ThreeMonthsDashboardComponent extends Component {
             if (employeeKPIs.length === 0) employeeKPIs.push(kpi);
 
             let isPresent = false;
-            employeeKPIs.forEach(employeeKPI => {
+            employeeKPIs.forEach((employeeKPI) => {
               if (employeeKPI.id === kpi.id) isPresent = true;
             });
 
@@ -89,13 +113,13 @@ export class ThreeMonthsDashboardComponent extends Component {
 
         // Calculate the average of KPI score and weight
         let totalScores = 0;
-        employeeKPIScores.forEach(score => {
+        employeeKPIScores.forEach((score) => {
           totalScores += score;
         });
         const averageScore = totalScores / employeeKPIScores.length;
 
         let totalWeights = 0;
-        employeeKPIWeights.forEach(weight => {
+        employeeKPIWeights.forEach((weight) => {
           totalWeights += weight;
         });
         const averageWeight = totalWeights / employeeKPIWeights.length;
@@ -120,7 +144,7 @@ export class ThreeMonthsDashboardComponent extends Component {
         // Calculating average scores
         let totalWeights = 0;
 
-        scoreboard.kpis.forEach(kpi => {
+        scoreboard.kpis.forEach((kpi) => {
           totalWeights += kpi.kPIScoreBoard.KPIWeight;
         });
 
@@ -142,7 +166,7 @@ export class ThreeMonthsDashboardComponent extends Component {
     let departmentScore = 0;
 
     if (!isEmpty(averageScoresList)) {
-      averageScoresList.forEach(as => {
+      averageScoresList.forEach((as) => {
         totalAverageScoreList += as;
       });
 
@@ -155,7 +179,7 @@ export class ThreeMonthsDashboardComponent extends Component {
           // Calculating average scores
           let totalWeights = 0;
 
-          scoreboard.kpis.forEach(kpi => {
+          scoreboard.kpis.forEach((kpi) => {
             totalWeights += kpi.kPIScoreBoard.KPIWeight;
           });
 
@@ -170,14 +194,14 @@ export class ThreeMonthsDashboardComponent extends Component {
           }
 
           // Considering scores for each month
-          const kpiTitles = scoreboard.kpis.map(kpi => {
+          const kpiTitles = scoreboard.kpis.map((kpi) => {
             return <td key={kpi.id}>{kpi.title}</td>;
           });
 
-          const standardMeasures = scoreboard.kpis.map(kpi => {
+          const standardMeasures = scoreboard.kpis.map((kpi) => {
             return <td key={kpi.id}>100 %</td>;
           });
-          const kpiScores = scoreboard.kpis.map(kpi => {
+          const kpiScores = scoreboard.kpis.map((kpi) => {
             const score =
               kpi.kPIScoreBoard.KPIScore != null
                 ? kpi.kPIScoreBoard.KPIScore
@@ -186,23 +210,23 @@ export class ThreeMonthsDashboardComponent extends Component {
             let style = null;
             if (score < 50)
               style = {
-                backgroundColor: '#cc6600'
+                backgroundColor: '#cc6600',
               };
             else if (score < 60)
               style = {
-                backgroundColor: '#ffcccc'
+                backgroundColor: '#ffcccc',
               };
             else if (score < 75)
               style = {
-                backgroundColor: '#ffd11a'
+                backgroundColor: '#ffd11a',
               };
             else if (score < 90)
               style = {
-                backgroundColor: '#4dd2ff'
+                backgroundColor: '#4dd2ff',
               };
             else
               style = {
-                backgroundColor: '#00cc44'
+                backgroundColor: '#00cc44',
               };
 
             return (
@@ -213,7 +237,7 @@ export class ThreeMonthsDashboardComponent extends Component {
           });
 
           // KPI Weights
-          const kpiWeights = scoreboard.kpis.map(kpi => {
+          const kpiWeights = scoreboard.kpis.map((kpi) => {
             return (
               <td key={kpi.id}>
                 {kpi.kPIScoreBoard.KPIWeight != null
@@ -259,57 +283,69 @@ export class ThreeMonthsDashboardComponent extends Component {
       : null;
 
     return (
-      <div className="my-3">
-        <div className="spin-loader"></div>
-        <h3 className="mb-2">
-          {isLoading ? <div className="spinner-border"></div> : ''}
-        </h3>
+      <React.Fragment>
+        {/* Dowlnload button */}
+        <div className="text-left my-3">
+          <button
+            onClick={this.exportToPdf}
+            id="exportButton"
+            className="btn btn-lg btn-danger clearfix"
+          >
+            <span className="fa fa-file-pdf-o"></span> Export to PDF
+          </button>
+        </div>
+        <div className="my-3" id="e3monthsDashboard">
+          <div className="spin-loader"></div>
+          <h3 className="mb-2">
+            {isLoading ? <div className="spinner-border"></div> : ''}
+          </h3>
 
-        <div className="mb-2 row h5">
-          {/* Show the performance of the department */}
-          <div className="text-left col-sm-6">
-            <label className="mr-sm-2">
-              Last Three Months Employee's Score
-            </label>
-            {departmentScore.toFixed(1)} %
+          <div className="mb-2 row h5">
+            {/* Show the performance of the department */}
+            <div className="text-left col-sm-6">
+              <label className="mr-sm-2">
+                Last Three Months Employee's Score
+              </label>
+              {departmentScore.toFixed(1)} %
+            </div>
+
+            {/* Show which department employees to be displayed on the page */}
+            <div className="text-right col-sm-6"></div>
           </div>
 
-          {/* Show which department employees to be displayed on the page */}
-          <div className="text-right col-sm-6"></div>
+          <table
+            className="table table-striped table-bordered table-hover text-left"
+            style={{ width: '100%' }}
+            id="employees-table"
+            // ref={el => (this.el = el)}
+          >
+            <thead>
+              <tr>
+                <th scope="col">Name</th>
+                <th scope="col">Modified</th>
+                <th scope="col">Created</th>
+                <th className="text-center" scope="col">
+                  KPIs
+                </th>
+                <th>Quarterly Score</th>
+              </tr>
+            </thead>
+            <tbody>{departmentScoreboards}</tbody>
+          </table>
         </div>
-
-        <table
-          className="table table-striped table-bordered table-hover text-left"
-          style={{ width: '100%' }}
-          id="employees-table"
-          // ref={el => (this.el = el)}
-        >
-          <thead>
-            <tr>
-              <th scope="col">Name</th>
-              <th scope="col">Modified</th>
-              <th scope="col">Created</th>
-              <th className="text-center" scope="col">
-                KPIs
-              </th>
-              <th>Quarterly Score</th>
-            </tr>
-          </thead>
-          <tbody>{departmentScoreboards}</tbody>
-        </table>
-      </div>
+      </React.Fragment>
     );
   }
 }
 
 export default connect(
-  state => {
+  (state) => {
     return {
       scoreboardsData: state.fetchScoreboardsReducer,
-      authenticateUserData: state.authenticateUserReducer
+      authenticateUserData: state.authenticateUserReducer,
     };
   },
   {
-    fetchUserPeriodicScoreboards
+    fetchUserPeriodicScoreboards,
   }
 )(ThreeMonthsDashboardComponent);
