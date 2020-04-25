@@ -6,18 +6,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="theme-color" content="#000000" />
     <meta name="description" content="3D services employees reporting portal" />
-    <link rel="apple-touch-icon" href="/src/assets/images/3dservices.ico" />
+    <link rel="apple-touch-icon" href="%PUBLIC_URL%/3dservices.ico" />
     <base href="/" />
-    <!-- Bootstrap4 DataTable CDN -->
-    <link
-      rel="stylesheet"
-      href="https://cdn.datatables.net/1.10.20/css/dataTables.bootstrap4.min.css"
-    />
-    <!-- jQuery-DataTable CDN -->
-    <link
-      rel="stylesheet"
-      href="https://cdn.datatables.net/1.10.20/css/jquery.dataTables.min.css"
-    />
+
     <!-- Bootstrap4 CDN -->
     <link
       rel="stylesheet"
@@ -58,8 +49,8 @@
     ></script>
 
     <script type="text/javascript">
-      jQuery(function($) {
-        $('#exportButton').click(function() {
+      jQuery(function ($) {
+        $('#exportButton').click(function () {
           // parse the HTML table element having an id=exportTable
           var dataSource = shield.DataSource.create({
             data: '#exportTable',
@@ -68,16 +59,16 @@
               fields: {
                 Name: { type: String },
                 Age: { type: Number },
-                Email: { type: String }
-              }
-            }
+                Email: { type: String },
+              },
+            },
           });
 
           // when parsing is done, export the data to PDF
-          dataSource.read().then(function(data) {
+          dataSource.read().then(function (data) {
             var pdf = new shield.exp.PDFDocument({
               author: 'PrepBootstrap',
-              created: new Date()
+              created: new Date(),
             });
 
             pdf.addPage('a4', 'portrait');
@@ -89,18 +80,18 @@
               [
                 { field: 'Name', title: 'Person Name', width: 200 },
                 { field: 'Age', title: 'Age', width: 50 },
-                { field: 'Email', title: 'Email Address', width: 200 }
+                { field: 'Email', title: 'Email Address', width: 200 },
               ],
               {
                 margins: {
                   top: 50,
-                  left: 50
-                }
+                  left: 50,
+                },
               }
             );
 
             pdf.saveAs({
-              fileName: 'PrepBootstrapPDF'
+              fileName: 'PrepBootstrapPDF',
             });
           });
         });
