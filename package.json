@@ -30,7 +30,7 @@
     "redux-thunk": "^2.3.0",
     "styled-components": "^5.0.0",
     "uniqid": "^5.2.0",
-    "validator": "^12.2.0"
+    "validator": "^13.7.0"
   },
   "scripts": {
     "start": "react-scripts start",
